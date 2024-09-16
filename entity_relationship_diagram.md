@@ -35,11 +35,11 @@ erDiagram
         numeric established_date
     }
 
-    users one or many to one or many views : "create"
-    views zero or many to one or many anime : "for"
-    users one or many to one or many ratings : "create"
-    ratings zero or many to one or many anime : "for"
-    studios one to one or many anime : "worked on"
+    users one to zero or many views : "create"
+    views zero or many to one anime : "for"
+    users one to zero or many ratings : "create"
+    ratings zero or many to one anime : "for"
+    studios one or many to one or many anime : "worked on"
 ```
 > Note: SQL queries written below are really rough drafts
 
