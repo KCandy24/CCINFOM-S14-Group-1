@@ -1,67 +1,84 @@
 ```mermaid
 erDiagram
-    ANIME {
+    anime {
         int id PK
+        int studios_id FK
         string title
-        enum genre "Action, Comedy, Romance, ..."
+        enum genre
+        numeric air_date
     }
     
-    EPISODE {
+    users {
         int id PK
-        int anime_id FK
-        string title
-        int season_number
-        int episode_number
-        numeric release_date
-    }
-    
-    USER {
-        int id PK
-        string user_name
-        string country
+        string username
+        enum continent
         numeric join_date
     }
 
-    VIEW {
-        int id PK
+    views {
         int user_id FK
-        int episode_id FK
+        int anime_id FK
+        numeric date
     }
 
-    RATING {
-        int id PK
+    ratings {
         int user_id FK
-        int episode_id FK
-        float rating "from 0.0 to 5.0"
+        int anime_id FK
+        float rating
         string comment
         numeric date
     }
 
-    STUDIO {
+    studios {
         int id PK
         string name
+        numeric established_date
     }
 
-    STAFF {
-        int id PK
-        int studio_id FK
-        string first_name
-        string last_name
-    }
-
-    WORKED_ON {
-        int id PK
-        int staff_id FK
-        int anime_id FK
-        enum role "Producer, Director, Animator, Voice Actor, ..."
-    }
-
-    USER many to many RATING : "creates"
-    USER many to many VIEW  : "creates"
-    VIEW many to many EPISODE : "for"
-    RATING zero or many to one EPISODE : "for"
-    ANIME one to one or many EPISODE : "contains"
-    STUDIO one to one or many STAFF : "contains"
-    ANIME many to many WORKED_ON : "that was"
-    STAFF many to many WORKED_ON : "that"
+    users one or many to one or many views : "create"
+    views zero or many to one or many anime : "for"
+    users one or many to one or many ratings : "create"
+    ratings zero or many to one or many anime : "for"
+    studios one to one or many anime : "worked on"
 ```
+> Note: SQL queries written below are really rough drafts
+
+Possible Transactions
+1. Rating an anime episode
+2. a
+3. a
+4. a
+
+Possible Reports
+1. Highest rated anime
+  ```SQL
+    SELECT
+        anime.title
+    FROM
+        anime
+        JOIN ratings ON anime.id = ratings.anime_id
+    GROUP BY
+        anime.id
+    ORDER BY
+        AVG(ratings.rating) DESC
+    LIMIT 1;
+  ```
+
+2. Most popular studio: most common studio among the top 10(?) most viewed anime
+
+3. A user's favorite genre: most common genre among the user's top 10(?) favorite anime
+   1. Can lead to **recommending an anime** based off the genre
+
+4. A user's favorite anime: highest rated anime by the user
+  ```SQL
+    SELECT
+        anime.title
+    FROM
+        anime
+        JOIN ratings ON anime.id = ratings.anime_id AND ratings.user_id = ?
+    GROUP BY
+        anime.id
+    ORDER BY
+        ratings.rating DESC
+    LIMIT 1;
+  ```
