@@ -6,19 +6,21 @@ erDiagram
         string title
         enum genre
         numeric air_date
+        float run_time
     }
     
     users {
         int id PK
         string username
-        enum continent
+        enum region
         numeric join_date
     }
 
     views {
         int user_id FK
         int anime_id FK
-        numeric date
+        int watch_time
+        numeric last_watched
     }
 
     ratings {
