@@ -3,7 +3,7 @@ package src.view.gui;
 import java.awt.*;
 import javax.swing.*;
 import src.view.widget.WidgetFactory;
-import src.view.widget.WidgetFactory.FontCollection;
+import src.view.widget.WidgetFactory.Fonts;
 
 public class TopView {
     private JFrame frame;
@@ -26,28 +26,18 @@ public class TopView {
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        panel.add(WidgetFactory.createJLabel("Ohayou sekai!",
-                FontCollection.TITLE));
-        panel.add(WidgetFactory.createJLabel("Template GUI",
-                FontCollection.SUBTITLE));
-        panel.add(WidgetFactory
-                .createJLabel("Please feel free to edit the code!"));
+        panel.add(WidgetFactory.createJLabel("Ohayou sekai!", Fonts.TITLE));
+        panel.add(WidgetFactory.createJLabel("Template GUI", Fonts.SUBTITLE));
+        panel.add(WidgetFactory.createJLabel("Please feel free to edit the code!"));
 
         test = WidgetFactory.createJButton("Frog button");
         panel.add(test);
 
         this.frame.add(panel, BorderLayout.CENTER);
 
-        this.frame.add(
-                WidgetFactory.createJLabel("North", FontCollection.TITLE),
-                BorderLayout.NORTH);
-        this.frame.add(
-                WidgetFactory.createJLabel("South", FontCollection.TITLE),
-                BorderLayout.SOUTH);
-        this.frame.add(WidgetFactory.createJLabel("East", FontCollection.TITLE),
-                BorderLayout.EAST);
-        this.frame.add(WidgetFactory.createJLabel("West", FontCollection.TITLE),
-                BorderLayout.WEST);
-                
+        this.frame.add(WidgetFactory.createJLabel("North", Fonts.TITLE), BorderLayout.NORTH);
+        this.frame.add(WidgetFactory.createJLabel("South", Fonts.TITLE), BorderLayout.SOUTH);
+        this.frame.add(WidgetFactory.createJLabel("East", Fonts.TITLE), BorderLayout.EAST);
+        this.frame.add(WidgetFactory.createJLabel("West", Fonts.TITLE), BorderLayout.WEST);
     }
 }

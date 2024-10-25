@@ -23,14 +23,14 @@ public class WidgetFactory {
      * https://learn.microsoft.com/en-us/windows/apps/design/style/xaml-theme-resources#the-xaml-type-ramp
      * 
      */
-    public enum FontCollection {
+    public enum Fonts {
         BODY("Segoe UI", Font.PLAIN, 14),
         SUBTITLE("Segoe UI", Font.PLAIN, 20),
         TITLE("Segoe UI", Font.PLAIN, 28);
 
         private Font font;
 
-        private FontCollection(String name, int style, int size) {
+        private Fonts(String name, int style, int size) {
             this.font = new Font(name, style, size);
         }
 
@@ -45,17 +45,17 @@ public class WidgetFactory {
      * @param component
      */
     private static void styleComponent(JComponent component) {
-        component.setFont(FontCollection.BODY.getFont());
+        component.setFont(Fonts.BODY.getFont());
     }
 
     /**
      * Create an ordinary label with a given text and font.
      * 
      * @param text
-     * @param font any of {@link WidgetFactory.FontCollection}
+     * @param font any of {@link WidgetFactory.Fonts}
      * @return
      */
-    public static JLabel createJLabel(String text, FontCollection font) {
+    public static JLabel createJLabel(String text, Fonts font) {
         JLabel jlabel = new JLabel(text);
         WidgetFactory.styleComponent(jlabel);
         jlabel.setHorizontalAlignment(JLabel.CENTER);
