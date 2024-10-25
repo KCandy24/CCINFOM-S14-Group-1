@@ -9,6 +9,8 @@ import javax.swing.*;
  * Labels and Buttons via static methods.
  */
 public class WidgetFactory {
+    private static final String DEFAULT_FONT_FAMILY = "Segoe UI";
+
     /**
      * This class is not meant to be instantiated. Use the various static
      * methods to create widgets.
@@ -24,14 +26,14 @@ public class WidgetFactory {
      * 
      */
     public enum Fonts {
-        BODY("Segoe UI", Font.PLAIN, 14),
-        SUBTITLE("Segoe UI", Font.PLAIN, 20),
-        TITLE("Segoe UI", Font.PLAIN, 28);
+        TITLE(28),
+        SUBTITLE(20),
+        BODY(14);
 
         private Font font;
 
-        private Fonts(String name, int style, int size) {
-            this.font = new Font(name, style, size);
+        private Fonts(int size) {
+            this.font = new Font(DEFAULT_FONT_FAMILY, Font.PLAIN, size);
         }
 
         public Font getFont() {
@@ -49,21 +51,6 @@ public class WidgetFactory {
     }
 
     /**
-     * Create an ordinary label with a given text and font.
-     * 
-     * @param text
-     * @param font any of {@link WidgetFactory.Fonts}
-     * @return
-     */
-    public static JLabel createJLabel(String text, Fonts font) {
-        JLabel jlabel = new JLabel(text);
-        WidgetFactory.styleComponent(jlabel);
-        jlabel.setHorizontalAlignment(JLabel.CENTER);
-        jlabel.setFont(font.getFont());
-        return jlabel;
-    }
-
-    /**
      * Create an ordinary label with a given text.
      * 
      * @param text
@@ -73,6 +60,19 @@ public class WidgetFactory {
         JLabel jlabel = new JLabel(text);
         WidgetFactory.styleComponent(jlabel);
         jlabel.setHorizontalAlignment(JLabel.CENTER);
+        return jlabel;
+    }
+
+    /**
+     * Create an ordinary label with a given text and font.
+     * 
+     * @param text
+     * @param font any of {@link WidgetFactory.Fonts}
+     * @return
+     */
+    public static JLabel createJLabel(String text, Fonts font) {
+        JLabel jlabel = createJLabel(text);
+        jlabel.setFont(font.getFont());
         return jlabel;
     }
 
