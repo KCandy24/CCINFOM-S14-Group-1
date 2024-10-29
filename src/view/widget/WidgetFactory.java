@@ -1,6 +1,6 @@
 package src.view.widget;
 
-import java.awt.Font;
+import java.util.ArrayList;
 import java.awt.*;
 import javax.swing.*;
 
@@ -39,6 +39,10 @@ public class WidgetFactory {
         public Font getFont() {
             return font;
         }
+
+        public int getSize() {
+            return font.getSize();
+        }
     }
 
     /**
@@ -57,10 +61,9 @@ public class WidgetFactory {
      * @return
      */
     public static JLabel createJLabel(String text) {
-        JLabel jlabel = new JLabel(text);
-        WidgetFactory.styleComponent(jlabel);
-        jlabel.setHorizontalAlignment(JLabel.CENTER);
-        return jlabel;
+        JLabel jLabel = new JLabel(text);
+        WidgetFactory.styleComponent(jLabel);
+        return jLabel;
     }
 
     /**
@@ -71,9 +74,10 @@ public class WidgetFactory {
      * @return
      */
     public static JLabel createJLabel(String text, Fonts font) {
-        JLabel jlabel = createJLabel(text);
-        jlabel.setFont(font.getFont());
-        return jlabel;
+        JLabel jLabel = createJLabel(text);
+        jLabel.setFont(font.getFont());
+        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        return jLabel;
     }
 
     /**
@@ -83,9 +87,31 @@ public class WidgetFactory {
      * @return
      */
     public static JButton createJButton(String text) {
-        JButton jbutton = new JButton(text);
-        WidgetFactory.styleComponent(jbutton);
-        return jbutton;
+        JButton jButton = new JButton(text);
+        WidgetFactory.styleComponent(jButton);
+        return jButton;
+    }
+
+    public static JPanel createJPanel() {
+        JPanel jPanel = new JPanel();
+        jPanel.setBackground(Color.WHITE);
+        return jPanel;
+    }
+
+    public static JTextField createJTextField() {
+        JTextField jTextField = new JTextField();
+        WidgetFactory.styleComponent(jTextField);
+        jTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                jTextField.getPreferredSize().height));
+        return jTextField;
+    }
+
+    public static JList<String> createJList() {
+        JList<String> jList = new JList<String>();
+        WidgetFactory.styleComponent(jList);
+        jList.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        return jList;
     }
 
     /**
@@ -113,21 +139,22 @@ public class WidgetFactory {
         }
 
         // Create JFrame and set defaults
-        JFrame jframe = new JFrame(title);
-        jframe.setLocationByPlatform(true);
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame jFrame = new JFrame(title);
+        jFrame.setLocationByPlatform(true);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        jframe.getContentPane().setBackground(Color.WHITE);
-        jframe.setMinimumSize(screenSize);
+        jFrame.getContentPane().setBackground(Color.WHITE);
+        jFrame.setMinimumSize(screenSize);
 
-        jframe.setLayout(new BorderLayout());
+        jFrame.setLayout(new BorderLayout());
 
-        return jframe;
+        return jFrame;
     }
 
-    public static JPanel createJPanel() {
-        JPanel jpanel = new JPanel();
-        jpanel.setBackground(Color.WHITE);
-        return jpanel;
+    // Custom widgets
+
+    public static SearchBox createSearchBox() {
+        SearchBox searchBox = new SearchBox();
+        return searchBox;
     }
 }
