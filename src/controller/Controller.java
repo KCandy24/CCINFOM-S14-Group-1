@@ -8,16 +8,16 @@ import src.view.gui.TopView;
  */
 public class Controller {
     // Declare listeners
-    SearchBoxListener searchBoxListener;
+    TitlesSearchBoxListener titlesSearchBoxListener;
 
     /**
      * Initializes the listeners to listen to the view.
      */
     public Controller(AnimeSystem as, TopView tv) {
         // Initialize listeners
-        searchBoxListener = new SearchBoxListener(as, tv);
+        titlesSearchBoxListener = new TitlesSearchBoxListener(as, tv);
 
         // Set listeners in topView
-        tv.setSearchBoxListener(searchBoxListener);
+        tv.setSearchBoxListener(titlesSearchBoxListener);
     }
 }

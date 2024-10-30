@@ -3,21 +3,32 @@ package src.model;
 import java.util.ArrayList;
 
 /**
- * TODO: Actually use SQL
+ * TODO: Actually use a SQL Database instead of hardcoding these lists
  */
 public class AnimeSystem {
     private String[] titles = {
             "Ao no Kanata Four Rhythms Across the Blue",
             "Dragon Ball Z",
+            "Goblin Slayer",
+            "Konosuba: God's Gift on this Wonderful World",
             "Love Live School Idol Project",
             "Love Live Sunshine",
-            "Shrek"
+            "Mayo Chiki!",
+            "Miss Kobayashi's Dragon Maid",
+            "Nichijou",
+            "Sankarea",
+            "Shrek",
+            "Tokyo Ghoul",
+            "The Helpful Fox Senko-san",
+            "Trinity Seven"
     };
 
     public AnimeSystem() {
 
     }
 
+    // Titles
+    
     public String[] getTitles() {
         return titles;
     }

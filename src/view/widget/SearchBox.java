@@ -8,34 +8,23 @@ import javax.swing.JTextField;
 import src.controller.SearchBoxListener;
 
 /**
- * Note: this search box uses composition instead of inheritance;
- * use its getJPanel method when adding it to a frame/panel!
- * TODO: ^ With that in mind, do we switch to inheritance?
- * Not really sure about the benefits to either TBH -- Justin
+ * 
  */
-public class SearchBox {
-    private JPanel jPanel;
+public class SearchBox extends JPanel {
     private JList<String> jList;
     private JTextField searchField;
 
     public SearchBox() {
-        jPanel = WidgetFactory.createJPanel();
-        jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
-
-        searchField = WidgetFactory.createJTextField();
-        jPanel.add(searchField);
-
-        jList = WidgetFactory.createJList();
-
-        jPanel.add(jList);
-    }
-
-    public JPanel getJPanel() {
-        return this.jPanel;
+        WidgetFactory.styleComponent(this);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.searchField = WidgetFactory.createJTextField();
+        this.jList = WidgetFactory.createJList();
+        this.add(searchField);
+        this.add(jList);
     }
 
     public void setListData(String[] listData) {
-        jList.setListData(listData);
+        this.jList.setListData(listData);
     }
 
     public void setListener(SearchBoxListener searchBoxListener) {

@@ -2,7 +2,6 @@ package src.view.gui;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import src.controller.SearchBoxListener;
 import src.view.widget.SearchBox;
@@ -46,11 +45,10 @@ public class TopView {
         hero.add(WidgetFactory.createJLabel("CCINFOM S14 Group 1", Fonts.SUBTITLE));
         hero.add(WidgetFactory.createJLabel("10/29/2024: Check out this search box - Justin"));
         hero.add(frogButton);
-        hero.add(sampleSearchBox.getJPanel());
 
         this.frame.add(hero, BorderLayout.NORTH);
 
-        center.add(this.sampleSearchBox.getJPanel());
+        center.add(this.sampleSearchBox);
 
         this.frame.add(center, BorderLayout.CENTER);
 

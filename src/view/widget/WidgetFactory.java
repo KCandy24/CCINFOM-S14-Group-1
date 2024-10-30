@@ -1,6 +1,5 @@
 package src.view.widget;
 
-import java.util.ArrayList;
 import java.awt.*;
 import javax.swing.*;
 
@@ -50,7 +49,8 @@ public class WidgetFactory {
      * 
      * @param component
      */
-    private static void styleComponent(JComponent component) {
+    static void styleComponent(JComponent component) {
+        component.setBackground(Color.WHITE);
         component.setFont(Fonts.BODY.getFont());
     }
 
@@ -94,7 +94,7 @@ public class WidgetFactory {
 
     public static JPanel createJPanel() {
         JPanel jPanel = new JPanel();
-        jPanel.setBackground(Color.WHITE);
+        WidgetFactory.styleComponent(jPanel);
         return jPanel;
     }
 
