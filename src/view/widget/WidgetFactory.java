@@ -27,12 +27,17 @@ public class WidgetFactory {
     public enum Fonts {
         TITLE(28),
         SUBTITLE(20),
-        BODY(14);
+        BODY(14),
+        BODY_BOLD(Font.BOLD, 14);
 
         private Font font;
 
         private Fonts(int size) {
             this.font = new Font(DEFAULT_FONT_FAMILY, Font.PLAIN, size);
+        }
+
+        private Fonts(int style, int size) {
+            this.font = new Font(DEFAULT_FONT_FAMILY, style, size);
         }
 
         public Font getFont() {
@@ -45,73 +50,15 @@ public class WidgetFactory {
     }
 
     /**
-     * Apply common stylings to a given component.
+     * Apply common stylings to a given component. TODO: A little concerned
+     * about this being public; it's used in SearchDemo and maybe other tabs
+     * outside `widget` which extend JPanel - Justin
      * 
      * @param component
      */
-    static void styleComponent(JComponent component) {
+    public static void styleComponent(JComponent component) {
         component.setBackground(Color.WHITE);
         component.setFont(Fonts.BODY.getFont());
-    }
-
-    /**
-     * Create an ordinary label with a given text.
-     * 
-     * @param text
-     * @return
-     */
-    public static JLabel createJLabel(String text) {
-        JLabel jLabel = new JLabel(text);
-        WidgetFactory.styleComponent(jLabel);
-        return jLabel;
-    }
-
-    /**
-     * Create an ordinary label with a given text and font.
-     * 
-     * @param text
-     * @param font any of {@link WidgetFactory.Fonts}
-     * @return
-     */
-    public static JLabel createJLabel(String text, Fonts font) {
-        JLabel jLabel = createJLabel(text);
-        jLabel.setFont(font.getFont());
-        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        return jLabel;
-    }
-
-    /**
-     * Create an ordinary label with a given text.
-     * 
-     * @param text
-     * @return
-     */
-    public static JButton createJButton(String text) {
-        JButton jButton = new JButton(text);
-        WidgetFactory.styleComponent(jButton);
-        return jButton;
-    }
-
-    public static JPanel createJPanel() {
-        JPanel jPanel = new JPanel();
-        WidgetFactory.styleComponent(jPanel);
-        return jPanel;
-    }
-
-    public static JTextField createJTextField() {
-        JTextField jTextField = new JTextField();
-        WidgetFactory.styleComponent(jTextField);
-        jTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
-                jTextField.getPreferredSize().height));
-        return jTextField;
-    }
-
-    public static JList<String> createJList() {
-        JList<String> jList = new JList<String>();
-        WidgetFactory.styleComponent(jList);
-        jList.setMaximumSize(
-                new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-        return jList;
     }
 
     /**
@@ -146,9 +93,81 @@ public class WidgetFactory {
         jFrame.getContentPane().setBackground(Color.WHITE);
         jFrame.setMinimumSize(screenSize);
 
-        jFrame.setLayout(new BorderLayout());
-
         return jFrame;
+    }
+
+    public static JTabbedPane createJTabbedPane() {
+        JTabbedPane jTabbedPane = new JTabbedPane();
+        jTabbedPane.setFont(Fonts.SUBTITLE.getFont());
+        return jTabbedPane;
+    }
+
+    /**
+     * Create an ordinary label with a given text.
+     * 
+     * @param text
+     * @return
+     */
+    public static JLabel createJLabel(String text) {
+        JLabel jLabel = new JLabel(text);
+        WidgetFactory.styleComponent(jLabel);
+        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        return jLabel;
+    }
+
+    /**
+     * Create an ordinary label with a given text and font.
+     * 
+     * @param text
+     * @param font any of {@link WidgetFactory.Fonts}
+     * @return
+     */
+    public static JLabel createJLabel(String text, Fonts font) {
+        JLabel jLabel = createJLabel(text);
+        jLabel.setFont(font.getFont());
+        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        return jLabel;
+    }
+
+    /**
+     * Create an ordinary label with a given text.
+     * 
+     * @param text
+     * @return
+     */
+    public static JButton createJButton(String text) {
+        JButton jButton = new JButton(text);
+        WidgetFactory.styleComponent(jButton);
+        return jButton;
+    }
+
+    public static JButton createJButton(String text, Fonts font) {
+        JButton jButton = new JButton(text);
+        WidgetFactory.styleComponent(jButton);
+        jButton.setFont(font.getFont());
+        return jButton;
+    }
+
+    public static JPanel createJPanel() {
+        JPanel jPanel = new JPanel();
+        WidgetFactory.styleComponent(jPanel);
+        return jPanel;
+    }
+
+    public static JTextField createJTextField() {
+        JTextField jTextField = new JTextField();
+        WidgetFactory.styleComponent(jTextField);
+        jTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
+                jTextField.getPreferredSize().height));
+        return jTextField;
+    }
+
+    public static JList<String> createJList() {
+        JList<String> jList = new JList<String>();
+        WidgetFactory.styleComponent(jList);
+        jList.setMaximumSize(
+                new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        return jList;
     }
 
     // Custom widgets
@@ -157,4 +176,10 @@ public class WidgetFactory {
         SearchBox searchBox = new SearchBox();
         return searchBox;
     }
+
+    public static ButtonSet createButtonSet(String header, String[] labels) {
+        ButtonSet buttonSet = new ButtonSet(header, labels);
+        return buttonSet;
+    }
+
 }

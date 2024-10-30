@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class AnimeSystem {
     private String[] titles = {
             "Ao no Kanata Four Rhythms Across the Blue",
+            "Cory in the House",
             "Dragon Ball Z",
             "Goblin Slayer",
             "Konosuba: God's Gift on this Wonderful World",
