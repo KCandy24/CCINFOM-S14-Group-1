@@ -17,11 +17,13 @@ public class TopView {
      * Initialize the top view.
      */
     public TopView() {
-        this.frame = WidgetFactory.createJFrame("Program Design is my passion");
-        this.frame.setLayout(new BorderLayout());
-        this.instantiateWidgets();
-        this.placeWidgets();
-        this.frame.setVisible(true);
+        frame = WidgetFactory.createJFrame("Program Design is my passion");
+        frame.setLayout(new BorderLayout());
+        frame.setBounds(100, 100, 1000, 500);
+
+        instantiateWidgets();
+        placeWidgets();
+        frame.setVisible(true);
     }
 
     public void instantiateWidgets() {
