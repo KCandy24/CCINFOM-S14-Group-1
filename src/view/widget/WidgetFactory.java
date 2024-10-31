@@ -8,7 +8,7 @@ import javax.swing.*;
  * Labels and Buttons via static methods.
  */
 public class WidgetFactory {
-    private static final String DEFAULT_FONT_FAMILY = "Segoe UI";
+    private static final String DEFAULT_FONT_FAMILY = "Inter";
 
     /**
      * This class is not meant to be instantiated. Use the various static
