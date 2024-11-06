@@ -17,7 +17,7 @@ public class TopView {
      * Initialize the top view.
      */
     public TopView() {
-        frame = WidgetFactory.createJFrame("Program Design is my passion");
+        frame = WidgetFactory.createJFrame("CCINFOM MCO GUI Prototype");
         frame.setLayout(new BorderLayout());
         frame.setBounds(100, 100, 1000, 500);
 
