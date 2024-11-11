@@ -2,5 +2,11 @@
     "java.format.settings.url": ".vscode/java-formatter.xml",
     "[java]": {
         "editor.detectIndentation": false
-    }
+    },
+    "java.project.referencedLibraries": [
+        "lib\\mysql-connector-j-9.1.0.jar"
+    ],
+    "java.project.sourcePaths": [
+        "."
+    ]
 }
