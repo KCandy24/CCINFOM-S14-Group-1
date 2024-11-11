@@ -9,8 +9,6 @@ import java.sql.*;
 public class AnimeSystem {
 
     public final static String PATH = "jdbc:mysql://localhost:3306/dbanime";
-    public final static String USER = "root";
-    public final static String PASS = "1234";
 
     Connection dbConnection;
     Statement dbStatement;
@@ -32,11 +30,11 @@ public class AnimeSystem {
             // "The Helpful Fox Senko-san",
             // "Trinity Seven"
 
-    public AnimeSystem() {
+    public AnimeSystem(String username, String password) {
         titles = new ArrayList<String>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(PATH, USER, PASS);
+            dbConnection = DriverManager.getConnection(PATH, username, password);
             dbStatement = dbConnection.createStatement();
         } catch (Exception e) {
             System.err.println("Unable to establish connection");
