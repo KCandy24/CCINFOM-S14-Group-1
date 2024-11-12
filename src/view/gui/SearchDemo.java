@@ -8,12 +8,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import src.controller.TitlesSearchBoxListener;
+import src.view.widget.LabelledField;
 import src.view.widget.SearchBox;
 import src.view.widget.WidgetFactory;
 import src.view.widget.WidgetFactory.Fonts;
 
 public class SearchDemo extends JPanel {
     private SearchBox searchBox;
+    private LabelledField l;
 
     public SearchDemo() {
         WidgetFactory.styleComponent(this);
@@ -25,6 +27,7 @@ public class SearchDemo extends JPanel {
 
     public void instantiateWidgets() {
         searchBox = WidgetFactory.createSearchBox();
+        l = WidgetFactory.creatLabelledField("Hi");
     }
 
     public void placeWidgets() {
@@ -35,6 +38,7 @@ public class SearchDemo extends JPanel {
         hero.add(WidgetFactory.createJLabel("Search"));
         this.add(hero, BorderLayout.NORTH);
         this.add(searchBox, BorderLayout.CENTER);
+        this.add(l, BorderLayout.SOUTH);
     }
 
     public void setListener(TitlesSearchBoxListener l) {
