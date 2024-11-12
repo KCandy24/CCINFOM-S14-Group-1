@@ -1,7 +1,11 @@
 package src.view.widget;
 
 import java.awt.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
+
+import com.mysql.cj.conf.ConnectionUrlParser.Pair;
 
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
@@ -102,6 +106,27 @@ public class WidgetFactory {
         return jTabbedPane;
     }
 
+    public static JTabbedPane createJTabbedPane(ArrayList<TitledTab> tabs) {
+        JTabbedPane jTabbedPane = createJTabbedPane();
+        for (src.util.Pair<String, JPanel> pair : tabs) {
+            String formattedString = """
+                    <html>
+                    <head><style>td {text-align: center}</style></head>
+                    <body>
+                    <table width=250>
+                    <td>
+                    """ + pair.getFirst() +
+                    """
+                            </td>
+                            </table>
+                            </body>
+                            </html>
+                            """;
+            jTabbedPane.addTab(formattedString, pair.getSecond());
+        }
+        return jTabbedPane;
+    }
+
     /**
      * Create an ordinary label with a given text.
      * 
@@ -180,6 +205,10 @@ public class WidgetFactory {
     public static ButtonSet createButtonSet(String header, String[] labels) {
         ButtonSet buttonSet = new ButtonSet(header, labels);
         return buttonSet;
+    }
+
+    public static LabelledField creatLabelledField(String text) {
+        return new LabelledField(text);
     }
 
 }

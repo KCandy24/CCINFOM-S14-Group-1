@@ -1,5 +1,4 @@
-@echo off
-
 del /s /q *.class
-javac src/controller/Driver.java
-java src/controller/Driver.java
+set cp=.;lib/*
+javac -cp %cp% src/controller/Driver.java
+java -cp %cp% src/controller/Driver.java < password.in
