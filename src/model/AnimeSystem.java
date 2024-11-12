@@ -1,6 +1,7 @@
 package src.model;
 
 import java.util.ArrayList;
+import java.lang.annotation.Retention;
 import java.sql.*;
 
 /**
@@ -13,6 +14,7 @@ public class AnimeSystem {
     Connection dbConnection;
     Statement dbStatement;
     ResultSet dbResultSet;
+    ResultSetMetaData dbMetaData;
     private ArrayList<String> titles;
             // "Ao no Kanata Four Rhythms Across the Blue",
             // "Cory in the House",
@@ -58,6 +60,37 @@ public class AnimeSystem {
             System.err.println("Query to 'dbanime' Failed");
             e.printStackTrace();
         }
+    }
+
+    private static String[] getColumnNames(ResultSetMetaData dbMetaData) throws SQLException {
+        int columnCount = dbMetaData.getColumnCount();
+        String[] columnNames = new String[columnCount];
+
+        for (int i = 0; i < columnCount; i++) {
+            columnNames[i] = dbMetaData.getColumnName(i + 1); // Column index starts at 1
+        }
+        return columnNames;
+    }
+
+    public String[][] getAnimes(){
+        ArrayList<String[]> data = new ArrayList<String[]>();
+        try {
+            dbResultSet = dbStatement.executeQuery("SELECT title, genre, air_date FROM animes");
+            dbMetaData = dbResultSet.getMetaData();
+            data.add(getColumnNames(dbMetaData));
+            int columnCount = dbMetaData.getColumnCount();
+            while (dbResultSet.next()) {
+                String[] rowData = new String[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    rowData[i] = dbResultSet.getString(i + 1);
+                } 
+                data.add(rowData);
+            }
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed");
+            e.printStackTrace();
+        }
+        return data.toArray(new String[0][0]);
     }
 
     public String minimize(String string) {
