@@ -82,74 +82,106 @@ CREATE TABLE `follows` (
     FOREIGN KEY(`followed_id`) REFERENCES `users`(`user_id`)
 );
 
--- USERS table
-INSERT INTO `users` (`user_name`, `region`, `join_date`)
-VALUES 
-('AnimeFan101', 'AM', '2020-05-21'),
-('OtakuMaster', 'JP', '2018-07-14'),
-('MangaLover', 'EU', '2019-02-08'),
-('KawaiiKitten', 'AS', '2021-03-25'),
-('ShonenWarrior', 'AU', '2022-11-15');
+-- Insert sample data into `users` table
+INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES
+('Alice', 'JP', '2023-01-10'),
+('Bob', 'AM', '2023-05-15'),
+('Charlie', 'EU', '2023-07-20'),
+('Diana', 'AS', '2023-02-25'),
+('Ethan', 'AU', '2023-03-30'),
+('Fiona', 'AF', '2023-08-15'),
+('George', 'EU', '2023-06-10'),
+('Hannah', 'AM', '2023-04-05'),
+('Ivy', 'AS', '2023-09-12'),
+('Jack', 'JP', '2023-10-01');
 
--- STUDIOS table
-INSERT INTO `studios` (`studio_name`)
-VALUES 
+-- Insert sample data into `studios` table
+INSERT INTO `studios` (`studio_name`) VALUES
 ('Studio Ghibli'),
+('Toei Animation'),
+('Madhouse'),
 ('Bones'),
 ('Sunrise'),
-('Toei Animation'),
-('Madhouse');
+('Kyoto Animation'),
+('A-1 Pictures'),
+('MAPPA'),
+('Studio Trigger'),
+('CloverWorks');
 
--- STAFF table
-INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`)
-VALUES 
+-- Insert sample data into `staff` table
+INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES
 ('Hayao', 'Miyazaki', 'Director', '1941-01-05'),
-('Shinji', 'Aramaki', 'Animator', '1960-10-02'),
+('Isao', 'Takahata', 'Producer', '1935-10-29'),
 ('Yoko', 'Kanno', 'Composer', '1964-03-18'),
-('Takeshi', 'Honda', 'Character Designer', '1968-06-02'),
-('Masashi', 'Kishimoto', 'Writer', '1974-11-08');
+('Makoto', 'Shinkai', 'Director', '1973-02-09'),
+('Yoshiyuki', 'Tomino', 'Animator', '1941-11-05'),
+('Satoshi', 'Kon', 'Screenwriter', '1963-10-12'),
+('Mamoru', 'Hosoda', 'Director', '1967-09-19'),
+('Gen', 'Urobuchi', 'Writer', '1972-12-20'),
+('Naoko', 'Yamada', 'Animator', '1984-11-28'),
+('Shinichiro', 'Watanabe', 'Director', '1965-05-24');
 
--- ANIMES table
-INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`, `available_from_date`, `available_to_date`)
-VALUES 
-(1, 'Spirited Away', 'FA', '2001-07-20', 1, '2021-01-01', '2023-01-01'),
-(2, 'Fullmetal Alchemist: Brotherhood', 'AC', '2009-04-05', 64, '2020-01-01', '2025-01-01'),
-(3, 'Cowboy Bebop', 'SF', '1998-04-03', 26, '2022-01-01', '2027-01-01'),
-(4, 'One Piece', 'AD', '1999-10-20', 1000, '2019-01-01', '2030-01-01'),
-(5, 'Death Note', 'TH', '2006-10-03', 37, '2023-01-01', '2026-01-01');
+-- Insert sample data into `animes` table
+INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`, `available_from_date`, `available_to_date`) VALUES
+(1, 'My Neighbor Totoro', 'FA', '1988-04-16', 1, '2023-01-01', '2023-12-31'),
+(2, 'One Piece', 'AD', '1999-10-20', 1000, '2023-01-01', '2023-12-31'),
+(3, 'Death Note', 'TH', '2006-10-04', 37, '2023-01-01', '2023-12-31'),
+(4, 'Fullmetal Alchemist', 'AC', '2003-10-04', 51, '2023-01-01', '2023-12-31'),
+(5, 'Cowboy Bebop', 'SF', '1998-04-03', 26, '2023-01-01', '2023-12-31'),
+(6, 'Attack on Titan', 'AC', '2013-04-06', 75, '2023-01-01', '2023-12-31'),
+(7, 'Neon Genesis Evangelion', 'MY', '1995-10-04', 26, '2023-01-01', '2023-12-31'),
+(8, 'Your Name', 'RO', '2016-08-26', 1, '2023-01-01', '2023-12-31'),
+(9, 'Demon Slayer', 'AD', '2019-04-06', 26, '2023-01-01', '2023-12-31'),
+(10, 'Violet Evergarden', 'DR', '2018-01-11', 13, '2023-01-01', '2023-12-31');
 
--- VIEWS table
-INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`)
-VALUES 
-(1, 1, 1, '2022-05-21 18:20:15'),
-(2, 2, 5, '2021-08-15 20:45:00'),
-(3, 3, 10, '2021-12-25 17:30:00'),
-(4, 4, 500, '2023-03-15 22:10:05'),
-(5, 5, 25, '2024-05-07 14:55:55');
+-- Insert sample data into `views` table
+INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) VALUES
+(1, 1, 1, '2023-01-11 10:30:00'),
+(2, 2, 10, '2023-05-16 12:45:00'),
+(3, 3, 5, '2023-07-21 15:15:00'),
+(4, 4, 15, '2023-02-26 16:30:00'),
+(5, 5, 20, '2023-04-01 18:00:00'),
+(6, 6, 30, '2023-09-01 13:00:00'),
+(7, 7, 2, '2023-06-12 09:45:00'),
+(8, 8, 5, '2023-04-07 19:30:00'),
+(9, 9, 18, '2023-09-15 11:00:00'),
+(10, 10, 1, '2023-10-02 17:45:00');
 
--- RATINGS table
-INSERT INTO `ratings` (`user_id`, `anime_id`, `rating`, `comment`, `last_episode_watched`, `last_edited_timestamp`)
-VALUES 
-(1, 1, 10, 'Absolutely amazing movie!', 1, '2022-05-21 18:30:15'),
-(2, 2, 9, 'Great story and characters.', 64, '2021-08-16 12:10:45'),
-(3, 3, 8, 'Loved the soundtrack and setting.', 26, '2021-12-26 18:00:00'),
-(4, 4, 7, 'Very long but entertaining.', 700, '2023-03-16 23:20:10'),
-(5, 5, 10, 'A masterpiece!', 37, '2024-05-08 15:05:55');
+-- Insert sample data into `ratings` table
+INSERT INTO `ratings` (`user_id`, `anime_id`, `rating`, `comment`, `last_episode_watched`, `last_edited_timestamp`) VALUES
+(1, 1, 5, 'Incredible animation and story.', 1, '2023-01-12 09:30:00'),
+(2, 2, 4, 'Great adventure with amazing characters.', 100, '2023-05-20 11:00:00'),
+(3, 3, 5, 'Dark and thrilling.', 37, '2023-07-25 13:30:00'),
+(4, 4, 3, 'Interesting, but a bit slow.', 20, '2023-02-28 17:00:00'),
+(5, 5, 5, 'Sci-fi masterpiece.', 26, '2023-04-03 18:45:00'),
+(6, 6, 4, 'Amazing animation.', 60, '2023-09-02 14:00:00'),
+(7, 7, 5, 'Mind-bending classic.', 26, '2023-06-13 10:30:00'),
+(8, 8, 4, 'Emotional and beautifully animated.', 1, '2023-04-08 20:00:00'),
+(9, 9, 5, 'Epic fights and storyline.', 26, '2023-09-16 11:45:00'),
+(10, 10, 4, 'Touching and visually stunning.', 13, '2023-10-03 18:15:00');
 
--- CREDITS table
-INSERT INTO `credits` (`staff_id`, `anime_id`, `position`, `department`)
-VALUES 
+-- Insert sample data into `credits` table
+INSERT INTO `credits` (`staff_id`, `anime_id`, `position`, `department`) VALUES
 (1, 1, 'Director', 'DP'),
-(2, 2, 'Animator', 'AN'),
-(3, 3, 'Composer', 'SS'),
-(4, 4, 'Character Designer', 'AD'),
-(5, 5, 'Writer', 'TO');
+(2, 1, 'Producer', 'DP'),
+(3, 5, 'Composer', 'SS'),
+(4, 4, 'Director', 'DP'),
+(5, 2, 'Animator', 'AN'),
+(6, 6, 'Director', 'DP'),
+(7, 7, 'Writer', 'SS'),
+(8, 3, 'Screenwriter', 'SS'),
+(9, 10, 'Animator', 'AN'),
+(10, 8, 'Director', 'DP');
 
--- FOLLOWS table
-INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`)
-VALUES 
-(1, 2, '2021-01-10'),
-(2, 3, '2019-07-15'),
-(3, 4, '2020-11-23'),
-(4, 5, '2022-04-12'),
-(5, 1, '2023-08-25');
+-- Insert sample data into `follows` table
+INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VALUES
+(1, 2, '2023-01-15'),
+(2, 3, '2023-06-01'),
+(3, 4, '2023-08-01'),
+(4, 5, '2023-03-01'),
+(5, 1, '2023-04-10'),
+(6, 7, '2023-08-15'),
+(7, 8, '2023-06-20'),
+(8, 9, '2023-04-10'),
+(9, 10, '2023-09-13'),
+(10, 1, '2023-10-05');
