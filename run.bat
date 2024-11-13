@@ -1,4 +1,9 @@
 del /s /q *.class
-set cp=.;lib/*
-javac -cp %cp% src/controller/Driver.java
-java -cp %cp% src/controller/Driver.java < password.in
+
+javac -cp .;lib/* src/controller/Driver.java -d bin/
+
+copy src\view\gui\*.json bin\src\view\gui\
+
+cd bin
+java -cp .;../lib/* src/controller/Driver  < ../password.in
+cd ..
