@@ -25,9 +25,13 @@ public class HighestRatedAnimeTab extends JPanel {
             }
     };
 
+    private String jsonPathString = "src\\view\\gui\\test.json";
+
     public HighestRatedAnimeTab() {
-        components = WidgetFactory.setComponentsFromMatrix(this,
-                componentMatrix);
+        // components = WidgetFactory.setComponentsFromMatrix(this,
+        //         componentMatrix);
+
+        components = WidgetFactory.setComponents(this, jsonPathString);
     }
 
     public void setListeners() {

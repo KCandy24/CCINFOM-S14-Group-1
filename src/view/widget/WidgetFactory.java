@@ -5,6 +5,15 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+// json dependencies
+import org.json.JSONObject;
+
+import com.mysql.cj.xdevapi.JsonArray;
+
+import org.json.JSONArray;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
@@ -259,6 +268,64 @@ public class WidgetFactory {
                 j++;
             }
             i++;
+        }
+
+        return components;
+    }
+
+    public static ArrayList<ArrayList<JComponent>> setComponents(JPanel panel, String jsonPathString) {
+        ArrayList<ArrayList<JComponent>> components = new ArrayList<>();
+
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(jsonPathString)));
+
+            JSONArray jsonArray = new JSONArray(content);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ArrayList<JComponent> rowComponents = new ArrayList<>();
+                JSONArray row = jsonArray.getJSONArray(i);
+                
+                for (int j = 0; j < row.length(); j++) {
+                    JSONObject cell = row.getJSONObject(j);
+                    
+                    switch (cell.getString("data_type")) {
+                        case "Label":
+                            rowComponents.add(createJLabel(cell.optString("value", "default")));
+                            break;
+                        case "ComboBox":
+                            // TODO
+                            JComboBox<String> cb = new JComboBox<>(new String[] {
+                                "TODO: Set this list"
+                            });
+                            styleComponent(cb);
+                            rowComponents.add(cb);
+                            break;
+                        case "Button":
+                            rowComponents.add(createJButton(cell.getString("value")));
+                            break;
+                        case "TextField":
+                            rowComponents.add(createJTextField());
+                            break;
+                    }
+                }
+                components.add(rowComponents);
+            }
+
+            panel.setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            int i = 0, j;
+            for (ArrayList<JComponent> row : components) {
+                j = 0;
+                for (JComponent component : row) {
+                    c.gridy = i;
+                    c.gridx = j;
+                    panel.add(component, c);
+                    j++;
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return components;
