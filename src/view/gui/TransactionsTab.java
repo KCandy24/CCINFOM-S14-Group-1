@@ -26,7 +26,7 @@ public class TransactionsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        watchNextTab = new WatchNextEpisodeTab();
+        watchNextTab = new Subtab("src/view/gui/WatchNextEpisode.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,

@@ -12,24 +12,18 @@ public class RecordAListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Anime Record")) {
-            //Data = control.model.getData
-            //control.gui.displayStuff
+        String action = e.getActionCommand();
+        switch (action) {
+            case "Check":
+                break;
+            case "Save":
+                break;
+            case "Delete":
+                break;
+            default:
+                throw new UnsupportedOperationException(
+                        "Unimplemented method 'actionPerformed'");
         }
-        else if (e.getActionCommand().equals("User Record")) {
-            //Data = control.model.getData
-            //control.gui.displayStuff
-        }
-        else if (e.getActionCommand().equals("Studio Record")) {
-            //Data = control.model.getData
-            //control.gui.displayStuff
-        }
-        else if (e.getActionCommand().equals("Prod Staff Record")) {
-            //Data = control.model.getData
-            //control.gui.displayStuff
-        }
-        else
-            throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
     }
     
 }

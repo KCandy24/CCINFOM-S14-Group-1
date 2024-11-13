@@ -41,7 +41,7 @@ public class TopView {
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,
-                new TitledTab("(Demo -- Remove in Final)", searchDemo),
+                new TitledTab("(Demo)", searchDemo),
                 new TitledTab("Records", recordsTab),
                 new TitledTab("Transactions", transactionsTab),
                 new TitledTab("Reports", reportsTab));
@@ -52,6 +52,8 @@ public class TopView {
         this.frame.add(tabs, BorderLayout.CENTER);
     }
 
+    // TODO: Set listeners to everything
+
     // Search Demo
     public void setSearchBoxListener(
             TitlesSearchBoxListener searchBoxListener) {
@@ -61,4 +63,5 @@ public class TopView {
     public void setSearchBoxResults(String[] results) {
         this.searchDemo.setListData(results);
     }
+
 }

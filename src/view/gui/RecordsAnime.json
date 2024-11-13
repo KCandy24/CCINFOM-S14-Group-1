@@ -1,0 +1,83 @@
+[
+    [
+        {
+            "value": "Select anime ID"
+        },
+        {
+            "type": "TextField",
+            "name": "animeId"
+        },
+        {
+            "type": "Button",
+            "name": "selectAnimeId",
+            "value": "Check"
+        }
+    ],
+    [
+        {
+            "value": "Studio ID"
+        },
+        {
+            "type": "TextField",
+            "name": "studioId"
+        }
+    ],
+    [
+        {
+            "value": "Title"
+        },
+        {
+            "type": "TextField",
+            "name": "animeTitle"
+        }
+    ],
+    [
+        {
+            "value": "Genre"
+        },
+        {
+            "type": "ComboBox",
+            "name": "genre"
+        }
+    ],
+    [
+        {
+            "value": "Available from"
+        },
+        {
+            "type": "TextField",
+            "name": "from"
+        },
+        {
+            "value": "to",
+            "align": "center"
+        },
+        {
+            "type": "TextField",
+            "name": "to"
+        }
+    ],
+    [
+        {
+            "value": "Episodes"
+        },
+        {
+            "type": "TextField",
+            "name": "episodes"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "save",
+            "value": "Save"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "delete",
+            "value": "Delete"
+        }
+    ]
+]

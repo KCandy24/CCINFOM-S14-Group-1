@@ -16,21 +16,6 @@ public class AnimeSystem {
     private ResultSetMetaData dbMetaData;
     private ArrayList<String> titles;
     private ArrayList<String> procedureList;
-            // "Ao no Kanata Four Rhythms Across the Blue",
-            // "Cory in the House",
-            // "Dragon Ball Z",
-            // "Goblin Slayer",
-            // "Konosuba: God's Gift on this Wonderful World",
-            // "Love Live School Idol Project",
-            // "Love Live Sunshine",
-            // "Mayo Chiki!",
-            // "Miss Kobayashi's Dragon Maid",
-            // "Nichijou",
-            // "Sankarea",
-            // "Shrek",
-            // "Tokyo Ghoul",
-            // "The Helpful Fox Senko-san",
-            // "Trinity Seven"
 
     public AnimeSystem(String username, String password) {
         titles = new ArrayList<String>();

@@ -26,7 +26,7 @@ public class RecordsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        recordsAnimeTab = new RecordsAnimeTab();
+        recordsAnimeTab = new Subtab("src/view/gui/RecordsAnime.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,

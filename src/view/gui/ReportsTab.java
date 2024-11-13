@@ -26,7 +26,8 @@ public class ReportsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        highestRatedAnimeTab = new HighestRatedAnimeTab();
+        highestRatedAnimeTab = new Subtab(
+                "src/view/gui/HighestRatedAnime.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,
