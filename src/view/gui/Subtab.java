@@ -23,12 +23,12 @@ import java.awt.event.ActionListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import src.util.Pair;
+import src.util.Tuple;
 import src.view.widget.WidgetFactory;
 
 public class Subtab extends JPanel {
     private ArrayList<ArrayList<JComponent>> components;
-    private HashMap<String, Pair<Integer, Integer>> componentLocations;
+    private HashMap<String, Tuple> componentLocations;
 
     public Subtab(String jsonPathString) {
         this.setComponents(jsonPathString);
@@ -38,7 +38,7 @@ public class Subtab extends JPanel {
     /**
      * Sets the components ArrayList and the componentLocations HashMap.
      * 
-     * @param jsonPathString
+     * @param jsonPathString path to JSON file from which to add component data
      */
     private void setComponents(String jsonPathString) {
         components = new ArrayList<>();
@@ -54,51 +54,59 @@ public class Subtab extends JPanel {
 
                 for (int j = 0; j < row.length(); j++) {
                     JSONObject cell = row.getJSONObject(j);
-                    String type = cell.optString("type", "Label");
-                    String value = cell.optString("value", "default");
                     String name = cell.optString("name",
                             String.format("%d,%d", i, j));
-                    switch (type) {
-                        case "Label":
-                            JLabel l = WidgetFactory.createJLabel(value);
-                            String align = cell.optString("align", "left");
-                            switch (align) {
-                                case "left":
-                                    l.setHorizontalAlignment(
-                                            SwingConstants.LEFT);
-                                    break;
-                                case "right":
-                                    l.setHorizontalAlignment(
-                                            SwingConstants.RIGHT);
-                                    break;
-                                case "center":
-                                    l.setHorizontalAlignment(
-                                            SwingConstants.CENTER);
-                                    break;
-                            }
-                            rowComponents
-                                    .add(l);
-                            break;
-                        case "ComboBox":
-                            rowComponents.add(WidgetFactory.createJComboBox());
-                            break;
-                        case "Button":
-                            rowComponents
-                                    .add(WidgetFactory.createJButton(value));
-                            break;
-                        case "TextField":
-                            rowComponents.add(WidgetFactory.createJTextField());
-                            break;
-                    }
-
-                    componentLocations.put(name,
-                            new Pair<Integer, Integer>(i, j));
+                    componentLocations.put(name, new Tuple(i, j));
+                    rowComponents.add(componentFromJSON(cell));
                 }
+
                 components.add(rowComponents);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private JComponent componentFromJSON(JSONObject cell) {
+        String type = cell.optString("type", "Label");
+        String value = cell.optString("value", "default");
+        JComponent component;
+        switch (type) {
+            case "ComboBox":
+                component = WidgetFactory.createJComboBox();
+                break;
+            case "Button":
+                component = WidgetFactory.createJButton(value);
+                break;
+            case "TextField":
+                component = WidgetFactory.createJTextField();
+                break;
+            case "Label":
+            default:
+                component = WidgetFactory.createJLabel(value);
+
+                // TODO
+                // ? Delegate to WidgetFactory?
+                String align = cell.optString("align", "left");
+                int alignment;
+                switch (align) {
+                    case "left":
+                        alignment = SwingConstants.LEFT;
+                        break;
+                    case "right":
+                        alignment = SwingConstants.RIGHT;
+                        break;
+                    default:
+                    case "center":
+                        alignment = SwingConstants.CENTER;
+                        break;
+                }
+                ((JLabel) component).setHorizontalAlignment(alignment);
+                // ? --
+
+                break;
+        }
+        return component;
     }
 
     /**
@@ -126,7 +134,7 @@ public class Subtab extends JPanel {
      * @return the component with a matching name
      */
     private JComponent getComponent(String name) {
-        Pair<Integer, Integer> location = componentLocations.get(name);
+        Tuple location = componentLocations.get(name);
         int i = location.getFirst();
         int j = location.getSecond();
         return components.get(i).get(j);

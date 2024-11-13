@@ -13,8 +13,9 @@ import src.view.widget.WidgetFactory;
 public class RecordsTab extends JPanel {
     private JTabbedPane tabs;
 
-    // TODO: Implement these tabs
     private JPanel recordsAnimeTab;
+
+    // TODO: Implement these tabs
     private JPanel recordsUserTab = WidgetFactory.createJPanel();
     private JPanel recordsStudioTab = WidgetFactory.createJPanel();
     private JPanel recordsStaffTab = WidgetFactory.createJPanel();
