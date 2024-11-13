@@ -4,7 +4,8 @@
         "editor.detectIndentation": false
     },
     "java.project.referencedLibraries": [
-        "lib\\mysql-connector-j-9.1.0.jar"
+        "lib\\mysql-connector-j-9.1.0.jar",
+        "lib\\json-20240303.jar"
     ],
     "java.project.sourcePaths": [
         "."
