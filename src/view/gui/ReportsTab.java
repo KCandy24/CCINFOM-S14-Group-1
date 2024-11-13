@@ -13,8 +13,9 @@ import src.view.widget.WidgetFactory;
 public class ReportsTab extends JPanel {
     private JTabbedPane tabs;
 
-    // TODO: Implement these tabs
     private JPanel highestRatedAnimeTab;
+
+    // TODO: Implement these tabs
     private JPanel topStudiosTab = WidgetFactory.createJPanel();
     private JPanel userProfileTab = WidgetFactory.createJPanel();
     private JPanel recommendAnimeTab = WidgetFactory.createJPanel();
