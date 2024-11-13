@@ -185,3 +185,90 @@ INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VAL
 (8, 9, '2023-04-10'),
 (9, 10, '2023-09-13'),
 (10, 1, '2023-10-05');
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS MakeBestAnimeView;
+CREATE PROCEDURE MakeBestAnimeView()
+BEGIN
+    CREATE OR REPLACE VIEW best_anime AS
+    SELECT 
+        title, 
+        genre, 
+        studio_name, 
+        ROUND(AVG(r.rating), 2) AS rating
+    FROM 
+        animes a
+    JOIN 
+        studios s ON a.studio_id = s.studio_id
+    JOIN 
+        ratings r ON a.anime_id = r.anime_id
+    GROUP BY 
+        a.anime_id
+    ORDER BY 
+        rating DESC;
+END //
+DELIMITER ;
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewUserProfile;
+CREATE PROCEDURE ViewUserProfile(
+    IN param_user_id INT
+)
+BEGIN
+    SELECT 
+        u.user_name,
+        COUNT(DISTINCT v.anime_id) AS viewed_anime_count,
+        COUNT(v.watched_episode) AS episodes_watched,
+		COUNT(r.rating) AS ratings_made
+    FROM 
+        users u
+    LEFT JOIN 
+        views v ON u.user_id = v.user_id
+	LEFT JOIN 
+        ratings r ON u.user_id = r.user_id
+    WHERE
+        u.user_id = param_user_id
+    GROUP BY
+        u.user_id;
+END //
+DELIMITER ;
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewUserGenreAnime;
+CREATE PROCEDURE ViewUserGenreAnime(
+    IN param_user_id INT
+)
+BEGIN
+	SELECT
+		a.genre,
+		COUNT(a.anime_id) AS `genre_count`,
+		(
+			SELECT 
+				asub.title            
+			FROM
+				ratings r
+			LEFT JOIN
+				animes asub ON r.anime_id = asub.anime_id
+			WHERE
+				r.user_id = param_user_id
+				AND asub.genre = a.genre
+			GROUP BY
+				asub.anime_id
+			ORDER BY
+				AVG(r.rating)
+			LIMIT 1
+		)	AS `top_rated_anime`
+	FROM
+		users u
+	LEFT JOIN
+		views v ON u.user_id = v.user_id
+	LEFT JOIN
+		animes a ON v.anime_id = a.anime_id
+	WHERE
+		u.user_id = param_user_id
+	GROUP BY
+		a.genre
+	ORDER BY
+		`genre_count` DESC;
+END //
+DELIMITER ;
