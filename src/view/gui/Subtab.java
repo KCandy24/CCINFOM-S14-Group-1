@@ -31,6 +31,8 @@ public class Subtab extends JPanel {
     private HashMap<String, Tuple> componentLocations;
 
     public Subtab(String jsonPathString) {
+        this.components = new ArrayList<>();
+        this.componentLocations = new HashMap<>();
         this.setComponents(jsonPathString);
         this.addComponents();
     }
@@ -41,9 +43,6 @@ public class Subtab extends JPanel {
      * @param jsonPathString path to JSON file from which to add component data
      */
     private void setComponents(String jsonPathString) {
-        components = new ArrayList<>();
-        componentLocations = new HashMap<>();
-
         Path jsonPath = Paths.get(jsonPathString);
         try {
             String content = new String(Files.readAllBytes(jsonPath));
@@ -57,7 +56,7 @@ public class Subtab extends JPanel {
                     String name = cell.optString("name",
                             String.format("%d,%d", i, j));
                     componentLocations.put(name, new Tuple(i, j));
-                    rowComponents.add(componentFromJSON(cell));
+                    rowComponents.add(WidgetFactory.componentFromJSON(cell));
                 }
 
                 components.add(rowComponents);
@@ -67,47 +66,6 @@ public class Subtab extends JPanel {
         }
     }
 
-    private JComponent componentFromJSON(JSONObject cell) {
-        String type = cell.optString("type", "Label");
-        String value = cell.optString("value", "default");
-        JComponent component;
-        switch (type) {
-            case "ComboBox":
-                component = WidgetFactory.createJComboBox();
-                break;
-            case "Button":
-                component = WidgetFactory.createJButton(value);
-                break;
-            case "TextField":
-                component = WidgetFactory.createJTextField();
-                break;
-            case "Label":
-            default:
-                component = WidgetFactory.createJLabel(value);
-
-                // TODO
-                // ? Delegate to WidgetFactory?
-                String align = cell.optString("align", "left");
-                int alignment;
-                switch (align) {
-                    case "left":
-                        alignment = SwingConstants.LEFT;
-                        break;
-                    case "right":
-                        alignment = SwingConstants.RIGHT;
-                        break;
-                    default:
-                    case "center":
-                        alignment = SwingConstants.CENTER;
-                        break;
-                }
-                ((JLabel) component).setHorizontalAlignment(alignment);
-                // ? --
-
-                break;
-        }
-        return component;
-    }
 
     /**
      * Actually adds the components to the Subtab.

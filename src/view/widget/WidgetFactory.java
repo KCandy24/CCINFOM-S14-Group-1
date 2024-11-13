@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import org.json.JSONObject;
+
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
  * Labels and Buttons via static methods.
@@ -208,5 +210,54 @@ public class WidgetFactory {
                 });
         WidgetFactory.styleComponent(cb);
         return cb;
+    }
+
+    /**
+     * Generate a component from JSON data.
+     * 
+     * @param cell
+     * @return
+     */
+    public static JComponent componentFromJSON(JSONObject cell) {
+        JComponent component;
+        String type = cell.optString("type", "Label");
+        String value = cell.optString("value", "default");
+
+        switch (type) {
+            case "ComboBox":
+                component = WidgetFactory.createJComboBox();
+                break;
+            case "Button":
+                component = WidgetFactory.createJButton(value);
+                break;
+            case "TextField":
+                component = WidgetFactory.createJTextField();
+                break;
+            case "Label":
+            default:
+                /**
+                 * "default:" is technically unnecessary as optString has a
+                 * default value of "Label", but this signals it to the compiler
+                 */
+                component = WidgetFactory.createJLabel(value);
+                String align = cell.optString("align", "left");
+                int alignment;
+                switch (align) {
+                    case "left":
+                        alignment = SwingConstants.LEFT;
+                        break;
+                    case "right":
+                        alignment = SwingConstants.RIGHT;
+                        break;
+                    default:
+                    case "center":
+                        alignment = SwingConstants.CENTER;
+                        break;
+                }
+                ((JLabel) component).setHorizontalAlignment(alignment);
+                break;
+        }
+
+        return component;
     }
 }
