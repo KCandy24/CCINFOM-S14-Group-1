@@ -15,7 +15,6 @@ public class AnimeSystem {
     private ResultSet dbResultSet;
     private ResultSetMetaData dbMetaData;
     private ArrayList<String> titles;
-    private ArrayList<String> procedureList;
             // "Ao no Kanata Four Rhythms Across the Blue",
             // "Cory in the House",
             // "Dragon Ball Z",
@@ -43,23 +42,6 @@ public class AnimeSystem {
             e.printStackTrace();
         }
         this.getTitles();
-        procedureList = new ArrayList<String>();
-        try {
-            dbResultSet = dbStatement.executeQuery
-            (
-                "SELECT * " +
-                "FROM information_schema.routines " +
-                "WHERE routine_type = 'PROCEDURE' " +
-                    "AND ROUTINE_SCHEMA = 'dbanime';"
-            );
-            while (dbResultSet.next()) {
-                procedureList.add(dbResultSet.getString("SPECIFIC_NAME"));
-                System.out.println(dbResultSet.getString("SPECIFIC_NAME"));
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to fetch procedure list.");
-            e.printStackTrace();
-        }
     }
 
     // Titles
@@ -80,7 +62,6 @@ public class AnimeSystem {
     }
 
     public void callProcedure(String procedure){
-
         try {
             dbStatement.executeQuery("CALL " + procedure);
         } catch (Exception e) {
