@@ -5,15 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-// json dependencies
 import org.json.JSONObject;
-
-import com.mysql.cj.xdevapi.JsonArray;
-
-import org.json.JSONArray;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.IOException;
 
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
@@ -37,8 +29,8 @@ public class WidgetFactory {
      * 
      */
     public enum Fonts {
-        TITLE(28),
-        SUBTITLE(20),
+        TITLE(20),
+        SUBTITLE(16),
         BODY(14),
         BODY_BOLD(Font.BOLD, 14);
 
@@ -80,15 +72,7 @@ public class WidgetFactory {
      * @return
      */
     public static JFrame createJFrame(String title) {
-        /**
-         * Set the default window size to be in a 16:9 ratio, where the width is
-         * 1/2 the width of the viewport.
-         */
-        Toolkit toolkit = Toolkit.getDefaultToolkit(); // platform-specific info
-        Dimension systemResolution = toolkit.getScreenSize();
-        int windowWidth = (int) (systemResolution.getWidth() / 2);
-        int windowHeight = (int) 9 * windowWidth / 16;
-        Dimension windowSize = new Dimension(windowWidth, windowHeight);
+        Dimension windowSize = new Dimension(1360, 768);
 
         // Attempt to set system look and feel
         try {
@@ -144,7 +128,7 @@ public class WidgetFactory {
     public static JLabel createJLabel(String text) {
         JLabel jLabel = new JLabel(text);
         WidgetFactory.styleComponent(jLabel);
-        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        jLabel.setHorizontalAlignment(SwingConstants.LEFT);
         return jLabel;
     }
 
@@ -158,7 +142,7 @@ public class WidgetFactory {
     public static JLabel createJLabel(String text, Fonts font) {
         JLabel jLabel = createJLabel(text);
         jLabel.setFont(font.getFont());
-        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        jLabel.setHorizontalAlignment(SwingConstants.LEFT);
         return jLabel;
     }
 
@@ -219,121 +203,61 @@ public class WidgetFactory {
         return new LabelledField(text);
     }
 
+    public static JComponent createJComboBox() {
+        JComboBox<String> cb = new JComboBox<>(
+                new String[] {
+                        "TODO: Set this list"
+                });
+        WidgetFactory.styleComponent(cb);
+        return cb;
+    }
+
     /**
-     * TODO: Parameters (Button labels, ComboBox options) ? Label text ?
-     * <Button:Text ? <ComboBox:Option 1, Option 2, Option 3 ? See
-     * RecordsAnimeTab for a demo
+     * Generate a component from JSON data.
      * 
-     * @param componentMatrix
+     * @param cell
      * @return
      */
-    public static ArrayList<ArrayList<JComponent>> setComponentsFromMatrix(
-            JPanel panel, String[][] componentMatrix) {
-        ArrayList<ArrayList<JComponent>> components = new ArrayList<>();
-        for (String[] row : componentMatrix) {
-            ArrayList<JComponent> rowComponents = new ArrayList<>();
-            for (String componentString : row) {
-                switch (componentString) {
-                    case "<TextField":
-                        rowComponents.add(createJTextField());
+    public static JComponent componentFromJSON(JSONObject cell) {
+        JComponent component;
+        String type = cell.optString("type", "Label");
+        String value = cell.optString("value", "default");
+
+        switch (type) {
+            case "ComboBox":
+                component = WidgetFactory.createJComboBox();
+                break;
+            case "Button":
+                component = WidgetFactory.createJButton(value);
+                break;
+            case "TextField":
+                component = WidgetFactory.createJTextField();
+                break;
+            case "Label":
+            default:
+                /**
+                 * "default:" is technically unnecessary as optString has a
+                 * default value of "Label", but this signals it to the compiler
+                 */
+                component = WidgetFactory.createJLabel(value);
+                String align = cell.optString("align", "left");
+                int alignment;
+                switch (align) {
+                    case "left":
+                        alignment = SwingConstants.LEFT;
                         break;
-                    case "<Button":
-                        rowComponents.add(createJButton("TODO: Set this text"));
-                        break;
-                    case "<ComboBox":
-                        // TODO
-                        JComboBox<String> cb = new JComboBox<>(new String[] {
-                                "TODO: Set this list"
-                        });
-                        styleComponent(cb);
-                        rowComponents.add(cb);
+                    case "right":
+                        alignment = SwingConstants.RIGHT;
                         break;
                     default:
-                        rowComponents.add(createJLabel(componentString));
+                    case "center":
+                        alignment = SwingConstants.CENTER;
                         break;
                 }
-                components.add(rowComponents);
-            }
+                ((JLabel) component).setHorizontalAlignment(alignment);
+                break;
         }
 
-        panel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        int i = 0, j;
-        for (ArrayList<JComponent> row : components) {
-            j = 0;
-            for (JComponent component : row) {
-                c.gridy = i;
-                c.gridx = j;
-                panel.add(component, c);
-                j++;
-            }
-            i++;
-        }
-
-        return components;
+        return component;
     }
-
-    public static ArrayList<ArrayList<JComponent>> setComponents(JPanel panel, String jsonPathString) {
-        ArrayList<ArrayList<JComponent>> components = new ArrayList<>();
-
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(jsonPathString)));
-
-            JSONArray jsonArray = new JSONArray(content);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                ArrayList<JComponent> rowComponents = new ArrayList<>();
-                JSONArray row = jsonArray.getJSONArray(i);
-                
-                for (int j = 0; j < row.length(); j++) {
-                    JSONObject cell = row.getJSONObject(j);
-                    
-                    switch (cell.getString("data_type")) {
-                        case "Label":
-                            rowComponents.add(createJLabel(cell.optString("value", "default")));
-                            break;
-                        case "ComboBox":
-                            // TODO
-                            JComboBox<String> cb = new JComboBox<>(new String[] {
-                                "TODO: Set this list"
-                            });
-                            styleComponent(cb);
-                            rowComponents.add(cb);
-                            break;
-                        case "Button":
-                            rowComponents.add(createJButton(cell.getString("value")));
-                            break;
-                        case "TextField":
-                            rowComponents.add(createJTextField());
-                            break;
-                    }
-                }
-                components.add(rowComponents);
-            }
-
-            panel.setLayout(new GridBagLayout());
-            GridBagConstraints c = new GridBagConstraints();
-            int i = 0, j;
-            for (ArrayList<JComponent> row : components) {
-                j = 0;
-                for (JComponent component : row) {
-                    c.gridy = i;
-                    c.gridx = j;
-                    panel.add(component, c);
-                    j++;
-                }
-                i++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return components;
-    }
-
-    public void placeWidgets(JPanel panel,
-            ArrayList<ArrayList<JComponent>> components) {
-
-    }
-
 }

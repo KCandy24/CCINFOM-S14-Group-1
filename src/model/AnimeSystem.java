@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.sql.*;
 
 /**
- * TODO: Actually use a SQL Database instead of hardcoding these lists
+ * TODO: MySQL Connections
  */
 public class AnimeSystem {
 

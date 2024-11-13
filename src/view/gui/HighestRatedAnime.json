@@ -1,0 +1,31 @@
+[
+    [
+        {
+            "type": "Label",
+            "name": "periodLabel",
+            "value": "Select Period"
+        },
+        {
+            "type": "ComboBox",
+            "name": "periodComboBox"
+        }
+    ],
+    [
+        {
+            "type": "Label",
+            "name": "genreLabel",
+            "value": "Select Genre"
+        },
+        {
+            "type": "ComboBox",
+            "name": "genreComboBox"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "checkButton",
+            "value": "Check"
+        }
+    ]
+]

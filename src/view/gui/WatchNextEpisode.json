@@ -1,0 +1,45 @@
+[
+    [
+        {
+            "value": "Select user ID"
+        },
+        {
+            "type": "TextField",
+            "name": "userId"
+        },
+        {
+            "type": "Button",
+            "name": "checkUser",
+            "value": "Check"
+        },
+        {
+            "name": "selectedUser",
+            "value": "No selected user"
+        }
+    ],
+    [
+        {
+            "value": "Anime"
+        },
+        {
+            "type": "TextField",
+            "name": "anime"
+        }
+    ],
+    [
+        {
+            "value": "Last episode watched"
+        },
+        {
+            "value": "0",
+            "name": "episode"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "watchEpisode",
+            "value": "Watch next episode"
+        }
+    ]
+]

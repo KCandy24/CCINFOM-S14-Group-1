@@ -13,8 +13,9 @@ import src.view.widget.WidgetFactory;
 public class RecordsTab extends JPanel {
     private JTabbedPane tabs;
 
-    // TODO: Implement these tabs
     private JPanel recordsAnimeTab;
+
+    // TODO: Implement these tabs
     private JPanel recordsUserTab = WidgetFactory.createJPanel();
     private JPanel recordsStudioTab = WidgetFactory.createJPanel();
     private JPanel recordsStaffTab = WidgetFactory.createJPanel();
@@ -26,7 +27,7 @@ public class RecordsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        recordsAnimeTab = new RecordsAnimeTab();
+        recordsAnimeTab = new Subtab("src/view/gui/RecordsAnime.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,
