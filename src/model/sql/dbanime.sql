@@ -84,16 +84,16 @@ CREATE TABLE `follows` (
 
 -- Insert sample data into `users` table
 INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES
-('Alice', 'JP', '2023-01-10'),
-('Bob', 'AM', '2023-05-15'),
-('Charlie', 'EU', '2023-07-20'),
-('Diana', 'AS', '2023-02-25'),
-('Ethan', 'AU', '2023-03-30'),
-('Fiona', 'AF', '2023-08-15'),
-('George', 'EU', '2023-06-10'),
-('Hannah', 'AM', '2023-04-05'),
-('Ivy', 'AS', '2023-09-12'),
-('Jack', 'JP', '2023-10-01');
+('AnimeFan88', 'JP', '2023-01-10'),
+('PirateKingBob', 'AM', '2023-05-15'),
+('MysticCharlie', 'EU', '2023-07-20'),
+('DragonQueenDiana', 'AS', '2023-02-25'),
+('AussieOtaku', 'AU', '2023-03-30'),
+('SafariFiona', 'AF', '2023-08-15'),
+('GundamGeorge', 'EU', '2023-06-10'),
+('SpaceCowgirl', 'AM', '2023-04-05'),
+('Ninja_Ivy', 'AS', '2023-09-12'),
+('KitsuneJack', 'JP', '2023-10-01');
 
 -- Insert sample data into `studios` table
 INSERT INTO `studios` (`studio_name`) VALUES
