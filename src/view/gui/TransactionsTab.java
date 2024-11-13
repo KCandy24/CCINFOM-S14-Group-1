@@ -14,7 +14,7 @@ public class TransactionsTab extends JPanel {
     private JTabbedPane tabs;
 
     // TODO: Implement these tabs
-    private JPanel watchNextTab = WidgetFactory.createJPanel();
+    private JPanel watchNextTab;
     private JPanel rateAnimeTab = WidgetFactory.createJPanel();
     private JPanel addEditAnimeTab = WidgetFactory.createJPanel();
     private JPanel followUserTab = WidgetFactory.createJPanel();
@@ -26,6 +26,7 @@ public class TransactionsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
+        watchNextTab = new WatchNextEpisodeTab();
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,

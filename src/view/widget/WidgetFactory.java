@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.mysql.cj.conf.ConnectionUrlParser.Pair;
 
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
@@ -80,7 +79,7 @@ public class WidgetFactory {
         Dimension systemResolution = toolkit.getScreenSize();
         int windowWidth = (int) (systemResolution.getWidth() / 2);
         int windowHeight = (int) 9 * windowWidth / 16;
-        Dimension screenSize = new Dimension(windowWidth, windowHeight);
+        Dimension windowSize = new Dimension(windowWidth, windowHeight);
 
         // Attempt to set system look and feel
         try {
@@ -95,7 +94,7 @@ public class WidgetFactory {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         jFrame.getContentPane().setBackground(Color.WHITE);
-        jFrame.setMinimumSize(screenSize);
+        jFrame.setMinimumSize(windowSize);
 
         return jFrame;
     }
@@ -180,7 +179,7 @@ public class WidgetFactory {
     }
 
     public static JTextField createJTextField() {
-        JTextField jTextField = new JTextField();
+        JTextField jTextField = new JTextField(16);
         WidgetFactory.styleComponent(jTextField);
         jTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE,
                 jTextField.getPreferredSize().height));
@@ -209,6 +208,65 @@ public class WidgetFactory {
 
     public static LabelledField creatLabelledField(String text) {
         return new LabelledField(text);
+    }
+
+    /**
+     * TODO: Parameters (Button labels, ComboBox options) ? Label text ?
+     * <Button:Text ? <ComboBox:Option 1, Option 2, Option 3 ? See
+     * RecordsAnimeTab for a demo
+     * 
+     * @param componentMatrix
+     * @return
+     */
+    public static ArrayList<ArrayList<JComponent>> setComponentsFromMatrix(
+            JPanel panel, String[][] componentMatrix) {
+        ArrayList<ArrayList<JComponent>> components = new ArrayList<>();
+        for (String[] row : componentMatrix) {
+            ArrayList<JComponent> rowComponents = new ArrayList<>();
+            for (String componentString : row) {
+                switch (componentString) {
+                    case "<TextField":
+                        rowComponents.add(createJTextField());
+                        break;
+                    case "<Button":
+                        rowComponents.add(createJButton("TODO: Set this text"));
+                        break;
+                    case "<ComboBox":
+                        // TODO
+                        JComboBox<String> cb = new JComboBox<>(new String[] {
+                                "TODO: Set this list"
+                        });
+                        styleComponent(cb);
+                        rowComponents.add(cb);
+                        break;
+                    default:
+                        rowComponents.add(createJLabel(componentString));
+                        break;
+                }
+                components.add(rowComponents);
+            }
+        }
+
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        int i = 0, j;
+        for (ArrayList<JComponent> row : components) {
+            j = 0;
+            for (JComponent component : row) {
+                c.gridy = i;
+                c.gridx = j;
+                panel.add(component, c);
+                j++;
+            }
+            i++;
+        }
+
+        return components;
+    }
+
+    public void placeWidgets(JPanel panel,
+            ArrayList<ArrayList<JComponent>> components) {
+
     }
 
 }

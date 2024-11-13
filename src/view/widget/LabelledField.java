@@ -4,6 +4,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentListener;
 
 public class LabelledField extends JPanel {
     JTextField field;
@@ -15,5 +16,9 @@ public class LabelledField extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.add(label);
         this.add(field);
+    }
+
+    public void setListener(DocumentListener l) {
+        this.field.getDocument().addDocumentListener(l);
     }
 }

@@ -6,10 +6,8 @@ import java.util.Collections;
 
 import javax.swing.*;
 
-import com.mysql.cj.conf.ConnectionUrlParser.Pair;
 
 import src.controller.TitlesSearchBoxListener;
-import src.view.widget.ButtonSet;
 import src.view.widget.TitledTab;
 import src.view.widget.WidgetFactory;
 
@@ -43,7 +41,7 @@ public class TopView {
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,
-                new TitledTab("Select", searchDemo),
+                new TitledTab("(Demo -- Remove in Final)", searchDemo),
                 new TitledTab("Records", recordsTab),
                 new TitledTab("Transactions", transactionsTab),
                 new TitledTab("Reports", reportsTab));
