@@ -1,4 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `dbanime`;
+DROP DATABASE IF EXISTS `dbanime`;
+CREATE DATABASE IF NOT EXISTS`dbanime`;
 USE `dbanime`;
 
 DROP TABLE IF EXISTS `users`;
@@ -187,7 +188,6 @@ INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VAL
 (10, 1, '2023-10-05');
 
 DELIMITER //
-DROP PROCEDURE IF EXISTS MakeBestAnimeView;
 CREATE PROCEDURE MakeBestAnimeView()
 BEGIN
     CREATE OR REPLACE VIEW best_anime AS
@@ -210,7 +210,6 @@ END //
 DELIMITER ;
 
 DELIMITER //
-DROP PROCEDURE IF EXISTS ViewUserProfile;
 CREATE PROCEDURE ViewUserProfile(
     IN param_user_id INT
 )
@@ -234,7 +233,6 @@ END //
 DELIMITER ;
 
 DELIMITER //
-DROP PROCEDURE IF EXISTS ViewUserGenreAnime;
 CREATE PROCEDURE ViewUserGenreAnime(
     IN param_user_id INT
 )
