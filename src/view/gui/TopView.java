@@ -65,10 +65,10 @@ public class TopView {
 
         // Transactions
         transactionsTab = new Tab("Transactions");
-        watchEpisode = new Subtab("Anime", "transactions/watch_episode.json");
-        rateAnime = new Subtab("User", "transactions/rate_anime.json");
-        editCredits = new Subtab("Studio", "transactions/edit_credits.json");
-        followUser = new Subtab("Staff", "transactions/follow_user.json");
+        watchEpisode = new Subtab("Watch Episode", "transactions/watch_episode.json");
+        rateAnime = new Subtab("Rate Anime", "transactions/rate_anime.json");
+        editCredits = new Subtab("Edit Credits", "transactions/edit_credits.json");
+        followUser = new Subtab("Follow User", "transactions/follow_user.json");
         transactionsTab.addSubtab(watchEpisode);
         transactionsTab.addSubtab(rateAnime);
         transactionsTab.addSubtab(editCredits);
@@ -77,11 +77,10 @@ public class TopView {
 
         // Reports
         reportsTab = new Tab("Reports");
-        highestRatedAnime = new Subtab("Anime",
-                "reports/highest_rated_anime.json");
-        topStudios = new Subtab("User", "reports/recommend_anime.json");
-        userProfile = new Subtab("Studio", "reports/top_studios.json");
-        recommendAnime = new Subtab("Staff", "reports/user_profile.json");
+        highestRatedAnime = new Subtab("Highest Rated Anime", "reports/highest_rated_anime.json");
+        topStudios = new Subtab("Recommend Anime", "reports/recommend_anime.json");
+        userProfile = new Subtab("Top Studios", "reports/top_studios.json");
+        recommendAnime = new Subtab("User Profile", "reports/user_profile.json");
         reportsTab.addSubtab(highestRatedAnime);
         reportsTab.addSubtab(topStudios);
         reportsTab.addSubtab(userProfile);
