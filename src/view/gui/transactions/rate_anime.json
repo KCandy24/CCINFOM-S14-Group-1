@@ -1,0 +1,44 @@
+[
+    [
+        {
+            "value": "Search user"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchUser"
+        }
+    ],
+    [
+        {
+            "value": "Anime watched"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchAnime"
+        }
+    ],
+    [
+        {
+            "value": "Rating"
+        },
+        {
+            "type": "TextField",
+            "name": "rating"
+        }
+    ],
+    [
+        {
+            "value": "Last episode watched"
+        },
+        {
+            "name": "lastEpisodeWatched",
+            "value": "0"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "value": "Save rating"
+        }
+    ]
+]

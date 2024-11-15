@@ -15,9 +15,9 @@ public class TransactionsTab extends JPanel {
 
     // TODO: Implement these tabs
     private JPanel watchNextTab;
-    private JPanel rateAnimeTab = WidgetFactory.createJPanel();
-    private JPanel addEditAnimeTab = WidgetFactory.createJPanel();
-    private JPanel followUserTab = WidgetFactory.createJPanel();
+    private JPanel rateAnimeTab;
+    private JPanel addEditAnimeTab;
+    private JPanel followUserTab;
 
     public TransactionsTab() {
         this.setLayout(new BorderLayout());
@@ -26,13 +26,16 @@ public class TransactionsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        watchNextTab = new Subtab("src/view/gui/WatchNextEpisode.json");
+        watchNextTab = new Subtab("transactions/watch_episode.json");
+        rateAnimeTab = new Subtab("transactions/rate_anime.json");
+        addEditAnimeTab = new Subtab("transactions/edit_credits.json");
+        followUserTab = new Subtab("transactions/follow_user.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,
                 new TitledTab("Watch next episode", watchNextTab),
                 new TitledTab("Rate an anime", rateAnimeTab),
-                new TitledTab("Add/edit an anime", addEditAnimeTab),
+                new TitledTab("Edit anime credits", addEditAnimeTab),
                 new TitledTab("Follow user", followUserTab));
         tabs = WidgetFactory.createJTabbedPane(titledTabs);
         tabs.setTabPlacement(JTabbedPane.LEFT);

@@ -1,0 +1,52 @@
+[
+    [
+        {
+            "value": "Search anime"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchAnime"
+        }
+    ],
+    [
+        {
+            "value": "Search staff"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchStaff"
+        }
+    ],
+    [
+        {
+            "value": "Position"
+        },
+        {
+            "type": "TextField",
+            "name": "position"
+        }
+    ],
+    [
+        {
+            "value": "Department"
+        },
+        {
+            "type": "ComboBox",
+            "name": "department"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "save",
+            "value": "Save"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "delete",
+            "value": "Delete"
+        }
+    ]
+]

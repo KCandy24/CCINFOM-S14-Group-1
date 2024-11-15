@@ -1,0 +1,27 @@
+[
+    [
+        {
+            "value": "Input year"
+        },
+        {
+            "type": "TextField",
+            "name": "episodes"
+        }
+    ],
+    [
+        {
+            "value": "Select studio"
+        },
+        {
+            "type": "ComboBox",
+            "name": "studio"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "value": "Check",
+            "name": "check"
+        }
+    ]
+]

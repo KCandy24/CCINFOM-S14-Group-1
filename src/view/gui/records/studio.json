@@ -1,0 +1,34 @@
+[
+    [
+        {
+            "value": "Search studio"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchStudio"
+        }
+    ],
+    [
+        {
+            "value": "Studio name"
+        },
+        {
+            "type": "TextField",
+            "name": "studioName"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "save",
+            "value": "Save"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "delete",
+            "value": "Delete"
+        }
+    ]
+]

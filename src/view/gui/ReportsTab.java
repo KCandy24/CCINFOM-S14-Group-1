@@ -14,11 +14,9 @@ public class ReportsTab extends JPanel {
     private JTabbedPane tabs;
 
     private JPanel highestRatedAnimeTab;
-
-    // TODO: Implement these tabs
-    private JPanel topStudiosTab = WidgetFactory.createJPanel();
-    private JPanel userProfileTab = WidgetFactory.createJPanel();
-    private JPanel recommendAnimeTab = WidgetFactory.createJPanel();
+    private JPanel topStudiosTab;
+    private JPanel userProfileTab;
+    private JPanel recommendAnimeTab;
 
     public ReportsTab() {
         this.setLayout(new BorderLayout());
@@ -27,8 +25,10 @@ public class ReportsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        highestRatedAnimeTab = new Subtab(
-                "src/view/gui/HighestRatedAnime.json");
+        highestRatedAnimeTab = new Subtab("reports/highest_rated_anime.json");
+        topStudiosTab = new Subtab("reports/top_studios.json");
+        userProfileTab = new Subtab("reports/user_profile.json");
+        recommendAnimeTab = new Subtab("reports/recommend_anime.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,

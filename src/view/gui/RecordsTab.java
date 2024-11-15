@@ -14,11 +14,9 @@ public class RecordsTab extends JPanel {
     private JTabbedPane tabs;
 
     private JPanel recordsAnimeTab;
-
-    // TODO: Implement these tabs
-    private JPanel recordsUserTab = WidgetFactory.createJPanel();
-    private JPanel recordsStudioTab = WidgetFactory.createJPanel();
-    private JPanel recordsStaffTab = WidgetFactory.createJPanel();
+    private JPanel recordsUserTab;
+    private JPanel recordsStudioTab;
+    private JPanel recordsStaffTab;
 
     public RecordsTab() {
         this.setLayout(new BorderLayout());
@@ -27,7 +25,10 @@ public class RecordsTab extends JPanel {
     }
 
     public void instantiateWidgets() {
-        recordsAnimeTab = new Subtab("src/view/gui/RecordsAnime.json");
+        recordsAnimeTab = new Subtab("records/anime.json");
+        recordsUserTab = new Subtab("records/user.json");
+        recordsStudioTab = new Subtab("records/studio.json");
+        recordsStaffTab = new Subtab("records/staff.json");
         ArrayList<TitledTab> titledTabs = new ArrayList<>();
         Collections.addAll(
                 titledTabs,
