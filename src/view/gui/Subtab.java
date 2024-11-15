@@ -8,11 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
@@ -27,13 +23,15 @@ import org.json.JSONObject;
 import src.util.Tuple;
 import src.view.widget.WidgetFactory;
 
-public class Subtab extends JPanel {
+public class Subtab extends NamedPanel {
     private ArrayList<ArrayList<JComponent>> components;
     private HashMap<String, Tuple> componentLocations;
+    private String name;
 
     private static final String JSON_PATH_PREFIX = "src/view/gui/";
 
-    public Subtab(String jsonPathString) {
+    public Subtab(String name, String jsonPathString) {
+        this.name = name;
         this.components = new ArrayList<>();
         this.componentLocations = new HashMap<>();
         this.setComponents(jsonPathString);
@@ -114,5 +112,9 @@ public class Subtab extends JPanel {
     public void setDocumentListener(String name, DocumentListener listener) {
         ((JTextComponent) getComponent(name)).getDocument()
                 .addDocumentListener(listener);
+    }
+
+    public String getName() {
+        return name;
     }
 }
