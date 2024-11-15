@@ -27,10 +27,6 @@ public class Tab extends NamedPanel {
         WidgetFactory.addTab(tabbedPane, subtab);
     }
 
-    public Subtab getSubtab(String title) {
-        return subtabs.get(title);
-    }
-
     public String getName() {
         return name;
     }

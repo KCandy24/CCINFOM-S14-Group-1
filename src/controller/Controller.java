@@ -7,29 +7,56 @@ import src.view.gui.TopView;
  * The controller communicates between the model and the view.
  */
 public class Controller {
-    // Declare listeners
-    AnimeSystem animeModel;
-    TopView animeGUI;
-    TitlesSearchBoxListener titlesSearchBoxListener;
+    AnimeSystem animeSystem; // model
+    TopView topView; // view
 
-    //TODO: Integrate in GUI
-    ActionListener recordListener;
+    // Listeners
+
+    // TODO: Deprecate
+    TitlesSearchBoxListener titlesSearchBoxListener;
+    // --
+
+    // Records
+    AnimeRecordsListener animeRecordsListener;
+    UserRecordsListener userRecordsListener;
+    StudioRecordsListener studioRecordsListener;
+    StaffRecordsListener staffRecordsListener;
+
+    // Transactions
     ActionListener transactionListener;
+
+    // Reports
     ActionListener reportListener;
     
     /**
      * Initializes the listeners to listen to the view.
      */
     public Controller(AnimeSystem animeSystem, TopView topView) {
-        animeModel = animeSystem;
-        animeGUI = topView;
-        // Initialize listeners
-        titlesSearchBoxListener = new TitlesSearchBoxListener(animeModel, animeGUI);
+        this.animeSystem = animeSystem;
+        this.topView = topView;
+        // Initialize and set listeners
 
-        recordListener = new RecordAListener(this);
-        transactionListener = new TransactionAListener(this);
-        reportListener = new ReportsAListener(this);
-        // Set listeners in topView
-        animeGUI.setSearchBoxListener(titlesSearchBoxListener);
+        // TODO: Deprecate
+        titlesSearchBoxListener = new TitlesSearchBoxListener(animeSystem, topView);
+        topView.setSearchBoxListener(titlesSearchBoxListener);
+        // --
+
+        // Records
+        animeRecordsListener = new AnimeRecordsListener(animeSystem, topView);
+        userRecordsListener = new UserRecordsListener(animeSystem, topView);
+        studioRecordsListener = new StudioRecordsListener(animeSystem, topView);
+        staffRecordsListener = new StaffRecordsListener(animeSystem, topView);
+
+        topView.setAnimeRecordsListener(animeRecordsListener);
+        topView.setUserRecordsListener(userRecordsListener);
+        topView.setStudioRecordsListener(studioRecordsListener);
+        topView.setStaffRecordsListener(staffRecordsListener);
+
+        // Transactions
+        transactionListener = new TransactionAListener(animeSystem, topView);
+
+        // Reports
+        reportListener = new ReportsAListener(animeSystem, topView);
+
     }
 }

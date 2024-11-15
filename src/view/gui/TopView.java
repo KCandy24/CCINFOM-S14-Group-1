@@ -4,7 +4,11 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import src.controller.AnimeRecordsListener;
+import src.controller.StaffRecordsListener;
+import src.controller.StudioRecordsListener;
 import src.controller.TitlesSearchBoxListener;
+import src.controller.UserRecordsListener;
 import src.view.widget.WidgetFactory;
 
 public class TopView {
@@ -51,12 +55,15 @@ public class TopView {
         searchDemo = new SearchDemo();
         tabs.add("Demo", searchDemo);
 
+        // TODO: The ff. initializations would definitely be better off in some data
+        // TODO: structure that we iterate through
+
         // Records
         recordsTab = new Tab("Records");
         animeRecords = new Subtab("Anime", "records/anime.json");
         userRecords = new Subtab("User", "records/user.json");
-        staffRecords = new Subtab("Studio", "records/studio.json");
-        studioRecords = new Subtab("Staff", "records/staff.json");
+        staffRecords = new Subtab("Staff", "records/studio.json");
+        studioRecords = new Subtab("Studio", "records/staff.json");
         recordsTab.addSubtab(animeRecords);
         recordsTab.addSubtab(userRecords);
         recordsTab.addSubtab(staffRecords);
@@ -102,6 +109,31 @@ public class TopView {
 
     public void setSearchBoxResults(String[] results) {
         this.searchDemo.setListData(results);
+    }
+
+    // Set ActionListeners for the Anime Records subtab.
+    public void setAnimeRecordsListener(AnimeRecordsListener listener) {
+        this.animeRecords.setActionListener("selectAnimeId", listener);
+        this.animeRecords.setActionListener("save", listener);
+        this.animeRecords.setActionListener("delete", listener);
+    }
+
+    // Set ActionListeners for the User Records subtab.
+    public void setUserRecordsListener(UserRecordsListener listener) {
+        this.userRecords.setActionListener("save", listener);
+        this.userRecords.setActionListener("delete", listener);
+    }
+
+    // Set ActionListeners for the StudioRecordsListener subtab.
+    public void setStudioRecordsListener(StudioRecordsListener listener) {
+        this.studioRecords.setActionListener("save", listener);
+        this.studioRecords.setActionListener("delete", listener);
+    }
+
+    // Set ActionListeners for the StudioRecordsListener subtab.
+    public void setStaffRecordsListener(StaffRecordsListener listener) {
+        this.staffRecords.setActionListener("save", listener);
+        this.staffRecords.setActionListener("delete", listener);
     }
 
 }

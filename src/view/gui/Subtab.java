@@ -101,17 +101,19 @@ public class Subtab extends NamedPanel {
     }
 
     /**
+     * Set an ActionListener for a component in this Subtab.
      * 
      * @param name
      * @param listener
      */
     public void setActionListener(String name, ActionListener listener) {
+        System.out.println(this.getName() + "/" + name + "<-ActionListener(" + listener + ")");
         ((AbstractButton) getComponent(name)).addActionListener(listener);
     }
 
     public void setDocumentListener(String name, DocumentListener listener) {
-        ((JTextComponent) getComponent(name)).getDocument()
-                .addDocumentListener(listener);
+        System.out.println(this.getName() + "/" + name + "<-DocumentListener(" + listener + ")");
+        ((JTextComponent) getComponent(name)).getDocument().addDocumentListener(listener);
     }
 
     public String getName() {

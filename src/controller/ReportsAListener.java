@@ -2,12 +2,17 @@ package src.controller;
 
 import java.awt.event.*;
 
+import src.model.AnimeSystem;
+import src.view.gui.TopView;
+
 public class ReportsAListener implements ActionListener {
 
-    Controller control;
+    AnimeSystem animeSystem;
+    TopView topView;
 
-    public ReportsAListener(Controller controller){
-        control = controller;
+    public ReportsAListener(AnimeSystem animeSystem, TopView topView) {
+        this.animeSystem = animeSystem;
+        this.topView = topView;
     }
 
     @Override
