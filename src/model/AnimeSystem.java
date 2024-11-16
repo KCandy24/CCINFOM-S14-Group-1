@@ -1,35 +1,46 @@
 package src.model;
 
 import java.util.ArrayList;
+
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
+
 import java.sql.*;
 
 /**
  * TODO: MySQL Connections
  */
 public class AnimeSystem {
-
     public final static String PATH = "jdbc:mysql://localhost:3306/dbanime";
-
     private Connection dbConnection;
     private Statement dbStatement;
     private ResultSet dbResultSet;
     private ResultSetMetaData dbMetaData;
     private ArrayList<String> titles;
-            // "Ao no Kanata Four Rhythms Across the Blue",
-            // "Cory in the House",
-            // "Dragon Ball Z",
-            // "Goblin Slayer",
-            // "Konosuba: God's Gift on this Wonderful World",
-            // "Love Live School Idol Project",
-            // "Love Live Sunshine",
-            // "Mayo Chiki!",
-            // "Miss Kobayashi's Dragon Maid",
-            // "Nichijou",
-            // "Sankarea",
-            // "Shrek",
-            // "Tokyo Ghoul",
-            // "The Helpful Fox Senko-san",
-            // "Trinity Seven"
+
+    /**
+     * TODO: Made this, but not sure if it's useful; wdygt? - wafl
+     */
+    public enum Records {
+        ANIME("animes"),
+        USER("users"),
+        STAFF("staff"),
+        STUDIO("studios");
+
+        private String tableName;
+
+        private Records(String tableName) {
+            this.tableName = tableName;
+        }
+
+        public String getTableName() {
+            return this.tableName;
+        }
+
+        public String selectAllQuery() {
+            return "SELECT * FROM " + tableName;
+        }
+    }
 
     public AnimeSystem(String username, String password) {
         titles = new ArrayList<String>();
@@ -44,8 +55,10 @@ public class AnimeSystem {
         this.getTitles();
     }
 
-    // Titles
-    
+    // # Records
+
+    // ## Anime
+
     public void getTitles() {
         try {
             dbResultSet = dbStatement.executeQuery("SELECT * FROM animes");
@@ -61,7 +74,7 @@ public class AnimeSystem {
         }
     }
 
-    public void callProcedure(String procedure){
+    public void callProcedure(String procedure) {
         try {
             dbStatement.executeQuery("CALL " + procedure);
         } catch (Exception e) {
@@ -70,7 +83,7 @@ public class AnimeSystem {
         }
     }
 
-    public String[][] getAnimes(){
+    public String[][] getAnimes() {
         ArrayList<String[]> data = new ArrayList<String[]>();
         try {
             dbResultSet = dbStatement.executeQuery("SELECT title, genre, air_date FROM animes");
@@ -80,7 +93,7 @@ public class AnimeSystem {
                 String[] rowData = new String[columnCount];
                 for (int i = 0; i < columnCount; i++) {
                     rowData[i] = dbResultSet.getString(i + 1);
-                } 
+                }
                 data.add(rowData);
             }
         } catch (Exception e) {
@@ -100,6 +113,7 @@ public class AnimeSystem {
         ArrayList<String> results = new ArrayList<>();
         String minimizedSearch = minimize(text);
         String minimizedTitle;
+        JTable table = new JTable();
         for (String title : titles) {
             minimizedTitle = minimize(title);
             if (minimizedTitle.contains(minimizedSearch)) {

@@ -145,7 +145,7 @@ public class WidgetFactory {
     public static JLabel createJLabel(String text, Fonts font) {
         JLabel jLabel = createJLabel(text);
         jLabel.setFont(font.getFont());
-        jLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        jLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return jLabel;
     }
 

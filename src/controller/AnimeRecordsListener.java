@@ -24,7 +24,8 @@ public class AnimeRecordsListener implements ActionListener {
         System.out.println("\nRecords/Anime/?button=" + action);
 
         switch (action) {
-            case "Check":
+            case "Search":
+                searchAnime();
                 break;
             case "Save":
                 break;
@@ -34,6 +35,10 @@ public class AnimeRecordsListener implements ActionListener {
                 throw new UnsupportedOperationException(
                         "Unimplemented method 'actionPerformed'");
         }
+    }
+
+    public void searchAnime() {
+        topView.selectFromTable("anime");
     }
 
 }

@@ -1,14 +1,18 @@
 package src.view.gui;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.*;
 
 import src.controller.AnimeRecordsListener;
+import src.controller.RecordTableListener;
 import src.controller.StaffRecordsListener;
 import src.controller.StudioRecordsListener;
 import src.controller.TitlesSearchBoxListener;
 import src.controller.UserRecordsListener;
+import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
 
 public class TopView {
@@ -35,6 +39,8 @@ public class TopView {
     private Subtab userProfile;
     private Subtab recommendAnime;
 
+    private HashMap<String, RecordTable> recordTables;
+
     /**
      * Initialize the top view.
      */
@@ -58,17 +64,18 @@ public class TopView {
         // TODO: The ff. initializations would definitely be better off in some data
         // TODO: structure that we iterate through
 
+        recordTables = new HashMap<>();
+        recordTables.put("anime", new RecordTable());
+        recordTables.put("user", new RecordTable());
+        recordTables.put("staff", new RecordTable());
+        recordTables.put("studio", new RecordTable());
+
         // Records
         recordsTab = new Tab("Records");
         animeRecords = new Subtab("Anime", "records/anime.json");
         userRecords = new Subtab("User", "records/user.json");
-        staffRecords = new Subtab("Staff", "records/studio.json");
-        studioRecords = new Subtab("Studio", "records/staff.json");
-        recordsTab.addSubtab(animeRecords);
-        recordsTab.addSubtab(userRecords);
-        recordsTab.addSubtab(staffRecords);
-        recordsTab.addSubtab(studioRecords);
-        WidgetFactory.addTab(tabs, recordsTab);
+        staffRecords = new Subtab("Staff", "records/staff.json");
+        studioRecords = new Subtab("Studio", "records/studio.json");
 
         // Transactions
         transactionsTab = new Tab("Transactions");
@@ -76,11 +83,7 @@ public class TopView {
         rateAnime = new Subtab("Rate Anime", "transactions/rate_anime.json");
         editCredits = new Subtab("Edit Credits", "transactions/edit_credits.json");
         followUser = new Subtab("Follow User", "transactions/follow_user.json");
-        transactionsTab.addSubtab(watchEpisode);
-        transactionsTab.addSubtab(rateAnime);
-        transactionsTab.addSubtab(editCredits);
-        transactionsTab.addSubtab(followUser);
-        WidgetFactory.addTab(tabs, transactionsTab);
+
 
         // Reports
         reportsTab = new Tab("Reports");
@@ -88,14 +91,28 @@ public class TopView {
         topStudios = new Subtab("Recommend Anime", "reports/recommend_anime.json");
         userProfile = new Subtab("Top Studios", "reports/top_studios.json");
         recommendAnime = new Subtab("User Profile", "reports/user_profile.json");
+
+    }
+
+    public void placeWidgets() {
+        recordsTab.addSubtab(animeRecords);
+        recordsTab.addSubtab(userRecords);
+        recordsTab.addSubtab(staffRecords);
+        recordsTab.addSubtab(studioRecords);
+        WidgetFactory.addTab(tabs, recordsTab);
+
+        transactionsTab.addSubtab(watchEpisode);
+        transactionsTab.addSubtab(rateAnime);
+        transactionsTab.addSubtab(editCredits);
+        transactionsTab.addSubtab(followUser);
+        WidgetFactory.addTab(tabs, transactionsTab);
+
         reportsTab.addSubtab(highestRatedAnime);
         reportsTab.addSubtab(topStudios);
         reportsTab.addSubtab(userProfile);
         reportsTab.addSubtab(recommendAnime);
         WidgetFactory.addTab(tabs, reportsTab);
-    }
 
-    public void placeWidgets() {
         this.frame.add(tabs, BorderLayout.CENTER);
     }
 
@@ -134,6 +151,23 @@ public class TopView {
     public void setStaffRecordsListener(StaffRecordsListener listener) {
         this.staffRecords.setActionListener("save", listener);
         this.staffRecords.setActionListener("delete", listener);
+    }
+
+    // Record Tables
+    public void setRecordTableData(String recordName, String[][] data, String[] column) {
+        recordTables.get(recordName).setTableData(data, column);
+    }
+
+    public void setRecordTableListener(String recordName, RecordTableListener listener) {
+        recordTables.get(recordName).setListener(listener);
+    }
+
+    public void selectFromTable(String recordName) {
+        recordTables.get(recordName).setVisible(true);
+    }
+
+    public int getSelected(String recordName) {
+        return recordTables.get(recordName).getSelected();
     }
 
 }

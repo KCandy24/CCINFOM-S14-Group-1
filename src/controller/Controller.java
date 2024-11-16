@@ -22,6 +22,8 @@ public class Controller {
     StudioRecordsListener studioRecordsListener;
     StaffRecordsListener staffRecordsListener;
 
+    RecordTableListener animeRecordTableListener;
+
     // Transactions
     ActionListener transactionListener;
 
@@ -46,11 +48,14 @@ public class Controller {
         userRecordsListener = new UserRecordsListener(animeSystem, topView);
         studioRecordsListener = new StudioRecordsListener(animeSystem, topView);
         staffRecordsListener = new StaffRecordsListener(animeSystem, topView);
-
         topView.setAnimeRecordsListener(animeRecordsListener);
         topView.setUserRecordsListener(userRecordsListener);
         topView.setStudioRecordsListener(studioRecordsListener);
         topView.setStaffRecordsListener(staffRecordsListener);
+
+        // ? Combine into AnimeRecordsListener?
+        animeRecordTableListener = new RecordTableListener(animeSystem, topView);
+        topView.setRecordTableListener("anime", animeRecordTableListener);
 
         // Transactions
         transactionListener = new TransactionAListener(animeSystem, topView);
