@@ -24,6 +24,9 @@ public class StudioRecordsListener implements ActionListener {
         System.out.println("\nRecords/Studio/?button=" + action);
 
         switch (action) {
+            case "Search":
+                topView.selectFromTable("studios");
+                break;
             case "Save":
                 break;
             case "Delete":

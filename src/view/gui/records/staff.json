@@ -4,7 +4,8 @@
             "value": "Search staff"
         },
         {
-            "type": "ComboBox",
+            "type": "Button",
+            "value": "Search",
             "name": "searchStaff"
         }
     ],

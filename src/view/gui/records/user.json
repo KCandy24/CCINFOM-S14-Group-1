@@ -4,7 +4,8 @@
             "value": "Search user"
         },
         {
-            "type": "ComboBox",
+            "type": "Button",
+            "value": "Search",
             "name": "searchUser"
         }
     ],

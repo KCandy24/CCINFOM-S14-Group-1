@@ -2,9 +2,6 @@ package src.model;
 
 import java.util.ArrayList;
 
-import javax.swing.JTable;
-import javax.swing.table.TableModel;
-
 import java.sql.*;
 
 /**
@@ -83,6 +80,33 @@ public class AnimeSystem {
         }
     }
 
+    public String[][] query(String[] columns, String record) {
+        ArrayList<String[]> data = new ArrayList<String[]>();
+        String columnsString = new String();
+        for (String column : columns) {
+            columnsString += column + ", ";
+        }
+        columnsString = columnsString.substring(0, columnsString.length() - 2);
+        String query = "SELECT " + columnsString + " FROM " + record;
+        System.out.println(query);
+        try {
+            dbResultSet = dbStatement.executeQuery(query);
+            dbMetaData = dbResultSet.getMetaData();
+            int columnCount = dbMetaData.getColumnCount();
+            while (dbResultSet.next()) {
+                String[] rowData = new String[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    rowData[i] = dbResultSet.getString(i + 1);
+                }
+                data.add(rowData);
+            }
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+        }
+        return data.toArray(new String[0][0]);
+    }
+
     public String[][] getAnimes() {
         ArrayList<String[]> data = new ArrayList<String[]>();
         try {
@@ -113,7 +137,6 @@ public class AnimeSystem {
         ArrayList<String> results = new ArrayList<>();
         String minimizedSearch = minimize(text);
         String minimizedTitle;
-        JTable table = new JTable();
         for (String title : titles) {
             minimizedTitle = minimize(title);
             if (minimizedTitle.contains(minimizedSearch)) {

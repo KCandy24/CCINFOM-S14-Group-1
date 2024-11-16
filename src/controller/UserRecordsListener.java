@@ -24,6 +24,9 @@ public class UserRecordsListener implements ActionListener {
         System.out.println("\nRecords/User/?button=" + action);
 
         switch (action) {
+            case "Search":
+                topView.selectFromTable("users");
+                break;
             case "Save":
                 break;
             case "Delete":

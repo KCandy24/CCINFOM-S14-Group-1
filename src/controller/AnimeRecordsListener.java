@@ -38,7 +38,7 @@ public class AnimeRecordsListener implements ActionListener {
     }
 
     public void searchAnime() {
-        topView.selectFromTable("anime");
+        topView.selectFromTable("animes");
     }
 
 }
