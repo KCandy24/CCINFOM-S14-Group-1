@@ -1,0 +1,52 @@
+[
+    [
+        {
+            "value": "Search user"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchUser"
+        }
+    ],
+    [
+        {
+            "value": "Username"
+        },
+        {
+            "type": "TextField",
+            "name": "username"
+        }
+    ],
+    [
+        {
+            "value": "Region"
+        },
+        {
+            "type": "ComboBox",
+            "name": "region"
+        }
+    ],
+    [
+        {
+            "value": "Join date"
+        },
+        {
+            "type": "TextField",
+            "name": "joinDate"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "save",
+            "value": "Save"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "delete",
+            "value": "Delete"
+        }
+    ]
+]

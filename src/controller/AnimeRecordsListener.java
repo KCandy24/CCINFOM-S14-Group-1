@@ -2,17 +2,27 @@ package src.controller;
 
 import java.awt.event.*;
 
-public class RecordAListener implements ActionListener {
+import src.model.AnimeSystem;
+import src.view.gui.TopView;
 
-    Controller control;
+/**
+ * Handles events in the Records/Anime subtab.
+ */
+public class AnimeRecordsListener implements ActionListener {
 
-    public RecordAListener(Controller controller){
-        control = controller;
+    AnimeSystem animeSystem;
+    TopView topView;
+
+    public AnimeRecordsListener(AnimeSystem animeSystem, TopView topView) {
+        this.animeSystem = animeSystem;
+        this.topView = topView;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
+        System.out.println("\nRecords/Anime/?button=" + action);
+
         switch (action) {
             case "Check":
                 break;
@@ -25,5 +35,5 @@ public class RecordAListener implements ActionListener {
                         "Unimplemented method 'actionPerformed'");
         }
     }
-    
+
 }

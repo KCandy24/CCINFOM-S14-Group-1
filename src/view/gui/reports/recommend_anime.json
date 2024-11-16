@@ -1,0 +1,18 @@
+[
+    [
+        {
+            "value": "Select user"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchUser"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "value": "Check recommendations",
+            "name": "check"
+        }
+    ]
+]

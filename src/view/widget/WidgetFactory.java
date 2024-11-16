@@ -1,12 +1,12 @@
 package src.view.widget;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 import javax.swing.*;
 
 import org.json.JSONObject;
 
+import src.view.gui.NamedPanel;
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
  * Labels and Buttons via static methods.
@@ -98,25 +98,28 @@ public class WidgetFactory {
         return jTabbedPane;
     }
 
-    public static JTabbedPane createJTabbedPane(ArrayList<TitledTab> tabs) {
-        JTabbedPane jTabbedPane = createJTabbedPane();
-        for (src.util.Pair<String, JPanel> pair : tabs) {
-            String formattedString = """
-                    <html>
-                    <head><style>td {text-align: center}</style></head>
-                    <body>
-                    <table width=250>
-                    <td>
-                    """ + pair.getFirst() +
-                    """
-                            </td>
-                            </table>
-                            </body>
-                            </html>
-                            """;
-            jTabbedPane.addTab(formattedString, pair.getSecond());
-        }
-        return jTabbedPane;
+    /**
+     * Add a NamedPanel tab to a JTabbedPane. Formatting is applied to the "tab"
+     * name via HTML styling.
+     * 
+     * @param pane
+     * @param tab
+     */
+    public static void addTab(JTabbedPane pane, NamedPanel tab) {
+        String formattedString = """
+                <html>
+                <head><style>td {text-align: center}</style></head>
+                <body>
+                <table width=250>
+                <td>
+                """ + tab.getName() +
+                """
+                        </td>
+                        </table>
+                        </body>
+                        </html>
+                        """;
+        pane.addTab(formattedString, tab);
     }
 
     /**

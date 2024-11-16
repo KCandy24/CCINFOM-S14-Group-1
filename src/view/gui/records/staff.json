@@ -1,0 +1,61 @@
+[
+    [
+        {
+            "value": "Search staff"
+        },
+        {
+            "type": "ComboBox",
+            "name": "searchStaff"
+        }
+    ],
+    [
+        {
+            "value": "First name"
+        },
+        {
+            "type": "TextField",
+            "name": "firstName"
+        }
+    ],
+    [
+        {
+            "value": "Last name"
+        },
+        {
+            "type": "TextField",
+            "name": "lastName"
+        }
+    ],
+    [
+        {
+            "value": "Occupation"
+        },
+        {
+            "type": "TextField",
+            "name": "occupation"
+        }
+    ],
+    [
+        {
+            "value": "Birthday"
+        },
+        {
+            "type": "TextField",
+            "name": "birthday"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "save",
+            "value": "Save"
+        }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "delete",
+            "value": "Delete"
+        }
+    ]
+]
