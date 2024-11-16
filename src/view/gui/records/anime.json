@@ -10,7 +10,7 @@
         {
             "type": "Button",
             "name": "selectAnimeId",
-            "value": "Check"
+            "value": "Search"
         }
     ],
     [
