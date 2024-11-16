@@ -59,6 +59,25 @@ public class AnimeSystem {
 
     // ## Anime
 
+    public String[] getRecordColNames(String recordName){
+        ArrayList<String> returnVal = new ArrayList<String>();
+        try {
+            dbResultSet = dbStatement.executeQuery(
+                                "SELECT `COLUMN_NAME` \r\n" + //
+                                "FROM `INFORMATION_SCHEMA`.`COLUMNS` \r\n" + //
+                                "WHERE `TABLE_SCHEMA`= 'dbanime'\r\n" + //
+                                "AND `TABLE_NAME`='" +  recordName +  "';");
+            while (dbResultSet.next()) {
+                returnVal.add(dbResultSet.getString("COLUMN_NAME"));
+            }
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+        }
+
+        return returnVal.toArray(new String[0]);
+    }
+
     public void getTitles() {
         try {
             dbResultSet = dbStatement.executeQuery("SELECT * FROM animes");
