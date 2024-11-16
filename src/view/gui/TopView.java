@@ -1,7 +1,6 @@
 package src.view.gui;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -58,17 +57,17 @@ public class TopView {
         tabs = WidgetFactory.createJTabbedPane();
 
         // TODO: deprecate
-        searchDemo = new SearchDemo();
-        tabs.add("Demo", searchDemo);
+        // searchDemo = new SearchDemo();
+        // tabs.add("Demo", searchDemo);
 
         // TODO: The ff. initializations would definitely be better off in some data
         // TODO: structure that we iterate through
 
         recordTables = new HashMap<>();
-        recordTables.put("anime", new RecordTable());
-        recordTables.put("user", new RecordTable());
+        recordTables.put("animes", new RecordTable());
+        recordTables.put("users", new RecordTable());
         recordTables.put("staff", new RecordTable());
-        recordTables.put("studio", new RecordTable());
+        recordTables.put("studios", new RecordTable());
 
         // Records
         recordsTab = new Tab("Records");
@@ -137,18 +136,21 @@ public class TopView {
 
     // Set ActionListeners for the User Records subtab.
     public void setUserRecordsListener(UserRecordsListener listener) {
+        this.userRecords.setActionListener("searchUser", listener);
         this.userRecords.setActionListener("save", listener);
         this.userRecords.setActionListener("delete", listener);
     }
 
     // Set ActionListeners for the StudioRecordsListener subtab.
     public void setStudioRecordsListener(StudioRecordsListener listener) {
+        this.studioRecords.setActionListener("searchStudio", listener);
         this.studioRecords.setActionListener("save", listener);
         this.studioRecords.setActionListener("delete", listener);
     }
 
     // Set ActionListeners for the StudioRecordsListener subtab.
     public void setStaffRecordsListener(StaffRecordsListener listener) {
+        this.staffRecords.setActionListener("searchStaff", listener);
         this.staffRecords.setActionListener("save", listener);
         this.staffRecords.setActionListener("delete", listener);
     }

@@ -24,6 +24,8 @@ public class StaffRecordsListener implements ActionListener {
         System.out.println("\nRecords/Staff/?button=" + action);
 
         switch (action) {
+            case "Search":
+                topView.selectFromTable("staff");
             case "Save":
                 break;
             case "Delete":

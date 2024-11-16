@@ -4,7 +4,8 @@
             "value": "Search studio"
         },
         {
-            "type": "ComboBox",
+            "type": "Button",
+            "value": "Search",
             "name": "searchStudio"
         }
     ],
