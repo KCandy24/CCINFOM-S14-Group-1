@@ -53,7 +53,7 @@ CREATE TABLE `views` (
 
 DROP TABLE IF EXISTS `ratings`;
 CREATE TABLE `ratings` (
-	`user_id` INT NOT NULL PRIMARY KEY,
+	`user_id` INT NOT NULL,
     `anime_id` INT NOT NULL,
     `rating` INT NOT NULL,
     `comment` VARCHAR(2048),
@@ -133,7 +133,17 @@ INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episode
 (7, 'Neon Genesis Evangelion', 'MY', '1995-10-04', 26, '2023-01-01', '2023-12-31'),
 (8, 'Your Name', 'RO', '2016-08-26', 1, '2023-01-01', '2023-12-31'),
 (9, 'Demon Slayer', 'AD', '2019-04-06', 26, '2023-01-01', '2023-12-31'),
-(10, 'Violet Evergarden', 'DR', '2018-01-11', 13, '2023-01-01', '2023-12-31');
+(10, 'Violet Evergarden', 'DR', '2018-01-11', 13, '2023-01-01', '2023-12-31'),
+(1, 'Dragon Ball Z', 'AC', '1989-04-26', 291, '2023-01-01', '2023-12-31'),
+(2, 'Naruto', 'AD', '2002-10-03', 220, '2023-01-01', '2023-12-31'),
+(3, 'Sword Art Online', 'SF', '2012-07-08', 25, '2023-01-01', '2023-12-31'),
+(4, 'Jujutsu Kaisen', 'AC', '2020-10-03', 24, '2023-01-01', '2023-12-31'),
+(5, 'Hunter x Hunter', 'AD', '2011-10-02', 148, '2023-01-01', '2023-12-31'),
+(6, 'Mob Psycho 100', 'CO', '2016-07-12', 25, '2023-01-01', '2023-12-31'),
+(7, 'Steins;Gate', 'TH', '2011-04-06', 24, '2023-01-01', '2023-12-31'),
+(8, 'Tokyo Ghoul', 'HO', '2014-07-04', 12, '2023-01-01', '2023-12-31'),
+(9, 'Black Clover', 'FA', '2017-10-03', 170, '2023-01-01', '2023-12-31'),
+(10, 'Fruits Basket', 'SL', '2019-04-06', 63, '2023-01-01', '2023-12-31');
 
 -- Insert sample data into `views` table
 INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) VALUES
@@ -146,7 +156,32 @@ INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watche
 (7, 7, 2, '2023-06-12 09:45:00'),
 (8, 8, 5, '2023-04-07 19:30:00'),
 (9, 9, 18, '2023-09-15 11:00:00'),
-(10, 10, 1, '2023-10-02 17:45:00');
+(10, 10, 1, '2023-10-02 17:45:00'),
+(1, 11, 1, '2023-01-20 11:15:00'),
+(2, 12, 5, '2023-06-15 14:20:00'),
+(3, 13, 10, '2023-08-22 12:10:00'),
+(4, 14, 8, '2023-03-05 17:00:00'),
+(5, 15, 6, '2023-04-10 18:30:00'),
+(6, 16, 3, '2023-09-20 09:00:00'),
+(7, 17, 15, '2023-06-25 10:30:00'),
+(8, 18, 18, '2023-05-01 20:15:00'),
+(9, 19, 7, '2023-10-10 13:20:00'),
+(10, 20, 2, '2023-10-15 16:45:00'),
+(1, 2, 25, '2023-02-10 12:00:00'),
+(2, 3, 10, '2023-05-18 15:40:00'),
+(3, 4, 30, '2023-09-05 11:30:00'),
+(4, 5, 18, '2023-03-10 18:45:00'),
+(5, 6, 50, '2023-04-12 19:00:00'),
+(6, 7, 15, '2023-10-01 14:30:00'),
+(7, 8, 1, '2023-06-15 16:45:00'),
+(8, 9, 7, '2023-07-05 20:30:00'),
+(9, 10, 12, '2023-11-01 14:20:00'),
+(10, 1, 3, '2023-10-12 10:10:00'),
+(1, 11, 2, '2023-02-25 13:15:00'),
+(2, 12, 12, '2023-06-20 14:55:00'),
+(3, 13, 24, '2023-09-10 12:40:00'),
+(4, 14, 20, '2023-03-20 17:15:00'),
+(5, 15, 13, '2023-05-10 18:55:00');
 
 -- Insert sample data into `ratings` table
 INSERT INTO `ratings` (`user_id`, `anime_id`, `rating`, `comment`, `last_episode_watched`, `last_edited_timestamp`) VALUES
@@ -159,7 +194,17 @@ INSERT INTO `ratings` (`user_id`, `anime_id`, `rating`, `comment`, `last_episode
 (7, 7, 5, 'Mind-bending classic.', 26, '2023-06-13 10:30:00'),
 (8, 8, 4, 'Emotional and beautifully animated.', 1, '2023-04-08 20:00:00'),
 (9, 9, 5, 'Epic fights and storyline.', 26, '2023-09-16 11:45:00'),
-(10, 10, 4, 'Touching and visually stunning.', 13, '2023-10-03 18:15:00');
+(10, 10, 4, 'Touching and visually stunning.', 13, '2023-10-03 18:15:00'),
+(1, 11, 4, 'Classic action scenes.', 10, '2023-01-25 11:00:00'),
+(2, 12, 5, 'Beautiful storytelling.', 220, '2023-06-18 15:00:00'),
+(3, 13, 5, 'Engaging plot twists.', 24, '2023-08-25 12:20:00'),
+(4, 14, 3, 'Solid story but slow pacing.', 10, '2023-03-10 18:00:00'),
+(5, 15, 4, 'Intense battles.', 6, '2023-04-15 18:45:00'),
+(6, 16, 5, 'Top-tier animation and plot.', 148, '2023-09-20 09:10:00'),
+(7, 17, 4, 'Funny and thrilling.', 25, '2023-06-30 10:00:00'),
+(8, 18, 5, 'A masterpiece.', 24, '2023-05-10 20:30:00'),
+(9, 19, 3, 'Not as good as expected.', 12, '2023-10-11 13:00:00'),
+(10, 20, 4, 'Surprisingly good.', 63, '2023-10-20 16:00:00');
 
 -- Insert sample data into `credits` table
 INSERT INTO `credits` (`staff_id`, `anime_id`, `position`, `department`) VALUES
@@ -187,14 +232,17 @@ INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VAL
 (9, 10, '2023-09-13'),
 (10, 1, '2023-10-05');
 
+
+
 DELIMITER //
-CREATE PROCEDURE MakeBestAnimeView()
+CREATE PROCEDURE `MakeBestAnimeView`()
 BEGIN
     CREATE OR REPLACE VIEW best_anime AS
     SELECT 
         title, 
         genre, 
-        studio_name, 
+        studio_name,
+         
         ROUND(AVG(r.rating), 2) AS rating
     FROM 
         animes a
@@ -209,8 +257,10 @@ BEGIN
 END //
 DELIMITER ;
 
+
+
 DELIMITER //
-CREATE PROCEDURE ViewUserProfile(
+CREATE PROCEDURE `ViewUserProfile`(
     IN param_user_id INT
 )
 BEGIN
@@ -232,8 +282,10 @@ BEGIN
 END //
 DELIMITER ;
 
+
+
 DELIMITER //
-CREATE PROCEDURE ViewUserGenreAnime(
+CREATE PROCEDURE `ViewUserGenreAnime`(
     IN param_user_id INT
 )
 BEGIN
@@ -269,4 +321,33 @@ BEGIN
 	ORDER BY
 		`genre_count` DESC;
 END //
+DELIMITER ;
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS `ViewBestStudio`;
+CREATE PROCEDURE `ViewBestStudio`(
+	IN param_year YEAR,
+    IN param_genre VARCHAR(2)
+)
+BEGIN
+	SELECT 
+		s.studio_name,
+		ROUND(AVG(r.rating), 2) AS `studio_rating`
+	FROM
+		studios s
+	JOIN
+		animes asub ON s.studio_id = asub.studio_id
+	JOIN
+		ratings r ON asub.anime_id = r.anime_id
+	WHERE
+		(param_year IS NULL OR YEAR(asub.air_date) = param_year)
+			AND
+				(param_genre IS NULL OR asub.genre = param_genre)
+	GROUP BY
+		s.studio_id
+	ORDER BY
+		`studio_rating` DESC;
+END//
 DELIMITER ;
