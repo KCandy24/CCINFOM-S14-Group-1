@@ -584,6 +584,26 @@ DELIMITER ;
 
 
 -- PROCEDURE
+-- Usage: "CALL GetLastWatched(<param_user_id>, <param_anime_id>, <last_watched>)"
+-- Gets the user's latest episode watched and places into last_watched, returns 0 if found none
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS GetLastWatched;
+CREATE PROCEDURE GetLastWatched(
+	IN param_user_id INT,
+    IN param_anime_id INT,
+    OUT last_watched INT
+)
+BEGIN
+	SELECT 	IFNULL(MAX(watched_episode), 0)
+    INTO	last_watched
+    FROM 	views v
+    WHERE 	v.anime_id = param_anime_id
+    AND 	v.user_id = param_user_id;
+END //
+DELIMITER ;
+
+
+-- PROCEDURE
 -- Usage: "CALL WatchEpisode(<param_user_id>, <param_anime_id>)"
 -- Inserts a new entry to views of the same user and anime and advanced with 1 episode
 DELIMITER //
@@ -595,11 +615,7 @@ CREATE PROCEDURE WatchAnime(
 BEGIN
 	DECLARE lastWatched INT;
     
-	SELECT MAX(v.watched_episode) 
-    INTO 	lastWatched 
-    FROM 	views v
-    WHERE 	v.anime_id = param_anime_id
-    AND 	v.user_id = param_user_id;
+	CALL GetLastWatched(param_user_id, param_anime_id, lastWatched);
     
 	INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) VALUES
 	(param_user_id, param_anime_id, lastWatched + 1, CURRENT_TIMESTAMP());
