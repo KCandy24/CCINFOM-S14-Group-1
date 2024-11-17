@@ -234,18 +234,27 @@ INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VAL
 (9, 10, '2023-09-13'),
 (10, 1, '2023-10-05');
 
+-- ===================================PROCEDURES===================================
+
 -- PROCEDURE
--- Usage "CALL SelectBestAnimeView()"
--- Creates a view called `best_anime` for overall besst anime based on rating
+-- Usage "CALL SelectBestAnimeOverall()"
+-- Creates a table called `best_anime` for overall besst anime based on rating
 DELIMITER //
-CREATE PROCEDURE `SelectBestAnimeView`()
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeOverall`; 
+CREATE PROCEDURE `SelectBestAnimeOverall`()
 BEGIN
-	CREATE OR REPLACE VIEW `best_anime` AS
+	DROP TABLE IF EXISTS `best_anime`;
+	CREATE TABLE IF NOT EXISTS `best_anime` (
+        title VARCHAR(255),
+        genre VARCHAR(255),
+        studio_name VARCHAR(255),
+        rating DECIMAL(5, 2)
+    ); 
+    INSERT INTO `best_anime` (title, genre, studio_name, rating)
     SELECT 
         title, 
         genre, 
         studio_name,
-         
         ROUND(AVG(r.rating), 2) AS rating
     FROM 
         animes a
@@ -260,75 +269,6 @@ BEGIN
 END //
 DELIMITER ;
 
--- PROCEDURE
--- Usage "CALL SelectBestAnimeInSeason(<from_month>, <to_month>, <season_name>)"
--- Inserts the top 5 animes based on rating for the specified season
--- Used as a helper Procedure in SelectBestAnimeSeason
-DELIMITER //
--- DROP PROCEDURE IF EXISTS `SelectBestAnimeInSeason`;
-CREATE PROCEDURE `SelectBestAnimeInSeason`(
-    IN from_month INT,
-    IN to_month INT,
-    IN season_name VARCHAR(6)
-)
-BEGIN
-    CREATE TEMPORARY TABLE IF NOT EXISTS temp_best_anime (
-        season VARCHAR(6),
-        title VARCHAR(255),
-        genre VARCHAR(255),
-        studio_name VARCHAR(255),
-        rating DECIMAL(5, 2)
-    );
-
-    INSERT INTO temp_best_anime (season, title, genre, studio_name, rating)
-    SELECT 
-        season_name AS season,
-        a.title, 
-        a.genre, 
-        s.studio_name,
-        ROUND(AVG(r.rating), 2) AS rating
-    FROM 
-        animes a
-    JOIN 
-        studios s ON a.studio_id = s.studio_id
-    JOIN 
-        ratings r ON a.anime_id = r.anime_id
-    WHERE
-        MONTH(a.air_date) BETWEEN from_month AND to_month
-    GROUP BY 
-        a.anime_id
-    ORDER BY 
-        rating DESC
-    LIMIT 5;
-END //
-DELIMITER ;
-
--- PROCEDURE
--- Usage: "CALL SelectBestAnimeSeason()"
--- Creates a view called `best_anime` with each season containing the top 5 animes aired in that season
-DELIMITER //
--- DROP PROCEDURE IF EXISTS `SelectBestAnimeSeason`;
-CREATE PROCEDURE `SelectBestAnimeSeason`()
-BEGIN
-    CREATE TEMPORARY TABLE IF NOT EXISTS temp_best_anime (
-        season VARCHAR(6),
-        title VARCHAR(255),
-        genre VARCHAR(255),
-        studio_name VARCHAR(255),
-        rating DECIMAL(5, 2)
-    );
-
-    CALL SelectBestAnimeInSeason(1, 3, 'Winter');
-    CALL SelectBestAnimeInSeason(4, 6, 'Spring');
-    CALL SelectBestAnimeInSeason(7, 9, 'Summer');
-    CALL SelectBestAnimeInSeason(10, 12, 'Fall');
-
-	CREATE OR REPLACE VIEW `best_anime` AS
-    SELECT * FROM temp_best_anime;
-
-    DROP TEMPORARY TABLE temp_best_anime;
-END //
-DELIMITER ;
 
 
 -- PROCEDURE
@@ -337,11 +277,11 @@ DELIMITER ;
 -- Helper function for SelectBestAnimeMonth
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS SelectBestAnimeInMonth;
-CREATE PROCEDURE SelectBestAnimeInMonth(
+CREATE PROCEDURE `SelectBestAnimeInMonth`(
 	IN param_month INT
 )
 BEGIN
-    CREATE TEMPORARY TABLE IF NOT EXISTS best_anime_month(
+	CREATE TABLE IF NOT EXISTS `best_anime` (
 		month_ VARCHAR(9),
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -349,7 +289,7 @@ BEGIN
         rating DECIMAL(5, 2)
     );
     
-    INSERT INTO best_anime_month (month_, title, genre, studio_name, rating)
+    INSERT INTO `best_anime` (month_, title, genre, studio_name, rating)
     SELECT 
         MONTHNAME(CONCAT("0000-", param_month, "-00")) AS month_,
         a.title, 
@@ -375,13 +315,14 @@ DELIMITER ;
 
 -- PROCEDURE
 -- Usage: "CALL SelectBestAnimeMonths()"
--- Creates a view called `best_anime` for all the months with their top 5 animes
+-- Creates a table called `best_anime` for all the months with their top 5 animes
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS SelectBestAnimeMonths;
-CREATE PROCEDURE SelectBestAnimeMonths()
+CREATE PROCEDURE `SelectBestAnimeMonths`()
 BEGIN
 	DECLARE i INT DEFAULT 1;
-    CREATE TEMPORARY TABLE IF NOT EXISTS best_anime_month(
+	DROP TABLE IF EXISTS `best_anime`;
+	CREATE TABLE IF NOT EXISTS `best_anime` (
 		month_ VARCHAR(9),
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -393,11 +334,144 @@ BEGIN
 		CALL SelectBestAnimeInMonth(i);
 		SET i = i + 1;
 	END WHILE;
+END //
+DELIMITER ;
+
+
+
+-- PROCEDURE
+-- Usage "CALL SelectBestAnimeInSeason(<from_month>, <to_month>, <season_name>)"
+-- Inserts the top 5 animes based on rating for the specified season
+-- Used as a helper Procedure in SelectBestAnimeSeason
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeInSeason`;
+CREATE PROCEDURE `SelectBestAnimeInSeason`(
+    IN from_month INT,
+    IN to_month INT,
+    IN season_name VARCHAR(6)
+)
+BEGIN
+	CREATE TABLE IF NOT EXISTS `best_anime` (
+        season VARCHAR(6),
+        title VARCHAR(255),
+        genre VARCHAR(255),
+        studio_name VARCHAR(255),
+        rating DECIMAL(5, 2)
+    );
+
+    INSERT INTO `best_anime` (season, title, genre, studio_name, rating)
+    SELECT 
+        season_name AS season,
+        a.title, 
+        a.genre, 
+        s.studio_name,
+        ROUND(AVG(r.rating), 2) AS rating
+    FROM 
+        animes a
+    JOIN 
+        studios s ON a.studio_id = s.studio_id
+    JOIN 
+        ratings r ON a.anime_id = r.anime_id
+    WHERE
+        MONTH(a.air_date) BETWEEN from_month AND to_month
+    GROUP BY 
+        a.anime_id
+    ORDER BY 
+        rating DESC
+    LIMIT 5;
+END //
+DELIMITER ;
+
+-- PROCEDURE
+-- Usage: "CALL SelectBestAnimeSeason()"
+-- Creates a table called `best_anime` with each season containing the top 5 animes aired in that season
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeSeason`;
+CREATE PROCEDURE `SelectBestAnimeSeason`()
+BEGIN
+	DROP TABLE IF EXISTS `best_anime`;
+	CREATE TABLE IF NOT EXISTS `best_anime` (
+        season VARCHAR(6),
+        title VARCHAR(255),
+        genre VARCHAR(255),
+        studio_name VARCHAR(255),
+        rating DECIMAL(5, 2)
+    );
+
+    CALL SelectBestAnimeInSeason(1, 3, 'Winter');
+    CALL SelectBestAnimeInSeason(4, 6, 'Spring');
+    CALL SelectBestAnimeInSeason(7, 9, 'Summer');
+    CALL SelectBestAnimeInSeason(10, 12, 'Fall');
+END //
+DELIMITER ;
+
+-- PROCEDURE
+-- Usage: "CALL SelectBestAnimeInMonth(<param_month>)
+-- Inserts the top 5 animes based on ratings in the specified year
+-- Helper function for SelectBestAnimeYear
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeInYear`;
+CREATE PROCEDURE `SelectBestAnimeInYear`(
+	IN param_year INT
+)
+BEGIN
+    CREATE TABLE IF NOT EXISTS `best_anime`(
+        year_ INT,
+        title VARCHAR(255),
+        genre VARCHAR(255),
+        studio_name VARCHAR(255),
+        rating DECIMAL(5, 2)
+    );
+
+    INSERT INTO `best_anime` (year_, title, genre, studio_name, rating)
+    SELECT 
+        param_year AS year_,
+        a.title, 
+        a.genre, 
+        s.studio_name,
+        ROUND(AVG(r.rating), 2) AS rating
+    FROM 
+        animes a
+    JOIN 
+        studios s ON a.studio_id = s.studio_id
+    JOIN 
+        ratings r ON a.anime_id = r.anime_id
+    WHERE
+        YEAR(a.air_date) = param_year
+    GROUP BY 
+        a.anime_id
+    ORDER BY 
+        rating DESC
+    LIMIT 5;
+END //
+DELIMITER ;
+
+-- PROCEDURE
+-- Usage: "CALL SelectBestAnimeMonths()"
+-- Creates a table called `best_anime` for all the years with their top 5 animes
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeYear`;
+CREATE PROCEDURE `SelectBestAnimeYear`()
+BEGIN
+	DECLARE min INT;
+    DECLARE max INT;
+
+	SELECT MIN(YEAR(a.air_date)) INTO min FROM animes a;
+    SELECT MAX(YEAR(a.air_date)) INTO max FROM animes a;
+		
+	DROP TABLE IF EXISTS `best_anime`;
+	CREATE TABLE IF NOT EXISTS `best_anime`(
+        year_ INT,
+        title VARCHAR(255),
+        genre VARCHAR(255),
+        studio_name VARCHAR(255),
+        rating DECIMAL(5, 2)
+    );
     
-	CREATE OR REPLACE VIEW `best_anime` AS
-    SELECT * FROM best_anime_month;
-        
-    DROP TEMPORARY TABLE best_anime_month;
+	WHILE min <= max DO
+		CALL SelectBestAnimeInYear(min);
+		SET min = min + 1;
+	END WHILE;
 END //
 DELIMITER ;
 
@@ -405,6 +479,7 @@ DELIMITER ;
 -- Usage: "CALL ViewUserProfiel(<param_user_id>)"
 -- Returns the given user's name, number of unique anime's watched, and number of ratings made
 DELIMITER //
+-- DROP PROCEDURE IF EXISTS `ViewUserProfile`;
 CREATE PROCEDURE `ViewUserProfile`(
     IN param_user_id INT
 )
@@ -432,6 +507,7 @@ DELIMITER ;
 -- Returns all the genres the user viewed on and their count, 
 -- as well as the top anime based on the user's review
 DELIMITER //
+-- DROP PROCEDURE IF EXISTS `ViewUserGenreAnime`;
 CREATE PROCEDURE `ViewUserGenreAnime`(
     IN param_user_id INT
 )
