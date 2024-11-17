@@ -151,6 +151,10 @@ INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episode
 INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) VALUES
 (1, 1, 1, '2023-01-11 10:30:00'),
 (2, 2, 10, '2023-05-16 12:45:00'),
+(2, 2, 11, '2023-05-16 13:45:00'),
+(2, 2, 12, '2023-05-16 14:45:00'),
+(2, 2, 13, '2023-05-16 15:45:00'),
+(2, 2, 14, '2023-05-16 16:45:00'),
 (3, 3, 5, '2023-07-21 15:15:00'),
 (4, 4, 15, '2023-02-26 16:30:00'),
 (5, 5, 20, '2023-04-01 18:00:00'),
@@ -234,7 +238,7 @@ INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VAL
 (9, 10, '2023-09-13'),
 (10, 1, '2023-10-05');
 
--- ===================================PROCEDURES===================================
+-- ===================================REPORT PROCEDURES===================================
 
 -- PROCEDURE
 -- Usage "CALL SelectBestAnimeOverall()"
@@ -575,3 +579,29 @@ BEGIN
 		`studio_rating` DESC;
 END//
 DELIMITER ;
+
+-- ===================================TRANSACTION PROCEDURES===================================
+
+
+-- PROCEDURE
+-- Usage: "CALL WatchEpisode(<param_user_id>, <param_anime_id>)"
+-- Inserts a new entry to views of the same user and anime and advanced with 1 episode
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS WatchAnime;
+CREATE PROCEDURE WatchAnime(
+	IN param_user_id INT,
+    IN param_anime_id INT
+)
+BEGIN
+	DECLARE lastWatched INT;
+    
+	SELECT MAX(v.watched_episode) 
+    INTO 	lastWatched 
+    FROM 	views v
+    WHERE 	v.anime_id = param_anime_id
+    AND 	v.user_id = param_user_id;
+    
+	INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) VALUES
+	(param_user_id, param_anime_id, lastWatched + 1, CURRENT_TIMESTAMP());
+END //  
+DELIMITER ; 
