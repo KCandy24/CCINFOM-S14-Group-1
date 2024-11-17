@@ -90,6 +90,10 @@ public class AnimeSystem {
         }
     }
 
+    // public boolean checkIfExists(int value, String column, String table){
+
+    // }
+
     public void callProcedure(String procedure) {
         try {
             dbStatement.executeQuery("CALL " + procedure);

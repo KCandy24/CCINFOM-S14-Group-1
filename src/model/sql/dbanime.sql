@@ -580,6 +580,101 @@ BEGIN
 END//
 DELIMITER ;
 
+
+-- PROCEDURE
+-- Usage "CALL RecommendFromWatchList(<param_user_id>)"
+-- Returns a list of recommended titles where the user's last watch episode is not the final episode
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS RecommendFromWatchList;
+CREATE PROCEDURE RecommendFromWatchList(
+	IN param_user_id INT
+) 
+BEGIN
+	SELECT
+		a.title,
+        MAX(v.watched_episode) AS `last_watched`,
+		a.num_of_episodes
+    FROM
+		animes a
+	JOIN
+		views v ON a.anime_id = v.anime_id AND v.user_id = param_user_id
+    GROUP BY
+		a.anime_id
+	HAVING
+		`last_watched` < a.num_of_episodes;
+END // 
+DELIMITER ; 
+
+
+-- PROCEDURE
+-- Usage "CALL RecommendFromGenre(<param_user_id>)"
+-- Returns a list of recommended animes based on the users top 3 genres
+-- where the anime recommended for each genre is the highest average rating 
+-- and the user hasnt viewed a single episode yet
+DELIMITER // 
+-- DROP PROCEDURE IF EXISTS RecommendFromGenre;
+CREATE PROCEDURE RecommendFromGenre(
+	IN param_user_id INT
+)
+BEGIN
+	SELECT
+		a.genre,
+		COUNT(a.anime_id) AS `genre_count`,
+		(
+			SELECT aa.title            
+			FROM ratings r
+			LEFT JOIN
+				animes aa ON r.anime_id = aa.anime_id
+			WHERE
+				aa.genre = a.genre AND aa.anime_id NOT IN(
+					SELECT DISTINCT(aaa.anime_id) FROM animes aaa JOIN views vv
+                    ON aaa.anime_id = vv.anime_id AND vv.user_id = param_user_id
+                )
+			GROUP BY aa.anime_id ORDER BY AVG(r.rating) DESC LIMIT 1
+		)	AS `top_rated_anime`
+	FROM
+		users u
+	LEFT JOIN
+		views v ON u.user_id = v.user_id
+	LEFT JOIN
+		animes a ON v.anime_id = a.anime_id
+	WHERE
+		u.user_id = param_user_id
+	GROUP BY
+		a.genre
+	ORDER BY
+		`genre_count` DESC;
+END // 
+DELIMITER ;
+
+
+-- PROCEDURE
+-- Usage "CALL RecommendFromFollows(<param_user_id>)"
+-- Returns a list of animes rated by followed users where their rating is greater than 3
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS RecommendFromFollows;
+CREATE PROCEDURE RecommendFromFollows(
+	IN param_user_id INT
+)
+BEGIN
+	SELECT 
+		u.user_name,
+        a.title,
+        a.genre,
+        r.`comment`,
+        r.rating
+    FROM
+		`follows` f
+	JOIN
+		ratings r ON f.followed_id = r.user_id AND f.follower_id = param_user_id AND r.rating > 3
+	JOIN
+		users u ON f.followed_id = u.user_id
+	JOIN
+		animes a ON r.anime_id = a.anime_id;
+END //
+DELIMITER ;
+
+
 -- ===================================TRANSACTION PROCEDURES===================================
 
 
