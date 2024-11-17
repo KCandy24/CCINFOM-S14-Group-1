@@ -13,6 +13,8 @@ public class RecordTableListener implements ActionListener {
     AnimeSystem animeSystem;
     TopView topView;
     String recordName;
+    String[][] data;
+    String[] column;
 
     public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName) {
         this.animeSystem = animeSystem;
@@ -22,48 +24,19 @@ public class RecordTableListener implements ActionListener {
     }
 
     public void setData() {
-        String[][] data;
-        String[] column;
-
-        // TODO: This can be made more concise
-        // Change the cases, and use Kurt's procedure to get all column names.
-        switch (recordName) {
-            default:
-                System.out.println(recordName + " is not a record.");
-            case "animes":
-                column = new String[] {
-                        "studio_id", "title", "genre", "air_date", "num_of_episodes", "available_from_date",
-                        "available_to_date"
-                };
-                break;
-            case "users":
-                column = new String[] {
-                        "user_id", "user_name", "region", "join_date"
-                };
-                break;
-            case "staff":
-                column = new String[] {
-                        "staff_id", "first_name", "last_name",
-                        "occupation", "birthday"
-                };
-                break;
-            case "studios":
-                column = new String[] {
-                        "studio_id", "studio_name"
-                };
-                break;
-        }
-        data = animeSystem.query(column, recordName);
-        topView.setRecordTableData(recordName, data, column);
+        this.column = animeSystem.getRecordColNames(recordName);
+        this.data = animeSystem.query(column, recordName);
+        topView.setRecordTableData(recordName, this.data, column);
     }
 
-    // TODO: Use arbitrary tables
+    // TODO: Implementing actions
+    // ? Idea: HashMap<recordName, HashMap<columnName, componentName>>?
     @Override
     public void actionPerformed(ActionEvent e) {
         // int index = topView.getSelected("animes");
-        int index = topView.getSelected("animes");
+        int index = topView.getSelected(recordName);
         System.out.println(e.getActionCommand());
-        for (String data : animeSystem.getAnimes()[index]) {
+        for (String data : this.data[index]) {
             System.out.print(data + '\t');
         }
         System.out.println();
