@@ -94,6 +94,18 @@ public class AnimeSystem {
             return null;
         }
     }
+    
+    public String singleQuery(String query){
+        try {
+            dbResultSet = dbStatement.executeQuery(query);
+            dbResultSet.next();
+            return dbResultSet.getString(1);
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public String[][] rawQuery(String query) {
         System.out.println(query);
