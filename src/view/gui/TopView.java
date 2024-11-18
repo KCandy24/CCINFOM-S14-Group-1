@@ -1,6 +1,7 @@
 package src.view.gui;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ public class TopView {
     private SearchDemo searchDemo;
 
     private JTabbedPane tabs;
+
+    private HashMap<String, Tab> mainTabs;
 
     private Tab recordsTab;
     private Subtab animeRecords;
@@ -64,6 +67,8 @@ public class TopView {
         // TODO: structure that we iterate through
 
         recordTables = new HashMap<>();
+        mainTabs = new HashMap<>();
+
         recordTables.put("animes", new RecordTable());
         recordTables.put("users", new RecordTable());
         recordTables.put("staff", new RecordTable());
@@ -98,18 +103,21 @@ public class TopView {
         recordsTab.addSubtab(userRecords);
         recordsTab.addSubtab(staffRecords);
         recordsTab.addSubtab(studioRecords);
+        mainTabs.put("recordsTab", recordsTab);
         WidgetFactory.addTab(tabs, recordsTab);
 
         transactionsTab.addSubtab(watchEpisode);
         transactionsTab.addSubtab(rateAnime);
         transactionsTab.addSubtab(editCredits);
         transactionsTab.addSubtab(followUser);
+        mainTabs.put("transactionsTab", transactionsTab);
         WidgetFactory.addTab(tabs, transactionsTab);
 
         reportsTab.addSubtab(highestRatedAnime);
         reportsTab.addSubtab(topStudios);
         reportsTab.addSubtab(userProfile);
         reportsTab.addSubtab(recommendAnime);
+        mainTabs.put("reportsTab", reportsTab);
         WidgetFactory.addTab(tabs, reportsTab);
 
         this.frame.add(tabs, BorderLayout.CENTER);
@@ -172,4 +180,24 @@ public class TopView {
         return recordTables.get(recordName).getSelected();
     }
 
+    public void TEMP_FUNC_setTransactionListener(ActionListener listener){
+        watchEpisode.setActionListener("watchEpisode", listener);
+    }
+
+    public JComponent accessComponent(String mainTab, String subTab, String component){
+        return mainTabs.get(mainTab).getSubtab(subTab).getComponent(component);
+    }
+
+    public void dialogPopUp(String title, String message){
+        JDialog popup = new JDialog(frame, title, true);
+        popup.setSize(400, 160);
+        popup.setLayout(new BorderLayout());
+
+        JLabel messageLabel = new JLabel(message, UIManager.getIcon("OptionPane.informationIcon"), SwingConstants.CENTER);
+        messageLabel.setFont(new Font("Inter", Font.PLAIN, 16));
+        popup.add(messageLabel, BorderLayout.CENTER);
+
+        popup.setLocationRelativeTo(frame);
+        popup.setVisible(true);
+    }
 }

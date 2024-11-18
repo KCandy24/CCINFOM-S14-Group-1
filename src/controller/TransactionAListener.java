@@ -21,6 +21,9 @@ public class TransactionAListener implements ActionListener {
         switch (action) {
             case "Check":
                 break;
+            case "Watch next episode":
+                topView.dialogPopUp("Watch Episode", "Successfully watched anime episode n");
+                break;
             default:
                 throw new UnsupportedOperationException(
                         "Unimplemented method 'actionPerformed'");

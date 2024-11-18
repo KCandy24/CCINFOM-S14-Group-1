@@ -68,6 +68,7 @@ public class Controller {
 
         // Transactions
         transactionListener = new TransactionAListener(animeSystem, topView);
+        topView.TEMP_FUNC_setTransactionListener(transactionListener);
 
         // Reports
         reportListener = new ReportsAListener(animeSystem, topView);
