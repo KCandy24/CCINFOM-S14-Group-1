@@ -20,6 +20,7 @@ public class TopView {
 
     private HashMap<String, Tab> mainTabs;
     private LinkedHashMap<Tab, ArrayList<Subtab>> tabMap; // * LinkedHashMap preserves insertion order
+
     private HashMap<String, RecordTable> recordTables;
 
     public static final String RECORDS_TAB = "Records",
@@ -153,15 +154,6 @@ public class TopView {
      */
     public void resetFields(String tabName, String subtabName) {
         mainTabs.get(tabName).getSubtab(subtabName).resetFields();
-    }
-
-    public void TEMP_FUNC_setTransactionListener(ActionListener listener) {
-        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("watchEpisode",
-                listener);
-        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("searchUser",
-                listener);
-        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("searchAnime",
-                listener);
     }
 
     public JComponent getComponent(String mainTab, String subTab, String component) {

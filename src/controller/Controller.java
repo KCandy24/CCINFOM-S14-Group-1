@@ -39,6 +39,7 @@ public class Controller {
         // # Initialize and set listeners
 
         // Records
+        // TODO: Consolidate to one RecordsTabListener
         animeRecordsListener = new AnimeRecordsListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
@@ -65,6 +66,7 @@ public class Controller {
 
 
         // Record Tables ("Search Pop-up")
+        // TODO: RecordTableListeners for Transaction subtabs
         animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
         userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
         staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");
@@ -76,7 +78,10 @@ public class Controller {
 
         // Transactions
         transactionListener = new TransactionAListener(animeSystem, topView);
-        topView.TEMP_FUNC_setTransactionListener(transactionListener);
+        topView.setActionListeners(
+                TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
+                transactionListener,
+                "searchUser", "searchAnime", "watchEpisode");
 
         // Reports
         reportListener = new ReportsAListener(animeSystem, topView);

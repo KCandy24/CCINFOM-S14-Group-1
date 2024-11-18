@@ -4,8 +4,9 @@
             "value": "User"
         },
         {
-            "name": "userId",
-            "value": "No user selected"
+            "name": "username",
+            "value": "No user selected",
+            "column": "user_name"
         },
         {
             "type": "Button",

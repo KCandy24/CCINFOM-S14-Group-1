@@ -52,6 +52,7 @@ public class Subtab extends NamedPanel {
      */
     private void setComponents(String jsonFileName) {
         Path jsonPath = Paths.get(JSON_PATH_PREFIX + jsonFileName);
+        System.out.println(JSON_PATH_PREFIX + jsonFileName);
         try {
             String content = new String(Files.readAllBytes(jsonPath));
             JSONArray jsonArray = new JSONArray(content);
@@ -71,6 +72,7 @@ public class Subtab extends NamedPanel {
                     String column = cell.optString("column");
                     if (!column.isEmpty()) {
                         componentColumns.put(column, component);
+                        System.out.println(name + "<-" + column);
                     }
 
                     rowComponents.add(component);
@@ -151,7 +153,12 @@ public class Subtab extends NamedPanel {
     public void setFields(HashMap<String, String> data) {
         for (String key : data.keySet()) {
             JComponent component = this.getAssociatedComponent(key);
-            this.setComponentText(component, data.get(key));
+            if (component != null) {
+                this.setComponentText(component, data.get(key));
+                System.out.println(key + " successfully set.");
+            } else {
+                System.out.println(key + " is not associated with any component.");
+            }
         }
     }
 

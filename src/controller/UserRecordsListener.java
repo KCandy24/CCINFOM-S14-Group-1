@@ -53,6 +53,9 @@ public class UserRecordsListener implements ActionListener {
         topView.setRecordTableData("users", data, columns);
     }
 
+    /**
+     * TODO: Refactor
+     */
     public void save() {
         String userName = ((JTextField) topView.getComponent(
                 TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "username")).getText();

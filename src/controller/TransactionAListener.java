@@ -4,7 +4,6 @@ import java.awt.event.*;
 
 import javax.swing.JComponent;
 
-import javax.swing.JButton;
 
 import src.model.AnimeSystem;
 import src.view.gui.TopView;

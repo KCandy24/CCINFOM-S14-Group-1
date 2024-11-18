@@ -294,6 +294,8 @@ public class WidgetFactory {
         String name = cell.optString("name");
         if (!name.isEmpty()) {
             component.setName(name);
+        } else {
+            component.setName(value);
         }
 
         return component;
