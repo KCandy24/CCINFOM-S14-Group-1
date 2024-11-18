@@ -40,13 +40,28 @@ public class Controller {
 
         // Records
         animeRecordsListener = new AnimeRecordsListener(animeSystem, topView);
+        topView.setActionListeners(
+                TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
+                animeRecordsListener,
+                "searchAnime", "addNew", "save", "delete");
+
         userRecordsListener = new UserRecordsListener(animeSystem, topView);
+        topView.setActionListeners(
+                TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB,
+                userRecordsListener,
+                "searchUser", "addNew", "save", "delete");
+
         studioRecordsListener = new StudioRecordsListener(animeSystem, topView);
+        topView.setActionListeners(
+                TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB,
+                studioRecordsListener,
+                "searchStudio", "addNew", "save", "delete");
+
         staffRecordsListener = new StaffRecordsListener(animeSystem, topView);
-        topView.setAnimeRecordsListener(animeRecordsListener);
-        topView.setUserRecordsListener(userRecordsListener);
-        topView.setStudioRecordsListener(studioRecordsListener);
-        topView.setStaffRecordsListener(staffRecordsListener);
+        topView.setActionListeners(
+                TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB,
+                staffRecordsListener,
+                "searchStaff", "addNew", "save", "delete");
 
 
         // Record Tables

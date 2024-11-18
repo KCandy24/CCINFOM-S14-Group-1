@@ -95,15 +95,9 @@ public class AnimeSystem {
         }
     }
 
-    public String[][] query(String[] columns, String record) {
-        ArrayList<String[]> data = new ArrayList<String[]>();
-        String columnsString = new String();
-        for (String column : columns) {
-            columnsString += column + ", ";
-        }
-        columnsString = columnsString.substring(0, columnsString.length() - 2);
-        String query = "SELECT " + columnsString + " FROM " + record;
+    public String[][] rawQuery(String query) {
         System.out.println(query);
+        ArrayList<String[]> data = new ArrayList<String[]>();
         try {
             dbResultSet = dbStatement.executeQuery(query);
             dbMetaData = dbResultSet.getMetaData();
@@ -122,24 +116,20 @@ public class AnimeSystem {
         return data.toArray(new String[0][0]);
     }
 
-    public String[][] getAnimes() {
-        ArrayList<String[]> data = new ArrayList<String[]>();
-        try {
-            dbResultSet = dbStatement.executeQuery("SELECT title, genre, air_date FROM animes");
-            dbMetaData = dbResultSet.getMetaData();
-            int columnCount = dbMetaData.getColumnCount();
-            while (dbResultSet.next()) {
-                String[] rowData = new String[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    rowData[i] = dbResultSet.getString(i + 1);
-                }
-                data.add(rowData);
-            }
-        } catch (Exception e) {
-            System.err.println("Query to 'dbanime' Failed.");
-            e.printStackTrace();
+    /**
+     * 
+     * @param columns
+     * @param record
+     * @return
+     */
+    public String[][] selectColumns(String[] columns, String record) {
+        String columnsString = new String();
+        for (String column : columns) {
+            columnsString += column + ", ";
         }
-        return data.toArray(new String[0][0]);
+        columnsString = columnsString.substring(0, columnsString.length() - 2);
+        String query = "SELECT " + columnsString + " FROM " + record;
+        return this.rawQuery(query);
     }
 
     public String minimize(String string) {

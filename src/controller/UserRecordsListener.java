@@ -27,6 +27,9 @@ public class UserRecordsListener implements ActionListener {
             case "Search":
                 topView.selectFromTable("users");
                 break;
+            case "Add new":
+                topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
+                break;
             case "Save":
                 break;
             case "Delete":

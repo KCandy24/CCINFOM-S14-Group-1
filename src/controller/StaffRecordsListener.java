@@ -26,6 +26,9 @@ public class StaffRecordsListener implements ActionListener {
         switch (action) {
             case "Search":
                 topView.selectFromTable("staff");
+            case "Add new":
+                topView.resetFields(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+                break;
             case "Save":
                 break;
             case "Delete":

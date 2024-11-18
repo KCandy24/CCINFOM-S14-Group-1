@@ -27,6 +27,9 @@ public class StudioRecordsListener implements ActionListener {
             case "Search":
                 topView.selectFromTable("studios");
                 break;
+            case "Add new":
+                topView.resetFields(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
+                break;
             case "Save":
                 break;
             case "Delete":

@@ -26,23 +26,23 @@ public class TopView {
     private LinkedHashMap<Tab, ArrayList<Subtab>> tabMap; // * LinkedHashMap preserves insertion order
     private HashMap<String, RecordTable> recordTables;
 
-    private final String RECORDS_TAB = "Records";
-    private final String ANIME_RECORD_SUBTAB = "Anime";
-    private final String USER_RECORD_SUBTAB = "User";
-    private final String STAFF_RECORD_SUBTAB = "Staff";
-    private final String STUDIO_RECORD_SUBTAB = "Studio";
+    public static final String RECORDS_TAB = "Records",
+            ANIME_RECORD_SUBTAB = "Anime",
+            USER_RECORD_SUBTAB = "User",
+            STAFF_RECORD_SUBTAB = "Staff",
+            STUDIO_RECORD_SUBTAB = "Studio",
 
-    private final String TRANSACTIONS_TAB = "Transactions";
-    private final String WATCH_EPISODE_TRANSACTION_SUBTAB = "Watch Episode";
-    private final String RATE_ANIME_TRANSACTION_SUBTAB = "Rate Anime";
-    private final String EDIT_CREDITS_TRANSACTION_SUBTAB = "Edit Credits";
-    private final String FOLLOW_USER_TRANSACTION_SUBTAB = "Follow User";
+            TRANSACTIONS_TAB = "Transactions",
+            WATCH_EPISODE_TRANSACTION_SUBTAB = "Watch Episode",
+            RATE_ANIME_TRANSACTION_SUBTAB = "Rate Anime",
+            EDIT_CREDITS_TRANSACTION_SUBTAB = "Edit Credits",
+            FOLLOW_USER_TRANSACTION_SUBTAB = "Follow User",
 
-    private final String REPORTS_TAB = "Reports";
-    private final String HIGHEST_RATED_ANIME_REPORT_SUBTAB = "Highest Rated Anime";
-    private final String RECOMMEND_ANIME_REPORT_SUBTAB = "Recommend Anime";
-    private final String TOP_STUDIOS_REPORT_SUBTAB = "Top Studios";
-    private final String USER_PROFILE_REPORT_SUBTAB = "User Profile";
+            REPORTS_TAB = "Reports",
+            HIGHEST_RATED_ANIME_REPORT_SUBTAB = "Highest Rated Anime",
+            RECOMMEND_ANIME_REPORT_SUBTAB = "Recommend Anime",
+            TOP_STUDIOS_REPORT_SUBTAB = "Top Studios",
+            USER_PROFILE_REPORT_SUBTAB = "User Profile";
 
     /**
      * Initialize the top view.
@@ -109,53 +109,20 @@ public class TopView {
         this.frame.add(tabs, BorderLayout.CENTER);
     }
 
-    // TODO: Set listeners to everything
+    // Listeners
 
-    // Records
-
-    // TODO: Refactor... but how?
-    // Set ActionListeners for the Anime Records subtab.
-    public void setAnimeRecordsListener(AnimeRecordsListener listener) {
-        Subtab animeRecords = mainTabs.get(RECORDS_TAB).getSubtab(ANIME_RECORD_SUBTAB);
-        animeRecords.setActionListener("selectAnimeId", listener);
-        animeRecords.setActionListener("save", listener);
-        animeRecords.setActionListener("delete", listener);
+    public void setActionListeners(
+            String tabName, String subtabName,
+            ActionListener listener,
+            String... buttonNames) {
+        Subtab subtab = mainTabs.get(tabName).getSubtab(subtabName);
+        for (String name : buttonNames) {
+            subtab.setActionListener(name, listener);
+        }
     }
-
-    // Set ActionListeners for the User Records subtab.
-    public void setUserRecordsListener(UserRecordsListener listener) {
-        Subtab userRecords = mainTabs.get(RECORDS_TAB).getSubtab(USER_RECORD_SUBTAB);
-        userRecords.setActionListener("searchUser", listener);
-        userRecords.setActionListener("save", listener);
-        userRecords.setActionListener("delete", listener);
-    }
-
-    // Set ActionListeners for the StudioRecordsListener subtab.
-    public void setStudioRecordsListener(StudioRecordsListener listener) {
-        Subtab studioRecords = mainTabs.get(RECORDS_TAB).getSubtab(STUDIO_RECORD_SUBTAB);
-        studioRecords.setActionListener("searchStudio", listener);
-        studioRecords.setActionListener("save", listener);
-        studioRecords.setActionListener("delete", listener);
-    }
-
-    // Set ActionListeners for the StudioRecordsListener subtab.
-    public void setStaffRecordsListener(StaffRecordsListener listener) {
-        Subtab staffRecords = mainTabs.get(RECORDS_TAB).getSubtab(STAFF_RECORD_SUBTAB);
-        staffRecords.setActionListener("searchStaff", listener);
-        staffRecords.setActionListener("save", listener);
-        staffRecords.setActionListener("delete", listener);
-    }
-
-    // Transactions
-
-    // Reports
-
-    // TODO: ^ Instead of defining a fifty functions for setting listeners, use a
-    // data structure like a HashMap<Subtab, ArrayList<ActionListener>>
-    // or something
-    // ! But how?
 
     // Record Tables
+
     public void setRecordTableData(String recordName, String[][] data, String[] column) {
         recordTables.get(recordName).setTableData(data, column);
     }
@@ -173,7 +140,17 @@ public class TopView {
     }
 
     public void setFieldsFromData(String tabName, String subtabName, HashMap<String, String> data) {
-        mainTabs.get(tabName).getSubtab(subtabName).setData(data);
+        mainTabs.get(tabName).getSubtab(subtabName).setFields(data);
+    }
+
+    /**
+     * Reset the fields of a subtab.
+     * 
+     * @param tabName
+     * @param subtabName
+     */
+    public void resetFields(String tabName, String subtabName) {
+        mainTabs.get(tabName).getSubtab(subtabName).resetFields();
     }
 
     public void TEMP_FUNC_setTransactionListener(ActionListener listener) {
