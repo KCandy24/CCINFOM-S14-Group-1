@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.sql.*;
 
 /**
- * TODO: MySQL Connections
  */
 public class AnimeSystem {
     public final static String PATH = "jdbc:mysql://localhost:3306/dbanime";
@@ -13,7 +12,6 @@ public class AnimeSystem {
     private Statement dbStatement;
     private ResultSet dbResultSet;
     private ResultSetMetaData dbMetaData;
-
 
     public AnimeSystem(String username, String password) {
         try {
@@ -30,15 +28,15 @@ public class AnimeSystem {
 
     // ## Anime
 
-    public String[] getRecordColNames(String recordName){
+    public String[] getRecordColNames(String recordName) {
         System.out.println("Columns of " + recordName);
         ArrayList<String> returnVal = new ArrayList<String>();
         try {
             dbResultSet = dbStatement.executeQuery(
-                                "SELECT `COLUMN_NAME` \r\n" + //
-                                "FROM `INFORMATION_SCHEMA`.`COLUMNS` \r\n" + //
-                                "WHERE `TABLE_SCHEMA`= 'dbanime'\r\n" + //
-                                "AND `TABLE_NAME`='" +  recordName +  "';");
+                    "SELECT `COLUMN_NAME` \r\n" + //
+                            "FROM `INFORMATION_SCHEMA`.`COLUMNS` \r\n" + //
+                            "WHERE `TABLE_SCHEMA`= 'dbanime'\r\n" + //
+                            "AND `TABLE_NAME`='" + recordName + "';");
             while (dbResultSet.next()) {
                 returnVal.add(dbResultSet.getString("COLUMN_NAME"));
             }
@@ -95,6 +93,18 @@ public class AnimeSystem {
             return null;
         }
     }
+    
+    public String singleQuery(String query){
+        try {
+            dbResultSet = dbStatement.executeQuery(query);
+            dbResultSet.next();
+            return dbResultSet.getString(1);
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public String[][] rawQuery(String query) {
         System.out.println(query);
@@ -139,4 +149,26 @@ public class AnimeSystem {
         return string;
     }
 
+    public void rawUpdate(String query) {
+        System.out.println(query);
+        try {
+            dbStatement.executeUpdate(query);
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+        }
+    }
+
+    public void safeUpdate(String query, String... arguments) {
+        try {
+            PreparedStatement statement = dbConnection.prepareStatement(query);
+            for (int i = 0; i < arguments.length; i++) {
+                statement.setString(i + 1, arguments[i]);
+            }
+            System.out.println(statement);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

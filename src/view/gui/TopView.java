@@ -9,11 +9,7 @@ import java.util.LinkedHashMap;
 
 import javax.swing.*;
 
-import src.controller.AnimeRecordsListener;
 import src.controller.RecordTableListener;
-import src.controller.StaffRecordsListener;
-import src.controller.StudioRecordsListener;
-import src.controller.UserRecordsListener;
 import src.model.Records;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
@@ -121,11 +117,20 @@ public class TopView {
         }
     }
 
+    public void setFieldsFromData(String tabName, String subtabName, HashMap<String, String> data) {
+        mainTabs.get(tabName).getSubtab(subtabName).setFields(data);
+    }
+
     // Record Tables
 
-    public void setRecordTableData(String recordName, String[][] data, String[] column) {
-        recordTables.get(recordName).setTableData(data, column);
+    public void initializeRecordTableData(String recordName, String[][] data, String[] column) {
+        recordTables.get(recordName).initializeData(data, column);
     }
+
+    public void setRecordTableData(String recordName, String[][] data, String[] column) {
+        recordTables.get(recordName).setData(data, column);
+    }
+
 
     public void setRecordTableListener(String recordName, RecordTableListener listener) {
         recordTables.get(recordName).setListener(listener);
@@ -139,9 +144,6 @@ public class TopView {
         return recordTables.get(recordName).getSelected();
     }
 
-    public void setFieldsFromData(String tabName, String subtabName, HashMap<String, String> data) {
-        mainTabs.get(tabName).getSubtab(subtabName).setFields(data);
-    }
 
     /**
      * Reset the fields of a subtab.
@@ -156,9 +158,13 @@ public class TopView {
     public void TEMP_FUNC_setTransactionListener(ActionListener listener) {
         mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("watchEpisode",
                 listener);
+        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("searchUser",
+                listener);
+        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("searchAnime",
+                listener);
     }
 
-    public JComponent accessComponent(String mainTab, String subTab, String component) {
+    public JComponent getComponent(String mainTab, String subTab, String component) {
         return mainTabs.get(mainTab).getSubtab(subTab).getComponent(component);
     }
 

@@ -23,4 +23,13 @@ public enum Genre {
         }
         return null;
     }
+
+    public static String findCode(String name) {
+        for (Genre genre : Genre.values()) {
+            if (genre.name.equals(name)) {
+                return genre.code;
+            }
+        }
+        return null;
+    }
 }
