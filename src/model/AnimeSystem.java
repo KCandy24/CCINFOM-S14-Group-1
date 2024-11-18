@@ -63,6 +63,38 @@ public class AnimeSystem {
         }
     }
 
+    public String getProcedureSingleResult(String procedure) {
+        try {
+            dbResultSet = dbStatement.executeQuery("CALL " + procedure + ";");
+            return dbResultSet.getString(1);
+        } catch (Exception e) {
+            System.err.println("Procedure" + " Failed to Execute.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String[][] getProcedureResults(String procedure) {
+        ArrayList<String[]> results = new ArrayList<String[]>();
+        try {
+            dbResultSet = dbStatement.executeQuery("CALL " + procedure);
+            dbMetaData = dbResultSet.getMetaData();
+            int columnCount = dbMetaData.getColumnCount();
+            while (dbResultSet.next()) {
+                String[] rowData = new String[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    rowData[i] = dbResultSet.getString(i + 1);
+                }
+                results.add(rowData);
+            }
+            return results.toArray(new String[0][0]);
+        } catch (Exception e) {
+            System.err.println("Procedure" + " Failed to Execute.");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public String[][] query(String[] columns, String record) {
         ArrayList<String[]> data = new ArrayList<String[]>();
         String columnsString = new String();
