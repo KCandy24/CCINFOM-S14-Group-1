@@ -2,6 +2,8 @@ package src.controller;
 
 import java.awt.event.*;
 
+import javax.swing.JComponent;
+
 import src.model.AnimeSystem;
 import src.view.gui.TopView;
 
@@ -18,6 +20,9 @@ public class TransactionAListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
+        String name = ((JComponent) e.getSource()).getName();
+        System.out.println("\nRecords/User/actionPerformed?value=" + action + "&name=" + name);
+
         switch (action) {
             case "Check":
                 break;

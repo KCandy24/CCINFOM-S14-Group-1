@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.sql.*;
 
 /**
- * TODO: MySQL Connections
  */
 public class AnimeSystem {
     public final static String PATH = "jdbc:mysql://localhost:3306/dbanime";

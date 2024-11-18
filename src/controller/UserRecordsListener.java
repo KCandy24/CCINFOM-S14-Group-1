@@ -3,12 +3,10 @@ package src.controller;
 import java.awt.event.*;
 
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
-import javax.swing.plaf.synth.Region;
 
 import src.model.AnimeSystem;
-import src.model.Genre;
 import src.model.UserRegion;
 import src.view.gui.TopView;
 
@@ -28,7 +26,8 @@ public class UserRecordsListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        System.out.println("\nRecords/User/?button=" + action);
+        String name = ((JComponent) e.getSource()).getName();
+        System.out.println("\nRecords/User/actionPerformed?value=" + action + "&name=" + name);
 
         switch (action) {
             case "Search":
@@ -65,7 +64,6 @@ public class UserRecordsListener implements ActionListener {
         animeSystem.safeUpdate(
                 "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
                 userName, region, joinDate);
-
     }
 
 }
