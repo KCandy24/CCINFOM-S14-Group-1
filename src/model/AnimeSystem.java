@@ -66,6 +66,7 @@ public class AnimeSystem {
     public String getProcedureSingleResult(String procedure) {
         try {
             dbResultSet = dbStatement.executeQuery("CALL " + procedure + ";");
+            dbResultSet.next();
             return dbResultSet.getString(1);
         } catch (Exception e) {
             System.err.println("Procedure" + " Failed to Execute.");

@@ -697,6 +697,22 @@ BEGIN
 END //
 DELIMITER ;
 
+-- PROCEDURE
+-- Usage: "CALL GetLastWatched(<param_user_id>, <param_anime_id>, <last_watched>)"
+-- Gets the user's latest episode watched, returns 0 if found none
+DELIMITER //
+-- DROP PROCEDURE IF EXISTS GetLastWatchedQ;
+CREATE PROCEDURE GetLastWatchedQ(
+	IN param_user_id INT,
+    IN param_anime_id INT
+)
+BEGIN
+	SELECT 	IFNULL(MAX(watched_episode), 0)
+    FROM 	views v
+    WHERE 	v.anime_id = param_anime_id
+    AND 	v.user_id = param_user_id;
+END //
+DELIMITER ;
 
 -- PROCEDURE
 -- Usage: "CALL WatchEpisode(<param_user_id>, <param_anime_id>)"

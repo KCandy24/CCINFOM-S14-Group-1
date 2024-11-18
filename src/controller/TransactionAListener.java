@@ -22,7 +22,11 @@ public class TransactionAListener implements ActionListener {
             case "Check":
                 break;
             case "Watch next episode":
-                topView.dialogPopUp("Watch Episode", "Successfully watched anime episode n");
+                int user_id = 2; // Get From topview
+                int anime_id = 2; // Get From topview
+                
+                int lastWatched = Integer.parseInt(animeSystem.getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
+                topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + lastWatched);
                 break;
             default:
                 throw new UnsupportedOperationException(
