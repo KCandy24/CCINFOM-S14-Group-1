@@ -4,6 +4,8 @@ import java.awt.event.*;
 
 import javax.swing.JComponent;
 
+import javax.swing.JButton;
+
 import src.model.AnimeSystem;
 import src.view.gui.TopView;
 
@@ -20,17 +22,15 @@ public class TransactionAListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        String name = ((JComponent) e.getSource()).getName();
-        System.out.println("\nRecords/User/actionPerformed?value=" + action + "&name=" + name);
-
         switch (action) {
             case "Check":
                 break;
-            case "Watch next episode":
+            case "watchEpisode":
                 int user_id = 2; // Get From topview
                 int anime_id = 2; // Get From topview
-                
-                int lastWatched = Integer.parseInt(animeSystem.getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
+
+                int lastWatched = Integer.parseInt(animeSystem
+                        .getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
                 topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + lastWatched);
                 break;
             default:
@@ -38,5 +38,12 @@ public class TransactionAListener implements ActionListener {
                         "Unimplemented method 'actionPerformed'");
         }
     }
-    
+
+    public void searchAnime() {
+        topView.selectFromTable("animes");
+    }
+
+    public void searchUser() {
+        topView.selectFromTable("users");
+    }
 }
