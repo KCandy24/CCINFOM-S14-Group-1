@@ -31,7 +31,7 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
     public void setData() {
         this.columns = animeSystem.getRecordColNames(recordName);
         this.data = animeSystem.selectColumns(this.columns, recordName);
-        topView.setRecordTableData(recordName, this.data, this.columns);
+        topView.initializeRecordTableData(recordName, this.data, this.columns);
     }
 
     /**

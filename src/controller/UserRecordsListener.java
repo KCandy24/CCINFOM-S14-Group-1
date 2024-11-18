@@ -31,6 +31,11 @@ public class UserRecordsListener implements ActionListener {
                 topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
                 break;
             case "Save":
+                animeSystem.rawUpdate(
+                        "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES ('TohruAdachi', 'JP', '2024-02-04')");
+                String[] columns = animeSystem.getRecordColNames("users");
+                String[][] data = animeSystem.selectColumns(columns, "users");
+                topView.setRecordTableData("users", data, columns);
                 break;
             case "Delete":
                 break;

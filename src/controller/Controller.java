@@ -64,7 +64,7 @@ public class Controller {
                 "searchStaff", "addNew", "save", "delete");
 
 
-        // Record Tables
+        // Record Tables ("Search Pop-up")
         animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
         userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
         staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");

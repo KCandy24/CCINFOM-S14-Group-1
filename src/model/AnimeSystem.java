@@ -139,4 +139,13 @@ public class AnimeSystem {
         return string;
     }
 
+    public void rawUpdate(String query) {
+        System.out.println(query);
+        try {
+            dbStatement.executeUpdate(query);
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+        }
+    }
 }
