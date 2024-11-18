@@ -3,11 +3,14 @@ package src.view.widget;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.plaf.synth.Region;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.json.JSONObject;
 
+import src.model.Genre;
+import src.model.UserRegion;
 import src.view.gui.NamedPanel;
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
@@ -232,11 +235,8 @@ public class WidgetFactory {
         return new LabelledField(text);
     }
 
-    public static JComponent createJComboBox() {
-        JComboBox<String> cb = new JComboBox<>(
-                new String[] {
-                        "TODO: Set this list"
-                });
+    public static JComboBox<String> createJComboBox() {
+        JComboBox<String> cb = new JComboBox<>();
         WidgetFactory.styleComponent(cb);
         return cb;
     }
@@ -254,7 +254,22 @@ public class WidgetFactory {
 
         switch (type) {
             case "ComboBox":
-                component = WidgetFactory.createJComboBox();
+                JComboBox<String> comboBox = WidgetFactory.createJComboBox();
+                String comboBoxType = cell.optString("combobox_type", "genre");
+                switch (comboBoxType) {
+                    case "genre":
+                    default:
+                        for (Genre genre : Genre.values()) {
+                            comboBox.addItem(genre.name);
+                        }
+                        break;
+                    case "region":
+                        for (UserRegion region : UserRegion.values()) {
+                            comboBox.addItem(region.name);
+                        }
+                        break;
+                }
+                component = comboBox;
                 break;
             case "Button":
                 component = WidgetFactory.createJButton(value);

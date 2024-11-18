@@ -1,19 +1,21 @@
 [
     [
         {
-            "type": "Button",
-            "value": "Search",
-            "name": "searchUser"
-        }
-    ],
-    [
-        {
             "value": "User ID"
         },
         {
             "value": "No user selected",
             "name": "userId",
             "column": "user_id"
+        },
+        {
+            "type": "Button",
+            "value": "Search",
+            "name": "searchUser"
+        },
+        {
+            "type": "Button",
+            "value": "Add new"
         }
     ],
     [
@@ -33,7 +35,8 @@
         {
             "type": "ComboBox",
             "name": "region",
-            "column": "region"
+            "column": "region",
+            "combobox_type": "region"
         }
     ],
     [
@@ -51,9 +54,7 @@
             "type": "Button",
             "name": "save",
             "value": "Save"
-        }
-    ],
-    [
+        },
         {
             "type": "Button",
             "name": "delete",

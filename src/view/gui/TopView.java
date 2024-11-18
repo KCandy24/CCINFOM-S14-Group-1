@@ -2,7 +2,10 @@ package src.view.gui;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.swing.*;
 
@@ -11,39 +14,35 @@ import src.controller.RecordTableListener;
 import src.controller.StaffRecordsListener;
 import src.controller.StudioRecordsListener;
 import src.controller.UserRecordsListener;
+import src.model.Records;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
 
 public class TopView {
     private JFrame frame;
-
     private JTabbedPane tabs;
 
     private HashMap<String, Tab> mainTabs;
+    private LinkedHashMap<Tab, ArrayList<Subtab>> tabMap; // * LinkedHashMap preserves insertion order
+    private HashMap<String, RecordTable> recordTables;
 
-    private Tab recordsTab;
-    private Subtab animeRecords;
-    private Subtab userRecords;
-    private Subtab staffRecords;
-    private Subtab studioRecords;
+    private final String RECORDS_TAB = "Records";
     private final String ANIME_RECORD_SUBTAB = "Anime";
     private final String USER_RECORD_SUBTAB = "User";
     private final String STAFF_RECORD_SUBTAB = "Staff";
     private final String STUDIO_RECORD_SUBTAB = "Studio";
 
-    private Tab transactionsTab;
-    private Subtab watchEpisode;
-    private Subtab rateAnime;
-    private Subtab editCredits;
-    private Subtab followUser;
+    private final String TRANSACTIONS_TAB = "Transactions";
+    private final String WATCH_EPISODE_TRANSACTION_SUBTAB = "Watch Episode";
+    private final String RATE_ANIME_TRANSACTION_SUBTAB = "Rate Anime";
+    private final String EDIT_CREDITS_TRANSACTION_SUBTAB = "Edit Credits";
+    private final String FOLLOW_USER_TRANSACTION_SUBTAB = "Follow User";
 
-    private Tab reportsTab;
-    private Subtab highestRatedAnime;
-    private Subtab topStudios;
-    private Subtab userProfile;
-    private Subtab recommendAnime;
-
-    private HashMap<String, RecordTable> recordTables;
+    private final String REPORTS_TAB = "Reports";
+    private final String HIGHEST_RATED_ANIME_REPORT_SUBTAB = "Highest Rated Anime";
+    private final String RECOMMEND_ANIME_REPORT_SUBTAB = "Recommend Anime";
+    private final String TOP_STUDIOS_REPORT_SUBTAB = "Top Studios";
+    private final String USER_PROFILE_REPORT_SUBTAB = "User Profile";
 
     /**
      * Initialize the top view.
@@ -61,63 +60,52 @@ public class TopView {
     public void instantiateWidgets() {
         tabs = WidgetFactory.createJTabbedPane();
 
-        // TODO: The ff. initializations would definitely be better off in some data
-        // TODO: structure that we iterate through.
-
         recordTables = new HashMap<>();
         mainTabs = new HashMap<>();
+        tabMap = new LinkedHashMap<>();
 
-        recordTables.put("animes", new RecordTable());
-        recordTables.put("users", new RecordTable());
-        recordTables.put("staff", new RecordTable());
-        recordTables.put("studios", new RecordTable());
+        for (Records record : Records.values()) {
+            recordTables.put(record.getTableName(), new RecordTable());
+        }
 
-        // Records
-        recordsTab = new Tab("Records");
-        animeRecords = new Subtab(ANIME_RECORD_SUBTAB, "records/anime.json");
-        userRecords = new Subtab(USER_RECORD_SUBTAB, "records/user.json");
-        staffRecords = new Subtab(STAFF_RECORD_SUBTAB, "records/staff.json");
-        studioRecords = new Subtab(STUDIO_RECORD_SUBTAB, "records/studio.json");
+        Tab recordsTab = new Tab(RECORDS_TAB);
+        ArrayList<Subtab> recordsTabSubtabs = new ArrayList<>();
+        Collections.addAll(recordsTabSubtabs,
+                new Subtab(ANIME_RECORD_SUBTAB, "records/anime.json"),
+                new Subtab(USER_RECORD_SUBTAB, "records/user.json"),
+                new Subtab(STAFF_RECORD_SUBTAB, "records/staff.json"),
+                new Subtab(STUDIO_RECORD_SUBTAB, "records/studio.json"));
+        tabMap.put(recordsTab, recordsTabSubtabs);
 
-        // Transactions
-        transactionsTab = new Tab("Transactions");
-        watchEpisode = new Subtab("Watch Episode", "transactions/watch_episode.json");
-        rateAnime = new Subtab("Rate Anime", "transactions/rate_anime.json");
-        editCredits = new Subtab("Edit Credits", "transactions/edit_credits.json");
-        followUser = new Subtab("Follow User", "transactions/follow_user.json");
+        Tab transactionsTab = new Tab(TRANSACTIONS_TAB);
+        ArrayList<Subtab> transactionsTabSubtabs = new ArrayList<>();
+        Collections.addAll(transactionsTabSubtabs,
+                new Subtab(WATCH_EPISODE_TRANSACTION_SUBTAB, "transactions/watch_episode.json"),
+                new Subtab(RATE_ANIME_TRANSACTION_SUBTAB, "transactions/rate_anime.json"),
+                new Subtab(EDIT_CREDITS_TRANSACTION_SUBTAB, "transactions/edit_credits.json"),
+                new Subtab(FOLLOW_USER_TRANSACTION_SUBTAB, "transactions/follow_user.json"));
+        tabMap.put(transactionsTab, transactionsTabSubtabs);
 
-
-        // Reports
-        reportsTab = new Tab("Reports");
-        highestRatedAnime = new Subtab("Highest Rated Anime", "reports/highest_rated_anime.json");
-        topStudios = new Subtab("Recommend Anime", "reports/recommend_anime.json");
-        userProfile = new Subtab("Top Studios", "reports/top_studios.json");
-        recommendAnime = new Subtab("User Profile", "reports/user_profile.json");
-
+        Tab reportsTab = new Tab(REPORTS_TAB);
+        ArrayList<Subtab> reportsTabSubtabs = new ArrayList<>();
+        Collections.addAll(reportsTabSubtabs,
+                new Subtab(HIGHEST_RATED_ANIME_REPORT_SUBTAB, "reports/highest_rated_anime.json"),
+                new Subtab(RECOMMEND_ANIME_REPORT_SUBTAB, "reports/recommend_anime.json"),
+                new Subtab(TOP_STUDIOS_REPORT_SUBTAB, "reports/top_studios.json"),
+                new Subtab(USER_PROFILE_REPORT_SUBTAB, "reports/user_profile.json"));
+        tabMap.put(reportsTab, reportsTabSubtabs);
     }
 
     public void placeWidgets() {
-        recordsTab.addSubtab(animeRecords);
-        recordsTab.addSubtab(userRecords);
-        recordsTab.addSubtab(staffRecords);
-        recordsTab.addSubtab(studioRecords);
-        mainTabs.put("recordsTab", recordsTab);
-        WidgetFactory.addTab(tabs, recordsTab);
-
-        transactionsTab.addSubtab(watchEpisode);
-        transactionsTab.addSubtab(rateAnime);
-        transactionsTab.addSubtab(editCredits);
-        transactionsTab.addSubtab(followUser);
-        mainTabs.put("transactionsTab", transactionsTab);
-        WidgetFactory.addTab(tabs, transactionsTab);
-
-        reportsTab.addSubtab(highestRatedAnime);
-        reportsTab.addSubtab(topStudios);
-        reportsTab.addSubtab(userProfile);
-        reportsTab.addSubtab(recommendAnime);
-        mainTabs.put("reportsTab", reportsTab);
-        WidgetFactory.addTab(tabs, reportsTab);
-
+        for (HashMap.Entry<Tab, ArrayList<Subtab>> tabMapData : this.tabMap.entrySet()) {
+            Tab tab = tabMapData.getKey();
+            for (Subtab subtab : tabMapData.getValue()) {
+                tab.addSubtab(subtab);
+                System.out.printf("Subtab added: %s/%s\n", tab.getName(), subtab.getName());
+            }
+            this.mainTabs.put(tab.getName(), tab);
+            WidgetFactory.addTab(tabs, tab);
+        }
         this.frame.add(tabs, BorderLayout.CENTER);
     }
 
@@ -125,32 +113,37 @@ public class TopView {
 
     // Records
 
+    // TODO: Refactor... but how?
     // Set ActionListeners for the Anime Records subtab.
     public void setAnimeRecordsListener(AnimeRecordsListener listener) {
-        this.animeRecords.setActionListener("selectAnimeId", listener);
-        this.animeRecords.setActionListener("save", listener);
-        this.animeRecords.setActionListener("delete", listener);
+        Subtab animeRecords = mainTabs.get(RECORDS_TAB).getSubtab(ANIME_RECORD_SUBTAB);
+        animeRecords.setActionListener("selectAnimeId", listener);
+        animeRecords.setActionListener("save", listener);
+        animeRecords.setActionListener("delete", listener);
     }
 
     // Set ActionListeners for the User Records subtab.
     public void setUserRecordsListener(UserRecordsListener listener) {
-        this.userRecords.setActionListener("searchUser", listener);
-        this.userRecords.setActionListener("save", listener);
-        this.userRecords.setActionListener("delete", listener);
+        Subtab userRecords = mainTabs.get(RECORDS_TAB).getSubtab(USER_RECORD_SUBTAB);
+        userRecords.setActionListener("searchUser", listener);
+        userRecords.setActionListener("save", listener);
+        userRecords.setActionListener("delete", listener);
     }
 
     // Set ActionListeners for the StudioRecordsListener subtab.
     public void setStudioRecordsListener(StudioRecordsListener listener) {
-        this.studioRecords.setActionListener("searchStudio", listener);
-        this.studioRecords.setActionListener("save", listener);
-        this.studioRecords.setActionListener("delete", listener);
+        Subtab studioRecords = mainTabs.get(RECORDS_TAB).getSubtab(STUDIO_RECORD_SUBTAB);
+        studioRecords.setActionListener("searchStudio", listener);
+        studioRecords.setActionListener("save", listener);
+        studioRecords.setActionListener("delete", listener);
     }
 
     // Set ActionListeners for the StudioRecordsListener subtab.
     public void setStaffRecordsListener(StaffRecordsListener listener) {
-        this.staffRecords.setActionListener("searchStaff", listener);
-        this.staffRecords.setActionListener("save", listener);
-        this.staffRecords.setActionListener("delete", listener);
+        Subtab staffRecords = mainTabs.get(RECORDS_TAB).getSubtab(STAFF_RECORD_SUBTAB);
+        staffRecords.setActionListener("searchStaff", listener);
+        staffRecords.setActionListener("save", listener);
+        staffRecords.setActionListener("delete", listener);
     }
 
     // Transactions
@@ -160,6 +153,7 @@ public class TopView {
     // TODO: ^ Instead of defining a fifty functions for setting listeners, use a
     // data structure like a HashMap<Subtab, ArrayList<ActionListener>>
     // or something
+    // ! But how?
 
     // Record Tables
     public void setRecordTableData(String recordName, String[][] data, String[] column) {
@@ -178,47 +172,26 @@ public class TopView {
         return recordTables.get(recordName).getSelected();
     }
 
-    public void setSubtabFieldFromData(String subtabName, HashMap<String, String> data) {
-        // TODO: Use HashMap<String, Subtab> instead of switch case
-        // ! TODO: Replace this thing with a HashMap.
-        // ? this.getSubtab(name).setData(data); ?
-        // or
-        // ? this.getTab(name).getSubtab(name).setData(data); ?
-        switch (subtabName) {
-            // Records
-            case ANIME_RECORD_SUBTAB:
-                animeRecords.setData(data);
-                break;
-            case USER_RECORD_SUBTAB:
-                userRecords.setData(data);
-                break;
-            case STAFF_RECORD_SUBTAB:
-                staffRecords.setData(data);
-                break;
-            case STUDIO_RECORD_SUBTAB:
-                studioRecords.setData(data);
-                break;
-            // TODO: Transactions
-
-            // TODO: Reports
-
-        }
+    public void setFieldsFromData(String tabName, String subtabName, HashMap<String, String> data) {
+        mainTabs.get(tabName).getSubtab(subtabName).setData(data);
     }
 
-    public void TEMP_FUNC_setTransactionListener(ActionListener listener){
-        watchEpisode.setActionListener("watchEpisode", listener);
+    public void TEMP_FUNC_setTransactionListener(ActionListener listener) {
+        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("watchEpisode",
+                listener);
     }
 
-    public JComponent accessComponent(String mainTab, String subTab, String component){
+    public JComponent accessComponent(String mainTab, String subTab, String component) {
         return mainTabs.get(mainTab).getSubtab(subTab).getComponent(component);
     }
 
-    public void dialogPopUp(String title, String message){
+    public void dialogPopUp(String title, String message) {
         JDialog popup = new JDialog(frame, title, true);
         popup.setSize(400, 160);
         popup.setLayout(new BorderLayout());
 
-        JLabel messageLabel = new JLabel(message, UIManager.getIcon("OptionPane.informationIcon"), SwingConstants.CENTER);
+        JLabel messageLabel = new JLabel(message, UIManager.getIcon("OptionPane.informationIcon"),
+                SwingConstants.CENTER);
         messageLabel.setFont(new Font("Inter", Font.PLAIN, 16));
         popup.add(messageLabel, BorderLayout.CENTER);
 

@@ -1,4 +1,4 @@
-package src.model.sql;
+package src.model;
 
 /**
  * TODO: Made this, but not sure if it's useful; wdygt? - wafl

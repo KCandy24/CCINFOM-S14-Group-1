@@ -15,7 +15,6 @@ public class AnimeSystem {
     private ResultSetMetaData dbMetaData;
 
 
-
     public AnimeSystem(String username, String password) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -32,6 +31,7 @@ public class AnimeSystem {
     // ## Anime
 
     public String[] getRecordColNames(String recordName){
+        System.out.println("Columns of " + recordName);
         ArrayList<String> returnVal = new ArrayList<String>();
         try {
             dbResultSet = dbStatement.executeQuery(

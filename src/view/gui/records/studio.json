@@ -1,19 +1,21 @@
 [
     [
         {
-            "type": "Button",
-            "value": "Search",
-            "name": "searchStudio"
-        }
-    ],
-    [
-        {
             "value": "Studio ID"
         },
         {
             "value": "No studio selected",
             "name": "studioId",
             "column": "studio_id"
+        },
+        {
+            "type": "Button",
+            "value": "Search",
+            "name": "searchStudio"
+        },
+        {
+            "type": "Button",
+            "value": "Add new"
         }
     ],
     [
@@ -31,9 +33,7 @@
             "type": "Button",
             "name": "save",
             "value": "Save"
-        }
-    ],
-    [
+        },
         {
             "type": "Button",
             "name": "delete",

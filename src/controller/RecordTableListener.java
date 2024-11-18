@@ -15,12 +15,15 @@ import src.view.gui.TopView;
 public class RecordTableListener extends SearchBoxListener implements ActionListener {
     String recordName;
     String subtabName;
+    String tabName;
     String[][] data;
     String[] column;
 
-    public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName, String subtabName) {
+    public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName, String tabName,
+            String subtabName) {
         super(animeSystem, topView);
         this.recordName = recordName;
+        this.tabName = tabName;
         this.subtabName = subtabName;
         this.setData();
     }
@@ -44,7 +47,7 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
             rowData.put(this.column[i], this.data[index][i]);
             System.out.printf("%d\t%s : %s\n", i, this.column[i], this.data[index][i]);
         }
-        topView.setSubtabFieldFromData(subtabName, rowData);
+        topView.setFieldsFromData(tabName, subtabName, rowData);
     }
 
     /**

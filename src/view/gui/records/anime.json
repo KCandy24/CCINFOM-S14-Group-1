@@ -1,19 +1,21 @@
 [
     [
         {
-            "type": "Button",
-            "name": "selectAnimeId",
-            "value": "Search"
-        }
-    ],
-    [
-        {
             "value": "Anime ID"
         },
         {
             "value": "No anime selected",
             "name": "animeId",
             "column": "anime_id"
+        },
+        {
+            "type": "Button",
+            "name": "selectAnimeId",
+            "value": "Search"
+        },
+        {
+            "type": "Button",
+            "value": "Add new"
         }
     ],
     [
@@ -43,7 +45,8 @@
         {
             "type": "ComboBox",
             "name": "genre",
-            "column": "genre"
+            "column": "genre",
+            "combobox_type": "genre"
         }
     ],
     [
@@ -80,9 +83,7 @@
             "type": "Button",
             "name": "save",
             "value": "Save"
-        }
-    ],
-    [
+        },
         {
             "type": "Button",
             "name": "delete",
