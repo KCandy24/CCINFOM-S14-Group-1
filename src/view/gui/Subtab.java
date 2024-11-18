@@ -30,7 +30,7 @@ import src.view.widget.WidgetFactory;
 
 public class Subtab extends NamedPanel {
     private ArrayList<ArrayList<JComponent>> components;
-    private HashMap<String, JComponent> componentLocations;
+    private HashMap<String, JComponent> componentName;
     private HashMap<String, JComponent> componentColumns;
     private String name;
 
@@ -39,14 +39,14 @@ public class Subtab extends NamedPanel {
     public Subtab(String name, String jsonPathString) {
         this.name = name;
         this.components = new ArrayList<>();
-        this.componentLocations = new HashMap<>();
+        this.componentName = new HashMap<>();
         this.componentColumns = new HashMap<>();
         this.setComponents(jsonPathString);
         this.addComponents();
     }
 
     /**
-     * Sets the components ArrayList and the componentLocations HashMap.
+     * Sets the components ArrayList and the componentName HashMap.
      * 
      * @param jsonPathString path to JSON file from which to add component data
      */
@@ -61,13 +61,18 @@ public class Subtab extends NamedPanel {
 
                 for (int j = 0; j < row.length(); j++) {
                     JSONObject cell = row.getJSONObject(j);
-                    String name = cell.optString("name",
-                            String.format("%d,%d", i, j));
-                    String column = cell.optString("column",
-                            String.format("-"));
                     JComponent component = WidgetFactory.componentFromJSON(cell);
-                    componentLocations.put(name, component);
-                    componentColumns.put(column, component);
+
+                    String name = cell.optString("name");
+                    if (!name.isEmpty()) {
+                        componentName.put(name, component);
+                    }
+
+                    String column = cell.optString("column");
+                    if (!column.isEmpty()) {
+                        componentColumns.put(column, component);
+                    }
+
                     rowComponents.add(component);
                 }
 
@@ -109,7 +114,7 @@ public class Subtab extends NamedPanel {
      * @return the component with a matching name
      */
     public JComponent getComponent(String name) {
-        return componentLocations.get(name);
+        return componentName.get(name);
     }
 
     /**
@@ -122,24 +127,41 @@ public class Subtab extends NamedPanel {
         return componentColumns.get(columnName);
     }
 
-    public void setData(HashMap<String, String> data) {
+    public void setComponentText(JComponent component, String text) {
+        if (component instanceof AbstractButton) {
+            ((AbstractButton) component).setText(text);
+        } else if (component instanceof JLabel) {
+            ((JLabel) component).setText(text);
+        } else if (component instanceof JTextField) {
+            ((JTextField) component).setText(text);
+        } else if (component instanceof JComboBox) {
+            JComboBox<String> comboBox = (JComboBox<String>) component;
+            String genreName = Genre.findName(text);
+            String regionName = UserRegion.findName(text);
+            if (genreName != null) {
+                comboBox.setSelectedItem(genreName);
+            } else if (regionName != null) {
+                comboBox.setSelectedItem(regionName);
+            } else {
+                comboBox.setSelectedIndex(0);
+            }
+        }
+    }
+
+    public void setFields(HashMap<String, String> data) {
         for (String key : data.keySet()) {
             JComponent component = this.getAssociatedComponent(key);
-            if (component instanceof AbstractButton) {
-                ((AbstractButton) component).setText(data.get(key));
-            } else if (component instanceof JLabel) {
-                ((JLabel) component).setText(data.get(key));
-            } else if (component instanceof JTextField) {
-                ((JTextField) component).setText(data.get(key));
-            } else if (component instanceof JComboBox) {
-                JComboBox<String> comboBox = (JComboBox<String>) component;
-                String genreName = Genre.findName(data.get(key));
-                if (genreName != null) {
-                    comboBox.setSelectedItem(genreName);
-                } else {
-                    comboBox.setSelectedItem(UserRegion.findName(data.get(key)));
-                }
-            }
+            this.setComponentText(component, data.get(key));
+        }
+    }
+
+    /**
+     * Reset the values of all components in this Subtab that are associated with a
+     * column.
+     */
+    public void resetFields() {
+        for (JComponent component : componentColumns.values()) {
+            setComponentText(component, "");
         }
     }
 
@@ -162,4 +184,5 @@ public class Subtab extends NamedPanel {
     public String getName() {
         return name;
     }
+
 }

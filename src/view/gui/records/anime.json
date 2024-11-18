@@ -10,12 +10,13 @@
         },
         {
             "type": "Button",
-            "name": "selectAnimeId",
+            "name": "searchAnime",
             "value": "Search"
         },
         {
             "type": "Button",
-            "value": "Add new"
+            "value": "Add new",
+            "name": "addNew"
         }
     ],
     [

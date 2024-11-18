@@ -21,9 +21,18 @@ public enum UserRegion {
     }
 
     public static String findName(String code) {
-        for (UserRegion genre : UserRegion.values()) {
-            if (genre.code.equals(code)) {
-                return genre.name;
+        for (UserRegion region : UserRegion.values()) {
+            if (region.code.equals(code)) {
+                return region.name;
+            }
+        }
+        return null;
+    }
+
+    public static String findCode(String name) {
+        for (UserRegion region : UserRegion.values()) {
+            if (region.name.equals(name)) {
+                return region.code;
             }
         }
         return null;

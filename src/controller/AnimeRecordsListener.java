@@ -27,6 +27,9 @@ public class AnimeRecordsListener implements ActionListener {
             case "Search":
                 searchAnime();
                 break;
+            case "Add new":
+                topView.resetFields(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB);
+                break;
             case "Save":
                 break;
             case "Delete":

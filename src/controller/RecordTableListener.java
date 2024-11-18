@@ -17,7 +17,7 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
     String subtabName;
     String tabName;
     String[][] data;
-    String[] column;
+    String[] columns;
 
     public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName, String tabName,
             String subtabName) {
@@ -29,9 +29,9 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
     }
 
     public void setData() {
-        this.column = animeSystem.getRecordColNames(recordName);
-        this.data = animeSystem.query(column, recordName);
-        topView.setRecordTableData(recordName, this.data, column);
+        this.columns = animeSystem.getRecordColNames(recordName);
+        this.data = animeSystem.selectColumns(this.columns, recordName);
+        topView.initializeRecordTableData(recordName, this.data, this.columns);
     }
 
     /**
@@ -44,8 +44,8 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
         HashMap<String, String> rowData = new HashMap<>();
 
         for (int i = 0; i < this.data[index].length; i++) {
-            rowData.put(this.column[i], this.data[index][i]);
-            System.out.printf("%d\t%s : %s\n", i, this.column[i], this.data[index][i]);
+            rowData.put(this.columns[i], this.data[index][i]);
+            System.out.printf("%d\t%s : %s\n", i, this.columns[i], this.data[index][i]);
         }
         topView.setFieldsFromData(tabName, subtabName, rowData);
     }

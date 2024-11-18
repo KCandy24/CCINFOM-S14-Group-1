@@ -15,7 +15,8 @@
         },
         {
             "type": "Button",
-            "value": "Add new"
+            "value": "Add new",
+            "name": "addNew"
         }
     ],
     [

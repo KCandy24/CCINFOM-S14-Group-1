@@ -9,12 +9,15 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.JButton;
 
 import src.controller.RecordTableListener;
 
 public class RecordTable extends JDialog {
     private JTable table;
+    private JScrollPane scrollPane;
     private JPanel panel;
     private JButton button;
     private GridBagConstraints c = new GridBagConstraints();
@@ -32,9 +35,9 @@ public class RecordTable extends JDialog {
         c.gridy++;
     }
 
-    public void setTableData(String[][] data, String[] columnNames) {
+    public void initializeData(String[][] data, String[] columnNames) {
         table = WidgetFactory.createJTable(data, columnNames);
-        JScrollPane scrollPane = WidgetFactory.createJScrollPane(table);
+        scrollPane = WidgetFactory.createJScrollPane(table);
 
         int prevIpadx = c.ipadx;
         c.ipadx = 400;
@@ -46,6 +49,27 @@ public class RecordTable extends JDialog {
         panel.add(button, c);
         c.gridy++;
         this.add(panel);
+    }
+
+    public void setData(String[][] data, String[] columnNames) {
+        table.setModel(new AbstractTableModel() {
+
+            public int getRowCount() {
+                return data.length;
+            }
+
+            public int getColumnCount() {
+                return data[0].length;
+            }
+
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                return data[rowIndex][columnIndex];
+            }
+
+            public String getColumnName(int columnIndex) {
+                return columnNames[columnIndex];
+            }
+        });
     }
 
     public void setListener(RecordTableListener listener) {
