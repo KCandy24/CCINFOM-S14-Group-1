@@ -22,8 +22,15 @@ public class TransactionAListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        switch (action) {
-            case "Check":
+        String name = ((JComponent) e.getSource()).getName();
+        System.out.println("Action: " + action + "\tName: " + name);
+
+        switch (name) {
+            case "searchUser":
+                this.searchUser();
+                break;
+            case "searchAnime":
+                this.searchAnime();
                 break;
             case "watchEpisode":
                 int user_id = 2; // Get From topview

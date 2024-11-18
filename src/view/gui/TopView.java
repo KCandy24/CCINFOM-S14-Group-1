@@ -158,6 +158,10 @@ public class TopView {
     public void TEMP_FUNC_setTransactionListener(ActionListener listener) {
         mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("watchEpisode",
                 listener);
+        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("searchUser",
+                listener);
+        mainTabs.get("Transactions").getSubtab(WATCH_EPISODE_TRANSACTION_SUBTAB).setActionListener("searchAnime",
+                listener);
     }
 
     public JComponent getComponent(String mainTab, String subTab, String component) {
