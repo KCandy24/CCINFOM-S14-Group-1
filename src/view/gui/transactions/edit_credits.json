@@ -1,20 +1,30 @@
 [
     [
         {
-            "value": "Search anime"
+            "value": "Anime"
         },
         {
-            "type": "ComboBox",
-            "name": "searchAnime"
+            "name": "anime",
+            "value": "No anime selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchAnime",
+            "value": "Search"
         }
     ],
     [
         {
-            "value": "Search staff"
+            "value": "Staff"
         },
         {
-            "type": "ComboBox",
-            "name": "searchStaff"
+            "name": "staffId",
+            "value": "No staff selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchStaff",
+            "value": "Search"
         }
     ],
     [
@@ -40,9 +50,7 @@
             "type": "Button",
             "name": "save",
             "value": "Save"
-        }
-    ],
-    [
+        },
         {
             "type": "Button",
             "name": "delete",
