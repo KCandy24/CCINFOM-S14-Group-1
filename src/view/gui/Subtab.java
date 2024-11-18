@@ -93,7 +93,7 @@ public class Subtab extends NamedPanel {
      * @param name
      * @return the component with a matching name
      */
-    private JComponent getComponent(String name) {
+    public JComponent getComponent(String name) {
         Tuple location = componentLocations.get(name);
         int i = location.getFirst();
         int j = location.getSecond();
