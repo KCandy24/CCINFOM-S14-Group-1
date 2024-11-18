@@ -1,12 +1,19 @@
 [
     [
         {
-            "value": "Search staff"
-        },
-        {
             "type": "Button",
             "value": "Search",
             "name": "searchStaff"
+        }
+    ],
+    [
+        {
+            "value": "Staff ID"
+        },
+        {
+            "value": "No staff selected",
+            "name": "staffId",
+            "column": "studio_id"
         }
     ],
     [
@@ -15,7 +22,8 @@
         },
         {
             "type": "TextField",
-            "name": "firstName"
+            "name": "firstName",
+            "column": "first_name"
         }
     ],
     [
@@ -24,7 +32,8 @@
         },
         {
             "type": "TextField",
-            "name": "lastName"
+            "name": "lastName",
+            "column": "last_name"
         }
     ],
     [
@@ -33,7 +42,8 @@
         },
         {
             "type": "TextField",
-            "name": "occupation"
+            "name": "occupation",
+            "column": "occupation"
         }
     ],
     [
@@ -42,7 +52,8 @@
         },
         {
             "type": "TextField",
-            "name": "birthday"
+            "name": "birthday",
+            "column": "birthday"
         }
     ],
     [

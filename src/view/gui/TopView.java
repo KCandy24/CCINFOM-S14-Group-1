@@ -9,14 +9,12 @@ import src.controller.AnimeRecordsListener;
 import src.controller.RecordTableListener;
 import src.controller.StaffRecordsListener;
 import src.controller.StudioRecordsListener;
-import src.controller.TitlesSearchBoxListener;
 import src.controller.UserRecordsListener;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
 
 public class TopView {
     private JFrame frame;
-    private SearchDemo searchDemo;
 
     private JTabbedPane tabs;
 
@@ -25,6 +23,10 @@ public class TopView {
     private Subtab userRecords;
     private Subtab staffRecords;
     private Subtab studioRecords;
+    private final String ANIME_RECORD_SUBTAB = "Anime";
+    private final String USER_RECORD_SUBTAB = "User";
+    private final String STAFF_RECORD_SUBTAB = "Staff";
+    private final String STUDIO_RECORD_SUBTAB = "Studio";
 
     private Tab transactionsTab;
     private Subtab watchEpisode;
@@ -56,12 +58,8 @@ public class TopView {
     public void instantiateWidgets() {
         tabs = WidgetFactory.createJTabbedPane();
 
-        // TODO: deprecate
-        // searchDemo = new SearchDemo();
-        // tabs.add("Demo", searchDemo);
-
         // TODO: The ff. initializations would definitely be better off in some data
-        // TODO: structure that we iterate through
+        // TODO: structure that we iterate through.
 
         recordTables = new HashMap<>();
         recordTables.put("animes", new RecordTable());
@@ -71,10 +69,10 @@ public class TopView {
 
         // Records
         recordsTab = new Tab("Records");
-        animeRecords = new Subtab("Anime", "records/anime.json");
-        userRecords = new Subtab("User", "records/user.json");
-        staffRecords = new Subtab("Staff", "records/staff.json");
-        studioRecords = new Subtab("Studio", "records/studio.json");
+        animeRecords = new Subtab(ANIME_RECORD_SUBTAB, "records/anime.json");
+        userRecords = new Subtab(USER_RECORD_SUBTAB, "records/user.json");
+        staffRecords = new Subtab(STAFF_RECORD_SUBTAB, "records/staff.json");
+        studioRecords = new Subtab(STUDIO_RECORD_SUBTAB, "records/studio.json");
 
         // Transactions
         transactionsTab = new Tab("Transactions");
@@ -117,15 +115,7 @@ public class TopView {
 
     // TODO: Set listeners to everything
 
-    // Search Demo
-    public void setSearchBoxListener(
-            TitlesSearchBoxListener searchBoxListener) {
-        this.searchDemo.setListener(searchBoxListener);
-    }
-
-    public void setSearchBoxResults(String[] results) {
-        this.searchDemo.setListData(results);
-    }
+    // Records
 
     // Set ActionListeners for the Anime Records subtab.
     public void setAnimeRecordsListener(AnimeRecordsListener listener) {
@@ -155,6 +145,14 @@ public class TopView {
         this.staffRecords.setActionListener("delete", listener);
     }
 
+    // Transactions
+
+    // Reports
+
+    // TODO: ^ Instead of defining a fifty functions for setting listeners, use a
+    // data structure like a HashMap<Subtab, ArrayList<ActionListener>>
+    // or something
+
     // Record Tables
     public void setRecordTableData(String recordName, String[][] data, String[] column) {
         recordTables.get(recordName).setTableData(data, column);
@@ -170,6 +168,33 @@ public class TopView {
 
     public int getSelected(String recordName) {
         return recordTables.get(recordName).getSelected();
+    }
+
+    public void setSubtabFieldFromData(String subtabName, HashMap<String, String> data) {
+        // TODO: Use HashMap<String, Subtab> instead of switch case
+        // ! TODO: Replace this thing with a HashMap.
+        // ? this.getSubtab(name).setData(data); ?
+        // or
+        // ? this.getTab(name).getSubtab(name).setData(data); ?
+        switch (subtabName) {
+            // Records
+            case ANIME_RECORD_SUBTAB:
+                animeRecords.setData(data);
+                break;
+            case USER_RECORD_SUBTAB:
+                userRecords.setData(data);
+                break;
+            case STAFF_RECORD_SUBTAB:
+                staffRecords.setData(data);
+                break;
+            case STUDIO_RECORD_SUBTAB:
+                studioRecords.setData(data);
+                break;
+            // TODO: Transactions
+
+            // TODO: Reports
+
+        }
     }
 
 }

@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.AbstractButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
@@ -26,6 +29,7 @@ import src.view.widget.WidgetFactory;
 public class Subtab extends NamedPanel {
     private ArrayList<ArrayList<JComponent>> components;
     private HashMap<String, Tuple> componentLocations;
+    private HashMap<String, Tuple> componentColumns;
     private String name;
 
     private static final String JSON_PATH_PREFIX = "src/view/gui/";
@@ -34,6 +38,7 @@ public class Subtab extends NamedPanel {
         this.name = name;
         this.components = new ArrayList<>();
         this.componentLocations = new HashMap<>();
+        this.componentColumns = new HashMap<>();
         this.setComponents(jsonPathString);
         this.addComponents();
     }
@@ -56,7 +61,10 @@ public class Subtab extends NamedPanel {
                     JSONObject cell = row.getJSONObject(j);
                     String name = cell.optString("name",
                             String.format("%d,%d", i, j));
+                    String column = cell.optString("column",
+                            String.format("-"));
                     componentLocations.put(name, new Tuple(i, j));
+                    componentColumns.put(column, new Tuple(i, j));
                     rowComponents.add(WidgetFactory.componentFromJSON(cell));
                 }
 
@@ -98,6 +106,40 @@ public class Subtab extends NamedPanel {
         int i = location.getFirst();
         int j = location.getSecond();
         return components.get(i).get(j);
+    }
+
+    /**
+     * Get the component associated with a column of a dataset.
+     * 
+     * @param columnName
+     * @return
+     */
+    private JComponent getAssociatedComponent(String columnName) {
+        System.out.println("Retrieving associated component from column " + columnName);
+        Tuple location = componentColumns.get(columnName);
+        if (location != null) {
+            int i = location.getFirst();
+            int j = location.getSecond();
+            return components.get(i).get(j);
+        } else {
+            System.out.println("No component found for column " + columnName);
+            return null;
+        }
+    }
+
+    public void setData(HashMap<String, String> data) {
+        for (String key : data.keySet()) {
+            JComponent component = this.getAssociatedComponent(key);
+            if (component instanceof AbstractButton) {
+                ((AbstractButton) component).setText(data.get(key));
+            } else if (component instanceof JLabel) {
+                ((JLabel) component).setText(data.get(key));
+            } else if (component instanceof JTextField) {
+                ((JTextField) component).setText(data.get(key));
+            } else if (component instanceof JComboBox) {
+                ((JComboBox<String>) component).setSelectedItem(data.get(key));
+            }
+        }
     }
 
     /**

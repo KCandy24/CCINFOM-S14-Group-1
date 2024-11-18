@@ -1,20 +1,30 @@
 [
     [
         {
-            "value": "Search user"
+            "value": "User"
         },
         {
-            "type": "ComboBox",
-            "name": "searchUser"
+            "name": "userId",
+            "value": "No user selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchUser",
+            "value": "Search"
         }
     ],
     [
         {
-            "value": "Anime watched"
+            "value": "Anime"
         },
         {
-            "type": "ComboBox",
-            "name": "searchAnime"
+            "name": "anime",
+            "value": "No anime selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchAnime",
+            "value": "Search"
         }
     ],
     [
@@ -24,6 +34,15 @@
         {
             "type": "TextField",
             "name": "rating"
+        }
+    ],
+    [
+        {
+            "value": "Comment"
+        },
+        {
+            "type": "TextArea",
+            "name": "comment"
         }
     ],
     [

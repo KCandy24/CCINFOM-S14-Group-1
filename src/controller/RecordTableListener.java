@@ -2,6 +2,9 @@ package src.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+
+import javax.swing.event.DocumentEvent;
 
 import src.model.AnimeSystem;
 import src.view.gui.TopView;
@@ -9,17 +12,16 @@ import src.view.gui.TopView;
 /**
  * ? Could be an abstract class?
  */
-public class RecordTableListener implements ActionListener {
-    AnimeSystem animeSystem;
-    TopView topView;
+public class RecordTableListener extends SearchBoxListener implements ActionListener {
     String recordName;
+    String subtabName;
     String[][] data;
     String[] column;
 
-    public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName) {
-        this.animeSystem = animeSystem;
-        this.topView = topView;
+    public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName, String subtabName) {
+        super(animeSystem, topView);
         this.recordName = recordName;
+        this.subtabName = subtabName;
         this.setData();
     }
 
@@ -29,16 +31,30 @@ public class RecordTableListener implements ActionListener {
         topView.setRecordTableData(recordName, this.data, column);
     }
 
-    // TODO: Implementing actions
-    // ? Idea: HashMap<recordName, HashMap<columnName, componentName>>?
+    /**
+     * Override this method in order to customize what happens when a row is
+     * selected.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // int index = topView.getSelected("animes");
         int index = topView.getSelected(recordName);
-        System.out.println(e.getActionCommand());
-        for (String data : this.data[index]) {
-            System.out.print(data + '\t');
+        HashMap<String, String> rowData = new HashMap<>();
+
+        for (int i = 0; i < this.data[index].length; i++) {
+            rowData.put(this.column[i], this.data[index][i]);
+            System.out.printf("%d\t%s : %s\n", i, this.column[i], this.data[index][i]);
         }
-        System.out.println();
+        topView.setSubtabFieldFromData(subtabName, rowData);
+    }
+
+    /**
+     * TODO: Filter out results. Use the name of the text field being updated in
+     * order to figure out what exactly is being filtered.
+     * 
+     * @param e
+     */
+    @Override
+    public void update(DocumentEvent e) {
+
     }
 }
