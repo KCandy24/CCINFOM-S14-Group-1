@@ -1,6 +1,5 @@
 package src.view.widget;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,9 +9,6 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.JButton;
 
 import src.controller.RecordTableListener;
@@ -36,35 +32,13 @@ public class RecordTable extends JDialog {
     }
 
     public void setTableData(String[][] data, String[] columnNames) {
-        table = new JTable(data, columnNames) {
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int columnIndex) {
-                Component component = super.prepareRenderer(renderer, rowIndex, columnIndex);
-                TableColumn tableColumn = getColumnModel().getColumn(columnIndex);
-                int componentPreferredWidth = component.getPreferredSize().width;
-                int columnPreferredWidth = tableColumn.getPreferredWidth();
-                tableColumn.setPreferredWidth(Math.max(componentPreferredWidth, columnPreferredWidth));
-                return component;
-            }
-        };
-        WidgetFactory.styleComponent(table);
-        table.getTableHeader().setFont(WidgetFactory.Fonts.BODY.getFont());
-
-        JScrollPane scrollPane = new JScrollPane(
-                table,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        WidgetFactory.styleComponent(scrollPane);
+        table = WidgetFactory.createJTable(data, columnNames);
+        JScrollPane scrollPane = WidgetFactory.createJScrollPane(table);
 
         int prevIpadx = c.ipadx;
         c.ipadx = 400;
         panel.add(scrollPane, c);
         c.gridy++;
-        for (String[] row : data) {
-            for (String cell : row) {
-                System.out.println(cell);
-            }
-        }
         c.ipadx = prevIpadx;
 
         button = WidgetFactory.createJButton("Select");

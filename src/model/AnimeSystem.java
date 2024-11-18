@@ -13,34 +13,10 @@ public class AnimeSystem {
     private Statement dbStatement;
     private ResultSet dbResultSet;
     private ResultSetMetaData dbMetaData;
-    private ArrayList<String> titles;
 
-    /**
-     * TODO: Made this, but not sure if it's useful; wdygt? - wafl
-     */
-    public enum Records {
-        ANIME("animes"),
-        USER("users"),
-        STAFF("staff"),
-        STUDIO("studios");
 
-        private String tableName;
-
-        private Records(String tableName) {
-            this.tableName = tableName;
-        }
-
-        public String getTableName() {
-            return this.tableName;
-        }
-
-        public String selectAllQuery() {
-            return "SELECT * FROM " + tableName;
-        }
-    }
 
     public AnimeSystem(String username, String password) {
-        titles = new ArrayList<String>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             dbConnection = DriverManager.getConnection(PATH, username, password);
@@ -49,7 +25,6 @@ public class AnimeSystem {
             System.err.println("Unable to establish connection");
             e.printStackTrace();
         }
-        this.getTitles();
     }
 
     // # Records
@@ -73,21 +48,6 @@ public class AnimeSystem {
         }
 
         return returnVal.toArray(new String[0]);
-    }
-
-    public void getTitles() {
-        try {
-            dbResultSet = dbStatement.executeQuery("SELECT * FROM animes");
-            while (dbResultSet.next()) {
-                String title = dbResultSet.getString("title");
-                if (!title.equals("")) {
-                    titles.add(title);
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Query to 'dbanime' Failed.");
-            e.printStackTrace();
-        }
     }
 
     // public boolean checkIfExists(int value, String column, String table){
@@ -156,16 +116,4 @@ public class AnimeSystem {
         return string;
     }
 
-    public String[] searchTitles(String text) {
-        ArrayList<String> results = new ArrayList<>();
-        String minimizedSearch = minimize(text);
-        String minimizedTitle;
-        for (String title : titles) {
-            minimizedTitle = minimize(title);
-            if (minimizedTitle.contains(minimizedSearch)) {
-                results.add(title);
-            }
-        }
-        return results.toArray(new String[0]);
-    }
 }

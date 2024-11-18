@@ -1,20 +1,16 @@
 [
     [
         {
-            "value": "Select user ID"
+            "value": "User"
         },
         {
-            "type": "TextField",
-            "name": "userId"
+            "name": "userId",
+            "value": "No user selected"
         },
         {
             "type": "Button",
             "name": "checkUser",
-            "value": "Check"
-        },
-        {
-            "name": "selectedUser",
-            "value": "No selected user"
+            "value": "Search"
         }
     ],
     [
@@ -22,8 +18,13 @@
             "value": "Anime"
         },
         {
-            "type": "TextField",
-            "name": "anime"
+            "name": "anime",
+            "value": "No anime selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchAnime",
+            "value": "Search"
         }
     ],
     [

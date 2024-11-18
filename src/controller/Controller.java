@@ -10,11 +10,7 @@ public class Controller {
     AnimeSystem animeSystem; // model
     TopView topView; // view
 
-    // Listeners
-
-    // TODO: Deprecate
-    // TitlesSearchBoxListener titlesSearchBoxListener;
-    // --
+    // # Listeners
 
     // Records
     AnimeRecordsListener animeRecordsListener;
@@ -39,12 +35,8 @@ public class Controller {
     public Controller(AnimeSystem animeSystem, TopView topView) {
         this.animeSystem = animeSystem;
         this.topView = topView;
-        // Initialize and set listeners
 
-        // TODO: Deprecate
-        // titlesSearchBoxListener = new TitlesSearchBoxListener(animeSystem, topView);
-        // topView.setSearchBoxListener(titlesSearchBoxListener);
-        // --
+        // # Initialize and set listeners
 
         // Records
         animeRecordsListener = new AnimeRecordsListener(animeSystem, topView);
@@ -57,14 +49,14 @@ public class Controller {
         topView.setStaffRecordsListener(staffRecordsListener);
 
         // Record Tables
-        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes");
-        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users");
-        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios");
-        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff");
+        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Anime");
+        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "User");
+        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Staff");
+        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Studio");
         topView.setRecordTableListener("animes", animeRecordTableListener);
         topView.setRecordTableListener("users", userRecordTableListener);
-        topView.setRecordTableListener("studios", studioRecordTableListener);
         topView.setRecordTableListener("staff", staffRecordTableListener);
+        topView.setRecordTableListener("studios", studioRecordTableListener);
 
         // Transactions
         transactionListener = new TransactionAListener(animeSystem, topView);

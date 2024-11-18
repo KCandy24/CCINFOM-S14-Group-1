@@ -1,16 +1,19 @@
 [
     [
         {
-            "value": "Select anime ID"
-        },
-        {
-            "type": "TextField",
-            "name": "animeId"
-        },
-        {
             "type": "Button",
             "name": "selectAnimeId",
             "value": "Search"
+        }
+    ],
+    [
+        {
+            "value": "Anime ID"
+        },
+        {
+            "value": "No anime selected",
+            "name": "animeId",
+            "column": "anime_id"
         }
     ],
     [
@@ -19,7 +22,8 @@
         },
         {
             "type": "TextField",
-            "name": "studioId"
+            "name": "studioId",
+            "column": "studio_id"
         }
     ],
     [
@@ -28,7 +32,8 @@
         },
         {
             "type": "TextField",
-            "name": "animeTitle"
+            "name": "animeTitle",
+            "column": "title"
         }
     ],
     [
@@ -37,7 +42,8 @@
         },
         {
             "type": "ComboBox",
-            "name": "genre"
+            "name": "genre",
+            "column": "genre"
         }
     ],
     [
@@ -46,7 +52,8 @@
         },
         {
             "type": "TextField",
-            "name": "from"
+            "name": "from",
+            "column": "available_from_date"
         },
         {
             "value": "to",
@@ -54,7 +61,8 @@
         },
         {
             "type": "TextField",
-            "name": "to"
+            "name": "to",
+            "column": "available_to_date"
         }
     ],
     [
@@ -63,7 +71,8 @@
         },
         {
             "type": "TextField",
-            "name": "episodes"
+            "name": "episodes",
+            "column": "num_of_episodes"
         }
     ],
     [

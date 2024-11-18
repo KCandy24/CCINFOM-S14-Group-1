@@ -3,6 +3,8 @@ package src.view.widget;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import org.json.JSONObject;
 
@@ -54,9 +56,7 @@ public class WidgetFactory {
     }
 
     /**
-     * Apply common stylings to a given component. TODO: A little concerned
-     * about this being public; it's used in SearchDemo and maybe other tabs
-     * outside `widget` which extend JPanel - Justin
+     * Apply common stylings to a given component.
      * 
      * @param component
      */
@@ -188,6 +188,32 @@ public class WidgetFactory {
         jList.setMaximumSize(
                 new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
         return jList;
+    }
+
+    public static JTable createJTable(String[][] data, String[] columnNames) {
+        JTable table = new JTable(data, columnNames) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int columnIndex) {
+                Component component = super.prepareRenderer(renderer, rowIndex, columnIndex);
+                TableColumn tableColumn = getColumnModel().getColumn(columnIndex);
+                int componentPreferredWidth = component.getPreferredSize().width;
+                int columnPreferredWidth = tableColumn.getPreferredWidth();
+                tableColumn.setPreferredWidth(Math.max(componentPreferredWidth, columnPreferredWidth));
+                return component;
+            }
+        };
+        WidgetFactory.styleComponent(table);
+        table.getTableHeader().setFont(WidgetFactory.Fonts.BODY.getFont());
+        return table;
+    }
+
+    public static JScrollPane createJScrollPane(JTable table) {
+        JScrollPane scrollPane = new JScrollPane(
+                table,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        WidgetFactory.styleComponent(scrollPane);
+        return scrollPane;
     }
 
     // Custom widgets

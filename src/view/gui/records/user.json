@@ -1,12 +1,19 @@
 [
     [
         {
-            "value": "Search user"
-        },
-        {
             "type": "Button",
             "value": "Search",
             "name": "searchUser"
+        }
+    ],
+    [
+        {
+            "value": "User ID"
+        },
+        {
+            "value": "No user selected",
+            "name": "userId",
+            "column": "user_id"
         }
     ],
     [
@@ -15,7 +22,8 @@
         },
         {
             "type": "TextField",
-            "name": "username"
+            "name": "username",
+            "column": "user_name"
         }
     ],
     [
@@ -24,7 +32,8 @@
         },
         {
             "type": "ComboBox",
-            "name": "region"
+            "name": "region",
+            "column": "region"
         }
     ],
     [
@@ -33,7 +42,8 @@
         },
         {
             "type": "TextField",
-            "name": "joinDate"
+            "name": "joinDate",
+            "column": "join_date"
         }
     ],
     [

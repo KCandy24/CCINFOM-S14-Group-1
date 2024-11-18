@@ -1,12 +1,19 @@
 [
     [
         {
-            "value": "Search studio"
-        },
-        {
             "type": "Button",
             "value": "Search",
             "name": "searchStudio"
+        }
+    ],
+    [
+        {
+            "value": "Studio ID"
+        },
+        {
+            "value": "No studio selected",
+            "name": "studioId",
+            "column": "studio_id"
         }
     ],
     [
@@ -15,7 +22,8 @@
         },
         {
             "type": "TextField",
-            "name": "studioName"
+            "name": "studioName",
+            "column": "studio_name"
         }
     ],
     [
