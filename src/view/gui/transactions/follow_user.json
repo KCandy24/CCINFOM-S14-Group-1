@@ -1,38 +1,42 @@
 [
     [
         {
-            "value": "Search user"
+            "value": "Search user (follower)"
         },
         {
-            "type": "ComboBox",
-            "name": "searchUser"
+            "name": "userId",
+            "value": "No user selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchUser",
+            "value": "Search"
         }
     ],
     [
         {
-            "value": "Anime watched"
+            "value": "Search user (followee)"
         },
         {
-            "type": "ComboBox",
-            "name": "searchAnime"
+            "name": "user2Id",
+            "value": "No user selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchUser2",
+            "value": "Search"
         }
     ],
     [
         {
-            "value": "Rating"
+            "type": "Button",
+            "name": "follow",
+            "value": "Follow"
         },
         {
-            "type": "TextField",
-            "name": "rating"
-        }
-    ],
-    [
-        {
-            "value": "Last episode watched"
-        },
-        {
-            "name": "lastEpisodeWatched",
-            "value": "0"
+            "type": "Button",
+            "name": "unfollow",
+            "value": "Unfollow"
         }
     ]
 ]

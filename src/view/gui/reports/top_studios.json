@@ -10,11 +10,17 @@
     ],
     [
         {
-            "value": "Select studio"
+            "value": "Studio"
         },
         {
-            "type": "ComboBox",
-            "name": "studio"
+            "value": "No studio selected",
+            "name": "studioId",
+            "column": "studio_id"
+        },
+        {
+            "type": "Button",
+            "value": "Search",
+            "name": "searchStudio"
         }
     ],
     [
