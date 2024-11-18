@@ -20,7 +20,8 @@ public class RecordTable extends JDialog {
     private GridBagConstraints c = new GridBagConstraints();
 
     public RecordTable() {
-        this.setMinimumSize(new Dimension(1000, 1000));
+        this.setSize(new Dimension(1000, 1000));
+        this.setResizable(true);
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         c.insets = new Insets(16, 8, 16, 8);
