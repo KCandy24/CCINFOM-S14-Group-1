@@ -26,13 +26,12 @@ import org.json.JSONObject;
 
 import src.model.Genre;
 import src.model.UserRegion;
-import src.util.Tuple;
 import src.view.widget.WidgetFactory;
 
 public class Subtab extends NamedPanel {
     private ArrayList<ArrayList<JComponent>> components;
-    private HashMap<String, Tuple> componentLocations;
-    private HashMap<String, Tuple> componentColumns;
+    private HashMap<String, JComponent> componentLocations;
+    private HashMap<String, JComponent> componentColumns;
     private String name;
 
     private static final String JSON_PATH_PREFIX = "src/view/gui/";
@@ -66,9 +65,10 @@ public class Subtab extends NamedPanel {
                             String.format("%d,%d", i, j));
                     String column = cell.optString("column",
                             String.format("-"));
-                    componentLocations.put(name, new Tuple(i, j));
-                    componentColumns.put(column, new Tuple(i, j));
-                    rowComponents.add(WidgetFactory.componentFromJSON(cell));
+                    JComponent component = WidgetFactory.componentFromJSON(cell);
+                    componentLocations.put(name, component);
+                    componentColumns.put(column, component);
+                    rowComponents.add(component);
                 }
 
                 components.add(rowComponents);
@@ -109,10 +109,7 @@ public class Subtab extends NamedPanel {
      * @return the component with a matching name
      */
     public JComponent getComponent(String name) {
-        Tuple location = componentLocations.get(name);
-        int i = location.getFirst();
-        int j = location.getSecond();
-        return components.get(i).get(j);
+        return componentLocations.get(name);
     }
 
     /**
@@ -122,16 +119,7 @@ public class Subtab extends NamedPanel {
      * @return
      */
     private JComponent getAssociatedComponent(String columnName) {
-        System.out.println("Retrieving associated component from column " + columnName);
-        Tuple location = componentColumns.get(columnName);
-        if (location != null) {
-            int i = location.getFirst();
-            int j = location.getSecond();
-            return components.get(i).get(j);
-        } else {
-            System.out.println("No component found for column " + columnName);
-            return null;
-        }
+        return componentColumns.get(columnName);
     }
 
     public void setData(HashMap<String, String> data) {

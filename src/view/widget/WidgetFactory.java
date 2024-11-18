@@ -3,7 +3,6 @@ package src.view.widget;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.plaf.synth.Region;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -220,16 +219,6 @@ public class WidgetFactory {
     }
 
     // Custom widgets
-
-    public static SearchBox createSearchBox() {
-        SearchBox searchBox = new SearchBox();
-        return searchBox;
-    }
-
-    public static ButtonSet createButtonSet(String header, String[] labels) {
-        ButtonSet buttonSet = new ButtonSet(header, labels);
-        return buttonSet;
-    }
 
     public static LabelledField creatLabelledField(String text) {
         return new LabelledField(text);
