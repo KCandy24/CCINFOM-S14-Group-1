@@ -23,8 +23,7 @@ CREATE TABLE `staff` (
     `first_name` VARCHAR(16) NOT NULL,
     `last_name` VARCHAR(16) NOT NULL,
     `occupation` VARCHAR(32) NOT NULL,
-    `birthday` DATE NOT NULL,
-    UNIQUE('first_name', 'last_name');
+    `birthday` DATE NOT NULL
 );
 
 DROP TABLE IF EXISTS `animes`;
@@ -85,7 +84,7 @@ CREATE TABLE `follows` (
     FOREIGN KEY(`followed_id`) REFERENCES `users`(`user_id`)
 );
 
-INSERT INTO `studios` (`studio_id`, `studio_name`) VALUES
+INSERT INTO `studios` (`studio_name`) VALUES
 ('Studio Zero'),            -- 1
 ('StarVision Studios'),     -- 2
 ('PixelCraft Studios'),     -- 3
@@ -100,11 +99,11 @@ INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES
 ('WaffleQuest',    'AU', '2022-05-12'); -- 5
 
 INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`) VALUES
-(1, 'Eternal Horizon',       'AC', '2022-01-06', 3), -- 1
+(1, 'Eternal Horizon',       'AD', '2022-01-06', 3), -- 1
 (2, 'Violet Shards',         'DR', '2022-03-25', 2), -- 2
 (2, 'Cosmic Eclipse',        'SF', '2022-04-15', 5), -- 3
 (3, 'Wanderlust Chronicles', 'DR', '2023-03-03', 3), -- 4
-(5, 'Unspoken Truth',        'AC', '2023-07-09', 2), -- 5
+(5, 'Unspoken Truth',        'AD', '2023-07-09', 2), -- 5
 (4, 'Whispers of the Past',  'HO', '2023-09-03', 3), -- 6
 (4, 'Phantom Dance',         'CO', '2023-12-23', 1); -- 7
 
