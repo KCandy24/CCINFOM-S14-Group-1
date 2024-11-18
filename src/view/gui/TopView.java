@@ -160,7 +160,7 @@ public class TopView {
                 listener);
     }
 
-    public JComponent accessComponent(String mainTab, String subTab, String component) {
+    public JComponent getComponent(String mainTab, String subTab, String component) {
         return mainTabs.get(mainTab).getSubtab(subTab).getComponent(component);
     }
 

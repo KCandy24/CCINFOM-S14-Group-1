@@ -14,7 +14,6 @@ public class AnimeSystem {
     private ResultSet dbResultSet;
     private ResultSetMetaData dbMetaData;
 
-
     public AnimeSystem(String username, String password) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -30,15 +29,15 @@ public class AnimeSystem {
 
     // ## Anime
 
-    public String[] getRecordColNames(String recordName){
+    public String[] getRecordColNames(String recordName) {
         System.out.println("Columns of " + recordName);
         ArrayList<String> returnVal = new ArrayList<String>();
         try {
             dbResultSet = dbStatement.executeQuery(
-                                "SELECT `COLUMN_NAME` \r\n" + //
-                                "FROM `INFORMATION_SCHEMA`.`COLUMNS` \r\n" + //
-                                "WHERE `TABLE_SCHEMA`= 'dbanime'\r\n" + //
-                                "AND `TABLE_NAME`='" +  recordName +  "';");
+                    "SELECT `COLUMN_NAME` \r\n" + //
+                            "FROM `INFORMATION_SCHEMA`.`COLUMNS` \r\n" + //
+                            "WHERE `TABLE_SCHEMA`= 'dbanime'\r\n" + //
+                            "AND `TABLE_NAME`='" + recordName + "';");
             while (dbResultSet.next()) {
                 returnVal.add(dbResultSet.getString("COLUMN_NAME"));
             }
@@ -145,6 +144,19 @@ public class AnimeSystem {
             dbStatement.executeUpdate(query);
         } catch (Exception e) {
             System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+        }
+    }
+
+    public void safeUpdate(String query, String... arguments) {
+        try {
+            PreparedStatement statement = dbConnection.prepareStatement(query);
+            for (int i = 0; i < arguments.length; i++) {
+                statement.setString(i + 1, arguments[i]);
+            }
+            System.out.println(statement);
+            statement.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

@@ -291,6 +291,12 @@ public class WidgetFactory {
                 break;
         }
 
+        String name = cell.optString("name");
+
+        if (!name.isEmpty()) {
+            component.setName(value);
+        }
+
         return component;
     }
 }
