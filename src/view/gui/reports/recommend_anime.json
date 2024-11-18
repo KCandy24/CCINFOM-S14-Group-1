@@ -1,11 +1,16 @@
 [
     [
         {
-            "value": "Select user"
+            "value": "User"
         },
         {
-            "type": "ComboBox",
-            "name": "searchUser"
+            "name": "userId",
+            "value": "No user selected"
+        },
+        {
+            "type": "Button",
+            "name": "searchUser",
+            "value": "Search"
         }
     ],
     [

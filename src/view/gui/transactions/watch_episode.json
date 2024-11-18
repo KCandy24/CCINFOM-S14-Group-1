@@ -9,7 +9,7 @@
         },
         {
             "type": "Button",
-            "name": "checkUser",
+            "name": "searchUser",
             "value": "Search"
         }
     ],

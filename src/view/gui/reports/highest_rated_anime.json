@@ -1,7 +1,6 @@
 [
     [
         {
-            "type": "Label",
             "name": "periodLabel",
             "value": "Select Period"
         },
@@ -12,13 +11,13 @@
     ],
     [
         {
-            "type": "Label",
             "name": "genreLabel",
             "value": "Select Genre"
         },
         {
             "type": "ComboBox",
-            "name": "genreComboBox"
+            "name": "genreComboBox",
+            "combobox_type": "genre"
         }
     ],
     [
