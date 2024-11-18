@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -23,6 +24,8 @@ import java.awt.event.ActionListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import src.model.Genre;
+import src.model.UserRegion;
 import src.util.Tuple;
 import src.view.widget.WidgetFactory;
 
@@ -75,7 +78,6 @@ public class Subtab extends NamedPanel {
         }
     }
 
-
     /**
      * Actually adds the components to the Subtab.
      */
@@ -89,6 +91,11 @@ public class Subtab extends NamedPanel {
         for (ArrayList<JComponent> row : components) {
             c.gridx = 0;
             for (JComponent component : row) {
+                if (component instanceof JButton) {
+                    c.fill = GridBagConstraints.NONE;
+                } else {
+                    c.fill = GridBagConstraints.HORIZONTAL;
+                }
                 this.add(component, c);
                 c.gridx++;
             }
@@ -137,7 +144,13 @@ public class Subtab extends NamedPanel {
             } else if (component instanceof JTextField) {
                 ((JTextField) component).setText(data.get(key));
             } else if (component instanceof JComboBox) {
-                ((JComboBox<String>) component).setSelectedItem(data.get(key));
+                JComboBox<String> comboBox = (JComboBox<String>) component;
+                String genreName = Genre.findName(data.get(key));
+                if (genreName != null) {
+                    comboBox.setSelectedItem(genreName);
+                } else {
+                    comboBox.setSelectedItem(UserRegion.findName(data.get(key)));
+                }
             }
         }
     }

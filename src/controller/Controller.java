@@ -48,11 +48,12 @@ public class Controller {
         topView.setStudioRecordsListener(studioRecordsListener);
         topView.setStaffRecordsListener(staffRecordsListener);
 
+
         // Record Tables
-        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Anime");
-        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "User");
-        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Staff");
-        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Studio");
+        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
+        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
+        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");
+        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Records", "Studio");
         topView.setRecordTableListener("animes", animeRecordTableListener);
         topView.setRecordTableListener("users", userRecordTableListener);
         topView.setRecordTableListener("staff", staffRecordTableListener);
