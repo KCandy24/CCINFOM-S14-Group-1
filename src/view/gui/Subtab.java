@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -136,6 +138,12 @@ public class Subtab extends NamedPanel {
         componentDbLinks.put(columnName, getComponent(componentName));
     }
 
+    /**
+     * TODO: This, but accepts componentName.
+     * 
+     * @param component
+     * @param text
+     */
     public void setComponentText(JComponent component, String text) {
         if (component instanceof AbstractButton) {
             ((AbstractButton) component).setText(text);
@@ -216,6 +224,10 @@ public class Subtab extends NamedPanel {
                 break;
             case "JTextField":
                 retval = ((JTextField) component).getText();
+                break;
+            case "JTextArea":
+                retval = ((JTextArea) ((JScrollPane) component).getComponent(0)).getText();
+                System.out.println("\tGetting text from a text area is untested");
                 break;
             case "JComboBox":
                 JComboBox<String> comboBox = (JComboBox<String>) component;
