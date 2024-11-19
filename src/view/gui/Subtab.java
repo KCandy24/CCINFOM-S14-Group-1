@@ -192,4 +192,45 @@ public class Subtab extends NamedPanel {
         return name;
     }
 
+    /**
+     * Get the text of a certain component.
+     * 
+     * @param componentName
+     * @param comboBoxType  Optional: combo box type -- region, genre.
+     * @return
+     */
+    public String getComponentText(String componentName, String... comboBoxType) {
+        JComponent component = getComponent(componentName);
+        String componentClass = component.getClass().getSimpleName();
+        String retval = new String();
+        switch (componentClass) {
+            case "JLabel":
+                retval = ((JLabel) component).getText();
+                break;
+            case "JTextField":
+                retval = ((JTextField) component).getText();
+                break;
+            case "JComboBox":
+                JComboBox<String> comboBox = (JComboBox<String>) component;
+                String selection = comboBox.getSelectedItem().toString();
+                switch (comboBoxType[0]) {
+                    case "region":
+                        retval = UserRegion.findCode(selection);
+                        break;
+                    case "genre":
+                        retval = Genre.findCode(selection);
+                        break;
+                    default:
+                        System.err.println("Unhandled comboBoxType " + comboBoxType[0]);
+                        break;
+                }
+                break;
+            default:
+                System.out.println("Unhandled component class " + componentClass
+                        + ". Please add a new case in Subtab.getComponentText()!");
+                break;
+        }
+        return retval;
+    }
+
 }
