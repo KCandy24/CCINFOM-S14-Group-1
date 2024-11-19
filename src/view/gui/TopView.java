@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import src.controller.CurrentSubtabListener;
 import src.controller.CurrentTabListener;
 import src.controller.RecordTableListener;
+import src.model.Genre;
 import src.model.Records;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
@@ -365,6 +366,7 @@ public class TopView {
 
         for (String[] strings : tableValuesArr) {
             strings[0] = Integer.toString(rank);
+            strings[2] = Genre.findName(strings[2]);
             rank++;
         }
         DefaultTableModel tableModel = new DefaultTableModel(tableValuesArr, columns);
