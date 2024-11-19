@@ -118,6 +118,9 @@ public class TopView {
         }
     }
 
+    /**
+     * Maybe store current tabName, subtabName in TopView
+     */
     public void setFieldsFromData(String tabName, String subtabName, HashMap<String, String> data) {
         mainTabs.get(tabName).getSubtab(subtabName).setFields(data);
     }
@@ -145,6 +148,15 @@ public class TopView {
         return recordTables.get(recordName).getSelected();
     }
 
+    public void setRecordTableVisible(String recordName, boolean b) {
+        this.recordTables.get(recordName).setVisible(b);
+    }
+
+    // Subtab
+
+    public Subtab getSubtab(String mainTab, String subTab) {
+        return mainTabs.get(mainTab).getSubtab(subTab);
+    }
 
     /**
      * Reset the fields of a subtab.
@@ -154,10 +166,6 @@ public class TopView {
      */
     public void resetFields(String tabName, String subtabName) {
         mainTabs.get(tabName).getSubtab(subtabName).resetFields();
-    }
-
-    public Subtab getSubtab(String mainTab, String subTab) {
-        return mainTabs.get(mainTab).getSubtab(subTab);
     }
 
     public JComponent getComponent(String mainTab, String subTab, String component) {
@@ -178,7 +186,5 @@ public class TopView {
         popup.setVisible(true);
     }
 
-    public void setRecordTableVisible(String recordName, boolean b) {
-        this.recordTables.get(recordName).setVisible(b);
-    }
+
 }

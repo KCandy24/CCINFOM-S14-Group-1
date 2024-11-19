@@ -32,7 +32,7 @@ public class RecordsTabListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = ((JComponent) e.getSource()).getName();
-        System.out.println("\nRecords/Anime/?buttonName=" + name);
+        System.out.println("\nRecords?buttonName=" + name);
 
         switch (name) {
             // Anime subtab

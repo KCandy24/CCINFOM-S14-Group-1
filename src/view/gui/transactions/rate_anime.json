@@ -9,7 +9,7 @@
         },
         {
             "type": "Button",
-            "name": "searchUser",
+            "name": "searchUserRateAnime",
             "value": "Search"
         }
     ],
@@ -23,7 +23,7 @@
         },
         {
             "type": "Button",
-            "name": "searchAnime",
+            "name": "searchAnimeRateAnime",
             "value": "Search"
         }
     ],
@@ -57,7 +57,8 @@
     [
         {
             "type": "Button",
-            "value": "Save rating"
+            "value": "Save rating",
+            "name": "rateAnime"
         }
     ]
 ]

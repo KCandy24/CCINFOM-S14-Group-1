@@ -17,13 +17,9 @@ public class Controller {
     RecordTableListener studioRecordTableListener;
     RecordTableListener staffRecordTableListener;
 
-    // Records
+    // Per-Tab Listeners
     RecordsTabListener recordsTabListener;
-
-    // Transactions
-    ActionListener transactionListener;
-
-    // Reports
+    TransactionsTabListener transactionsTabListener;
     ActionListener reportListener;
     
     /**
@@ -35,7 +31,21 @@ public class Controller {
 
         // # Initialize and set listeners
 
-        // Records
+        // ## RecordTableListeners ("search pop-up")
+        // TODO: Revise RecordTable to make it work in other tabs aside from the Records
+        // ? Solution: Make TopView store the current tab and subtab?
+        // ? + Set listeners to the JTabbedPanes to update the current tab, subtab
+        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
+        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
+        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");
+        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Records", "Studio");
+
+        topView.setRecordTableListener("animes", animeRecordTableListener);
+        topView.setRecordTableListener("users", userRecordTableListener);
+        topView.setRecordTableListener("staff", staffRecordTableListener);
+        topView.setRecordTableListener("studios", studioRecordTableListener);
+
+        // ## Records Tab
         recordsTabListener = new RecordsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
@@ -54,28 +64,21 @@ public class Controller {
                 recordsTabListener,
                 "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
 
-        // Record Tables ("Search Pop-up")
-
-        // TODO: Revise RecordTable to make it work in other tabs aside from the Records
-        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
-        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
-        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");
-        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Records", "Studio");
-
-        topView.setRecordTableListener("animes", animeRecordTableListener);
-        topView.setRecordTableListener("users", userRecordTableListener);
-        topView.setRecordTableListener("staff", staffRecordTableListener);
-        topView.setRecordTableListener("studios", studioRecordTableListener);
-
-        // Transactions
-        transactionListener = new TransactionAListener(animeSystem, topView);
+        // ## Transactions Tab
+        transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
-                transactionListener,
-                "searchUser", "searchAnime", "watchEpisode");
+                transactionsTabListener,
+                "searchUserWatchEpisode", "searchAnimeWatchEpisode", "watchEpisode");
+        topView.setActionListeners(
+                TopView.TRANSACTIONS_TAB, TopView.RATE_ANIME_TRANSACTION_SUBTAB,
+                transactionsTabListener,
+                "searchUserRateAnime", "searchAnimeRateAnime", "rateAnime");
+        // TODO: Set listeners for edit credits, follow user
 
-        // Reports
-        reportListener = new ReportsAListener(animeSystem, topView);
+        // ## Reports Tab
+        reportListener = new ReportsTabListener(animeSystem, topView);
+        // TODO: Set report listeners
 
     }
 }
