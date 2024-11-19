@@ -65,8 +65,7 @@ public class TransactionsTabListener implements ActionListener {
     public int getUserIDFromTopView(){
         try {
             Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
-            JLabel userIDLabel = (JLabel)subtab.getComponent("userId");
-            String userIDString = userIDLabel.getText();
+            String userIDString = subtab.getComponentText("userId");
             int user_id = Integer.parseInt(userIDString);
             return user_id;
         } catch (Exception e) {
@@ -82,8 +81,7 @@ public class TransactionsTabListener implements ActionListener {
     public int getAnimeIDFromTopView(){
         try {
             Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
-            JLabel animeIDLabel = (JLabel)subtab.getComponent("animeId");
-            String animeIDString = animeIDLabel.getText();
+            String animeIDString = subtab.getComponentText("animeId");
             int anime_id = Integer.parseInt(animeIDString);
             return anime_id;
         } catch (Exception e) {
