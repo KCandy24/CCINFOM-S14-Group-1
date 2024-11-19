@@ -81,7 +81,7 @@ public class TopView {
         subtabNames = new ArrayList<>();
 
         for (Records record : Records.values()) {
-            recordTables.put(record.getTableName(), new RecordTable());
+            recordTables.put(record.getTableName(), new RecordTable(frame, record.getTableName()));
         }
 
         Collections.addAll(tabNames, RECORDS_TAB, TRANSACTIONS_TAB, REPORTS_TAB);
