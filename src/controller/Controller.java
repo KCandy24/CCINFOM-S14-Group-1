@@ -2,6 +2,7 @@ package src.controller;
 
 import java.awt.event.*;
 import src.model.AnimeSystem;
+import src.model.Records;
 import src.view.gui.TopView;
 /**
  * The controller communicates between the model and the view.
@@ -38,10 +39,10 @@ public class Controller {
         // TODO: Revise RecordTable to make it work in other tabs aside from the Records
         // ? Solution: Make TopView store the current tab and subtab?
         // ? + Set listeners to the JTabbedPanes to update the current tab, subtab
-        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes");
-        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users");
-        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff");
-        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios");
+        animeRecordTableListener = new RecordTableListener(animeSystem, topView, Records.ANIME);
+        userRecordTableListener = new RecordTableListener(animeSystem, topView, Records.USER);
+        staffRecordTableListener = new RecordTableListener(animeSystem, topView, Records.STAFF);
+        studioRecordTableListener = new RecordTableListener(animeSystem, topView, Records.STUDIO);
 
         topView.setRecordTableListener("animes", animeRecordTableListener);
         topView.setRecordTableListener("users", userRecordTableListener);
@@ -57,7 +58,7 @@ public class Controller {
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
                 recordsTabListener,
-                "searchAnime", "addNewAnime", "saveAnime", "deleteAnime");
+                "searchAnime", "searchStudio", "addNewAnime", "saveAnime", "deleteAnime");
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB,
                 recordsTabListener,

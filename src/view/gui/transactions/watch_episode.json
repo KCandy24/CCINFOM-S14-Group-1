@@ -6,12 +6,12 @@
         {
             "name": "username",
             "value": "No user selected",
-            "column": "user_name"
+            "db_link": "users.user_name"
         },
         {
             "name": "userId",
             "value": "",
-            "column": "user_id"
+            "db_link": "users.user_id"
         },
         {
             "type": "Button",
@@ -26,12 +26,12 @@
         {
             "name": "anime",
             "value": "No anime selected",
-            "column": "title"
+            "db_link": "animes.title"
         },
         {
             "name": "animeId",
             "value": "",
-            "column": "anime_id"
+            "db_link": "animes.anime_id"
         },
         {
             "type": "Button",
