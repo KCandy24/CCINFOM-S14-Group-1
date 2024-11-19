@@ -4,8 +4,14 @@
             "value": "User"
         },
         {
+            "name": "username",
+            "value": "No user selected",
+            "column": "user_name"
+        },
+        {
             "name": "userId",
-            "value": "No user selected"
+            "value": "",
+            "column": "user_id"
         },
         {
             "type": "Button",
@@ -19,7 +25,13 @@
         },
         {
             "name": "anime",
-            "value": "No anime selected"
+            "value": "No anime selected",
+            "column": "title"
+        },
+        {
+            "name": "animeId",
+            "value": "",
+            "column": "anime_id"
         },
         {
             "type": "Button",

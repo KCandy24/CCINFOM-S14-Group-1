@@ -74,7 +74,7 @@ public class WidgetFactory {
      * @return
      */
     public static JFrame createJFrame(String title) {
-        Dimension windowSize = new Dimension(1360, 768);
+        Dimension windowSize = new Dimension(800, 600);
 
         // Attempt to set system look and feel
         try {

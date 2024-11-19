@@ -5,7 +5,8 @@
         },
         {
             "name": "anime",
-            "value": "No anime selected"
+            "value": "No anime selected",
+            "column": "title"
         },
         {
             "type": "Button",

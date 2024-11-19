@@ -52,7 +52,7 @@ public class Subtab extends NamedPanel {
      */
     private void setComponents(String jsonFileName) {
         Path jsonPath = Paths.get(JSON_PATH_PREFIX + jsonFileName);
-        System.out.println(JSON_PATH_PREFIX + jsonFileName);
+        System.out.println("\nSetting components from " + JSON_PATH_PREFIX + jsonFileName);
         try {
             String content = new String(Files.readAllBytes(jsonPath));
             JSONArray jsonArray = new JSONArray(content);
@@ -71,8 +71,10 @@ public class Subtab extends NamedPanel {
 
                     String column = cell.optString("column");
                     if (!column.isEmpty()) {
-                        componentColumns.put(column, component);
-                        System.out.println(name + "<-" + column);
+                        System.out.println("\t" + name + " component is associated with the " + column + " column.");
+                        if (componentColumns.put(column, component) != null) {
+                            System.out.println("\t\tAnother component was associated with this column before!");
+                        } ;
                     }
 
                     rowComponents.add(component);
