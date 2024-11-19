@@ -92,25 +92,23 @@ public class AnimeSystem {
         }
     }
 
-    public String[][] getProcedureResults(String procedure) {
-        ArrayList<String[]> results = new ArrayList<String[]>();
-        try {
-            dbResultSet = dbStatement.executeQuery("CALL " + procedure);
-            dbMetaData = dbResultSet.getMetaData();
-            int columnCount = dbMetaData.getColumnCount();
-            while (dbResultSet.next()) {
-                String[] rowData = new String[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    rowData[i] = dbResultSet.getString(i + 1);
-                }
-                results.add(rowData);
-            }
-            return results.toArray(new String[0][0]);
-        } catch (Exception e) {
-            System.err.println("Procedure" + " Failed to Execute.");
-            e.printStackTrace();
-            return null;
+    public String[][] getProcedureResults(String procedure, String... arguments) throws SQLException{
+        ArrayList<String[]> data = new ArrayList<String[]>();
+        PreparedStatement statement = dbConnection.prepareStatement("CALL " + procedure);
+        for (int i = 0; i < arguments.length; i++) {
+            statement.setString(i + 1, arguments[i]);
         }
+        dbResultSet = statement.executeQuery();
+        dbMetaData = dbResultSet.getMetaData();
+        int columnCount = dbMetaData.getColumnCount();
+        while (dbResultSet.next()) {
+            String[] rowData = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                rowData[i] = dbResultSet.getString(i + 1);
+            }
+            data.add(rowData);
+        }
+        return data.toArray(new String[0][0]);
     }
 
     public String singleQuery(String query) {

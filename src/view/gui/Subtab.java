@@ -222,6 +222,17 @@ public class Subtab extends NamedPanel {
                     case "genre":
                         retval = Genre.findCode(selection);
                         break;
+                    case "period":
+                        retval = selection;
+                        break;
+                    case "genre_with_none":
+                        if (selection.equals("None")) {
+                            retval = "None";            
+                        }
+                        else {
+                            retval = Genre.findCode(selection);
+                        }
+                        break;
                     default:
                         System.err.println("Unhandled comboBoxType " + comboBoxType[0]);
                         break;

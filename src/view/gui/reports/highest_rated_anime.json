@@ -6,18 +6,19 @@
         },
         {
             "type": "ComboBox",
-            "name": "periodComboBox"
+            "name": "periodComboBox",
+            "combobox_type": "period"
         }
     ],
     [
         {
             "name": "genreLabel",
-            "value": "Select Genre"
+            "value": "Filter by Genre"
         },
         {
             "type": "ComboBox",
             "name": "genreComboBox",
-            "combobox_type": "genre"
+            "combobox_type": "genre_with_none"
         }
     ],
     [

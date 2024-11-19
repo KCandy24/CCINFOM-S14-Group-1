@@ -257,6 +257,18 @@ public class WidgetFactory {
                             comboBox.addItem(region.name);
                         }
                         break;
+                    case "period":
+                        comboBox.addItem("Overall");
+                        comboBox.addItem("Monthly");
+                        comboBox.addItem("Seasonal");
+                        comboBox.addItem("Yearly");
+                        break;
+                    case "genre_with_none":
+                        comboBox.addItem("None");
+                        for (Genre genre : Genre.values()) {
+                            comboBox.addItem(genre.name);
+                        }
+                        break;
                 }
                 component = comboBox;
                 break;
