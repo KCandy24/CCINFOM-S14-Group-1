@@ -205,8 +205,8 @@ DELIMITER //
 -- DROP PROCEDURE IF EXISTS `SelectBestAnimeOverall`; 
 CREATE PROCEDURE `SelectBestAnimeOverall`()
 BEGIN
-	DROP TABLE IF EXISTS `best_anime`;
-	CREATE TABLE IF NOT EXISTS `best_anime` (
+	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
+	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
         title VARCHAR(255),
         genre VARCHAR(255),
         studio_name VARCHAR(255),
@@ -243,7 +243,7 @@ CREATE PROCEDURE `SelectBestAnimeInMonth`(
 	IN param_month INT
 )
 BEGIN
-	CREATE TABLE IF NOT EXISTS `best_anime` (
+	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
 		month_ VARCHAR(9),
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -283,8 +283,8 @@ DELIMITER //
 CREATE PROCEDURE `SelectBestAnimeMonths`()
 BEGIN
 	DECLARE i INT DEFAULT 1;
-	DROP TABLE IF EXISTS `best_anime`;
-	CREATE TABLE IF NOT EXISTS `best_anime` (
+	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
+	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
 		month_ VARCHAR(9),
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -313,7 +313,7 @@ CREATE PROCEDURE `SelectBestAnimeInSeason`(
     IN season_name VARCHAR(6)
 )
 BEGIN
-	CREATE TABLE IF NOT EXISTS `best_anime` (
+	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
         season VARCHAR(6),
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -351,8 +351,8 @@ DELIMITER //
 -- DROP PROCEDURE IF EXISTS `SelectBestAnimeSeason`;
 CREATE PROCEDURE `SelectBestAnimeSeason`()
 BEGIN
-	DROP TABLE IF EXISTS `best_anime`;
-	CREATE TABLE IF NOT EXISTS `best_anime` (
+	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
+	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
         season VARCHAR(6),
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -377,7 +377,7 @@ CREATE PROCEDURE `SelectBestAnimeInYear`(
 	IN param_year INT
 )
 BEGIN
-    CREATE TABLE IF NOT EXISTS `best_anime`(
+    CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime`(
         year_ INT,
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -421,8 +421,8 @@ BEGIN
 	SELECT MIN(YEAR(a.air_date)) INTO min FROM animes a;
     SELECT MAX(YEAR(a.air_date)) INTO max FROM animes a;
 		
-	DROP TABLE IF EXISTS `best_anime`;
-	CREATE TABLE IF NOT EXISTS `best_anime`(
+	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
+	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime`(
         year_ INT,
         title VARCHAR(255),
         genre VARCHAR(255),
@@ -683,10 +683,15 @@ CREATE PROCEDURE WatchAnime(
 )
 BEGIN
 	DECLARE lastWatched INT;
-    
+	DECLARE maxEpisodes INT;
+
+	SELECT num_of_episodes INTO maxEpisodes FROM animes WHERE anime_id = param_anime_id;
+
 	CALL GetLastWatched(param_user_id, param_anime_id, lastWatched);
-    
-	INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) VALUES
-	(param_user_id, param_anime_id, lastWatched + 1, CURRENT_TIMESTAMP());
+
+	IF (lastWatched < maxEpisodes) THEN
+		INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watched`) 
+		VALUES (param_user_id, param_anime_id, lastWatched + 1, CURRENT_TIMESTAMP());
+	END IF;
 END //  
 DELIMITER ; 
