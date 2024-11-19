@@ -1,25 +1,23 @@
 package src.model;
 
 /**
- * TODO: Made this, but not sure if it's useful; wdygt? - wafl
  */
 public enum Records {
-    ANIME("animes"),
-    USER("users"),
-    STAFF("staff"),
-    STUDIO("studios");
+    ANIME("animes", "an anime", "title"),
+    USER("users", "a user",
+            "user_name"),
+    STAFF("staff", "a staff member",
+            "first_name", "last_name"),
+    STUDIO("studios", "a studio",
+            "studio_name");
 
-    private String tableName;
+    public final String name;
+    public final String noun;
+    public final String[] shownColumnNames;
 
-    private Records(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableName() {
-        return this.tableName;
-    }
-
-    public String selectAllQuery() {
-        return "SELECT * FROM " + tableName;
+    private Records(String name, String noun, String... shownColumnNames) {
+        this.name = name;
+        this.noun = noun;
+        this.shownColumnNames = shownColumnNames;
     }
 }

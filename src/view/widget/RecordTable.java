@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.JButton;
 
 import src.controller.RecordTableListener;
@@ -21,9 +23,12 @@ public class RecordTable extends JDialog {
     private JPanel panel;
     private JButton button;
     private GridBagConstraints c = new GridBagConstraints();
+    private String[] shownColumnNames;
+    private String[] columnNames;
 
-    public RecordTable(JFrame frame, String recordName) {
-        super(frame, "Please select a row from " + recordName, true);
+    public RecordTable(JFrame frame, String recordName, String noun, String... shownColumnNames) {
+        super(frame, "Please select " + noun, true);
+        this.shownColumnNames = shownColumnNames;
         this.setSize(new Dimension(800, 600));
         this.setResizable(true);
         panel = new JPanel();
@@ -32,14 +37,38 @@ public class RecordTable extends JDialog {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
-        panel.add(WidgetFactory.createJLabel("Please select a row from " + recordName + ":",
+        panel.add(WidgetFactory.createJLabel("Please select " + noun + ":",
                 WidgetFactory.Fonts.SUBTITLE), c);
         c.gridy++;
     }
 
+    public void hideColumns() {
+        // Hide some columns
+        TableColumnModel columnModel = table.getColumnModel();
+        boolean show;
+        for (int i = columnNames.length - 1; i >= 0; i--) {
+            show = false;
+            System.out.println("Examining " + columnNames[i]);
+            for (int j = 0; j < shownColumnNames.length; j++) {
+                if (shownColumnNames[j].equals(columnNames[i])) {
+                    System.out.println("\tThis column must be shown.");
+                    show = true;
+                    break;
+                }
+            }
+            if (!show) {
+                TableColumn hiddenColumn = columnModel.getColumn(i);
+                columnModel.removeColumn(hiddenColumn);
+                System.out.println("\tHiding column " + columnNames[i] + " - Index " + i);
+            }
+        }
+    }
+
     public void initializeData(String[][] data, String[] columnNames) {
-        table = WidgetFactory.createJTable(data, columnNames);
-        scrollPane = WidgetFactory.createJScrollPane(table);
+        this.columnNames = columnNames;
+        this.table = WidgetFactory.createJTable(data, columnNames);
+        this.hideColumns();
+        this.scrollPane = WidgetFactory.createJScrollPane(table);
 
         c.weightx = 1;
         c.weighty = 1;
@@ -74,6 +103,7 @@ public class RecordTable extends JDialog {
                 return columnNames[columnIndex];
             }
         });
+        this.hideColumns();
     }
 
     public void setListener(RecordTableListener listener) {

@@ -28,15 +28,35 @@ public class AnimeSystem {
 
     // ## Anime
 
-    public String[] getRecordColNames(String recordName) {
-        System.out.println("Columns of " + recordName);
+    /**
+     * * Modified to allow multiple record names
+     * 
+     * @param recordNames
+     * @return list of column names
+     */
+    public String[] getRecordColNames(String... recordNames) {
+        StringBuffer recordNamesString = new StringBuffer();
+        int i = 0;
+        for (String s : recordNames) {
+            if (i > 0) {
+                recordNamesString.append(",");
+            }
+            s = String.format("'%s'", s);
+            recordNamesString.append(s);
+            i++;
+        }
+        System.out.println("Columns of " + recordNamesString);
+
         ArrayList<String> returnVal = new ArrayList<String>();
+        String query = String.format("""
+                SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS`
+                WHERE `TABLE_SCHEMA` = 'dbanime'
+                AND `TABLE_NAME` IN (%s)
+                """, recordNamesString);
+        System.out.println(query);
+
         try {
-            dbResultSet = dbStatement.executeQuery(
-                    "SELECT `COLUMN_NAME` \r\n" + //
-                            "FROM `INFORMATION_SCHEMA`.`COLUMNS` \r\n" + //
-                            "WHERE `TABLE_SCHEMA`= 'dbanime'\r\n" + //
-                            "AND `TABLE_NAME`='" + recordName + "';");
+            dbResultSet = dbStatement.executeQuery(query);
             while (dbResultSet.next()) {
                 returnVal.add(dbResultSet.getString("COLUMN_NAME"));
             }

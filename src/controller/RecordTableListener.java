@@ -7,26 +7,27 @@ import java.util.HashMap;
 import javax.swing.event.DocumentEvent;
 
 import src.model.AnimeSystem;
+import src.model.Records;
 import src.view.gui.TopView;
 
 /**
  * ? Could be an abstract class?
  */
 public class RecordTableListener extends SearchBoxListener implements ActionListener {
-    String recordName;
+    Records associatedRecord;
     String[][] data;
     String[] columns;
 
-    public RecordTableListener(AnimeSystem animeSystem, TopView topView, String recordName) {
+    public RecordTableListener(AnimeSystem animeSystem, TopView topView, Records associatedRecord) {
         super(animeSystem, topView);
-        this.recordName = recordName;
+        this.associatedRecord = associatedRecord;
         this.setData();
     }
 
     public void setData() {
-        this.columns = animeSystem.getRecordColNames(recordName);
-        this.data = animeSystem.selectColumns(this.columns, recordName);
-        topView.initializeRecordTableData(recordName, this.data, this.columns);
+        this.columns = animeSystem.getRecordColNames(associatedRecord.name);
+        this.data = animeSystem.selectColumns(this.columns, associatedRecord.name);
+        topView.initializeRecordTableData(associatedRecord.name, this.data, this.columns);
     }
 
     /**
@@ -35,7 +36,7 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        int index = topView.getSelected(recordName);
+        int index = topView.getSelected(associatedRecord.name);
         HashMap<String, String> rowData = new HashMap<>();
 
         for (int i = 0; i < this.data[index].length; i++) {
@@ -44,7 +45,7 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
         }
         topView.setFieldsFromData(rowData);
         topView.setLastRowData(rowData);
-        topView.setRecordTableVisible(this.recordName, false);
+        topView.setRecordTableVisible(associatedRecord.name, false);
     }
 
     /**

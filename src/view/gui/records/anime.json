@@ -24,9 +24,21 @@
             "value": "Studio ID"
         },
         {
-            "type": "TextField",
+            "type": "Label",
+            "name": "studioName",
+            "value": "No studio selected",
+            "column": "studio_name"
+        },
+        {
+            "type": "Label",
             "name": "studioId",
+            "value": "",
             "column": "studio_id"
+        },
+        {
+            "type": "Button",
+            "name": "searchStudio",
+            "value": "Search"
         }
     ],
     [
