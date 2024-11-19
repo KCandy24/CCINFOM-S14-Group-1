@@ -3,11 +3,16 @@ package src.view.gui;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import src.controller.CurrentSubtabListener;
 import src.controller.CurrentTabListener;
@@ -320,8 +325,51 @@ public class TopView {
         subtab.setFields(data);
     }
 
-    public void displayHighestRatedAnimes(String[] headers, HashMap<String, String[][]> data){
+    public void displayHighestRatedAnimes(HashMap<String[], String> data, String mode){
+        JDialog highestRatedPane = new JDialog(frame, "Highest Rated Anime " + mode);
+        highestRatedPane.setLayout(new BorderLayout());
+        JTabbedPane tabbedPane = new JTabbedPane();
         
+        HashSet<String> tabs = new HashSet<String>(data.values());
+
+        for (String tab : tabs) {
+            tabbedPane.addTab(tab, createTabTable(tab, data));
+        }
+
+        highestRatedPane.add(tabbedPane, BorderLayout.CENTER);
+        highestRatedPane.setSize(500, 400);
+        highestRatedPane.setLocationRelativeTo(frame);
+        highestRatedPane.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        highestRatedPane.setVisible(true);
+    }
+
+    private JScrollPane createTabTable(String tabName, HashMap<String[], String> data) {
+        String[] columns = {"Rank", "Anime Title", "Genre", "Studio", "Average Rating"};
+        ArrayList<String[]> tableValues = new ArrayList<String[]>();
+
+        int rank = 1;
+        for (Map.Entry<String[], String> entry : data.entrySet()) {
+            String[] key = entry.getKey();
+            String value = entry.getValue();
+            if(tabName.equals(value)){
+                tableValues.add(key);
+            }
+        }
+
+        String[][] tableValuesArr = tableValues.toArray(new String[0][0]);
+        Arrays.sort(tableValuesArr, (a, b) -> {
+            double ratingA = Double.parseDouble(a[4]);
+            double ratingB = Double.parseDouble(b[4]);
+            return Double.compare(ratingB, ratingA); 
+        });
+
+        for (String[] strings : tableValuesArr) {
+            strings[0] = Integer.toString(rank);
+            rank++;
+        }
+        DefaultTableModel tableModel = new DefaultTableModel(tableValuesArr, columns);
+        JTable table = new JTable(tableModel);
+        return new JScrollPane(table);
     }
 
     /**
@@ -343,7 +391,6 @@ public class TopView {
 
         popup.setVisible(true);
     }
-
 
 
 }

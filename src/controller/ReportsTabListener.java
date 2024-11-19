@@ -23,9 +23,14 @@ public class ReportsTabListener implements ActionListener {
         String name = ((JComponent) e.getSource()).getName();
         System.out.println("\nTransactions/?buttonName=" + name);
 
+        Subtab subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB);
+
         switch (name) {
             case "checkButton":
-                HashMap<String, String[]> data = generateHighestRatedAnime();
+                String period = subtab.getComponentText("periodComboBox", "period");
+                String genre = subtab.getComponentText("genreComboBox", "genre_with_none");
+                HashMap<String[], String> data = generateHighestRatedAnime(period, genre);
+                topView.displayHighestRatedAnimes(data, period);
                 // for (Map.Entry<String, String[]> entry : data.entrySet()) {
                 //     String key = entry.getKey();
                 //     String[] value = entry.getValue();
@@ -55,11 +60,7 @@ public class ReportsTabListener implements ActionListener {
     }
 
 
-    public HashMap<String, String[]> generateHighestRatedAnime(){
-        Subtab subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB);
-        String period = subtab.getComponentText("periodComboBox", "period");
-        String genre = subtab.getComponentText("genreComboBox", "genre_with_none");
-        
+    public HashMap<String[], String> generateHighestRatedAnime(String period, String genre){
         try {
             animeSystem.callProcedure("SelectBestAnime" + period + "()");
             String[][] results = animeSystem.rawQuery("SELECT * FROM `best_anime`" +
@@ -73,15 +74,15 @@ public class ReportsTabListener implements ActionListener {
         }
     }
 
-    private HashMap<String, String[]> stringArrayToMap (String[][] data){
+    private HashMap<String[], String> stringArrayToMap (String[][] data){
         int rows = data.length;
-        HashMap<String, String[]> resultMap = new HashMap<>();
+        HashMap<String[], String> resultMap = new HashMap<>();
 
         for (int i = 0; i < rows; i++) {
-            String key = data[i][0];
-            resultMap.put(key, removeFirstElement(data[i]));
+            String value = data[i][0];
+            String[] key = data[i];
+            resultMap.put(key, value);
         }
-
         return resultMap;
     }
 }
