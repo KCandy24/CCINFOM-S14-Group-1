@@ -3,13 +3,9 @@ package src.controller;
 import java.awt.event.*;
 import java.sql.SQLException;
 
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 import src.model.AnimeSystem;
-import src.model.UserRegion;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
@@ -135,20 +131,40 @@ public class RecordsTabListener implements ActionListener {
         topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
     }
 
+    /**
+     * Save user button either updates an existing user or creates a new user.
+     */
     public void saveUser() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
-        JTextField userNameField = (JTextField) subtab.getComponent("username");
-        JComboBox<String> regionComboBox = (JComboBox<String>) subtab.getComponent("region");
-        JTextField joinDateField = (JTextField) subtab.getComponent("joinDate");
+        String userId = subtab.getComponentText("userId");
+        String username = subtab.getComponentText("username");
+        String region = subtab.getComponentText("region", "region");
+        String joinDate = subtab.getComponentText("joinDate");
+        try {
+            Integer.parseInt(userId);
+            // User ID field was parsed successfully; this must be an existing record
+            updateUser(userId, username, region, joinDate);
+        } catch (NumberFormatException exception) {
+            // This must be a new record
+            createUser(username, region, joinDate);
+        }
+    }
 
-        String userName = userNameField.getText();
-        String region = UserRegion.findCode(regionComboBox.getSelectedItem().toString());
-        String joinDate = joinDateField.getText();
-
+    public void createUser(String username, String region, String joinDate) {
         try {
             animeSystem.safeUpdate(
-                "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
-                    userName, region, joinDate);
+                    "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
+                    username, region, joinDate);
+        } catch (SQLException exception) {
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
+    }
+
+    public void updateUser(String userId, String username, String region, String joinDate) {
+        try {
+            animeSystem.safeUpdate(
+                    "UPDATE `users` SET `user_name` = ?, `region` = ?, `join_date` = ? WHERE `user_id` = ?",
+                    username, region, joinDate, userId);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -156,9 +172,7 @@ public class RecordsTabListener implements ActionListener {
 
     public void deleteUser() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
-        JLabel userIdLabel = (JLabel) subtab.getComponent("userId");
-
-        String userId = userIdLabel.getText();
+        String userId = subtab.getComponentText("userId");
 
         try {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);

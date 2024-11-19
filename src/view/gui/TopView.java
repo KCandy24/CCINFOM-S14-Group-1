@@ -51,8 +51,6 @@ public class TopView {
     private HashMap<String, String> lastRowData;
 
     // Stores the current tab and subtab name.
-    private String currentTabName = RECORDS_TAB,
-            currentSubtabName = ANIME_RECORD_SUBTAB;
     private int currentTabIndex = 0;
     private int[] currentSubtabIndex = {
             0, 0, 0
