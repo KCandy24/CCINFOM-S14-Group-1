@@ -2,13 +2,9 @@ package src.controller;
 
 import java.awt.event.*;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.SubmissionPublisher;
-
 import javax.swing.JComponent;
 
 import src.model.AnimeSystem;
-import src.model.Genre;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 

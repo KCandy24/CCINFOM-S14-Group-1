@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
 import javax.swing.*;
 
@@ -312,8 +311,6 @@ public class TopView {
     }
 
     /**
-     * TODO: Store current tabName, subtabName in TopView; make tab pane listeners
-     * 
      * @param data A HashMap mapping column names of a record to their corresponding
      *             data values.
      */

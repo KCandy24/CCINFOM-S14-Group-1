@@ -9,6 +9,11 @@
             "db_link": "animes.title"
         },
         {
+            "name": "animeId",
+            "value": "",
+            "db_link": "animes.anime_id"
+        },
+        {
             "type": "Button",
             "name": "searchAnime",
             "value": "Search"
@@ -19,8 +24,18 @@
             "value": "Staff"
         },
         {
-            "name": "staffId",
+            "name": "staffFirstName",
             "value": "No staff selected",
+            "db_link": "staff.first_name"
+        },
+        {
+            "name": "staffLastName",
+            "value": "",
+            "db_link": "staff.last_name"
+        },
+        {
+            "name": "staffId",
+            "value": "",
             "db_link": "staff.staff_id"
         },
         {
@@ -50,12 +65,12 @@
     [
         {
             "type": "Button",
-            "name": "save",
+            "name": "saveCredits",
             "value": "Save"
         },
         {
             "type": "Button",
-            "name": "delete",
+            "name": "deleteCredits",
             "value": "Delete"
         }
     ]

@@ -15,7 +15,7 @@
         },
         {
             "type": "Button",
-            "name": "searchUserWatchEpisode",
+            "name": "searchUser",
             "value": "Search"
         }
     ],
@@ -35,7 +35,7 @@
         },
         {
             "type": "Button",
-            "name": "searchAnimeWatchEpisode",
+            "name": "searchAnime",
             "value": "Search"
         }
     ],

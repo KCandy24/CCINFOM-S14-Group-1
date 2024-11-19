@@ -77,12 +77,19 @@ public class Controller {
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
                 transactionsTabListener,
-                "searchUserWatchEpisode", "searchAnimeWatchEpisode", "watchEpisode");
+                "searchUser", "searchAnime", "watchEpisode");
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.RATE_ANIME_TRANSACTION_SUBTAB,
                 transactionsTabListener,
-                "searchUserRateAnime", "searchAnimeRateAnime", "rateAnime");
-        // TODO: Set listeners for edit credits, follow user
+                "searchUser", "searchAnime", "rateAnime");
+        topView.setActionListeners(
+                TopView.TRANSACTIONS_TAB, TopView.EDIT_CREDITS_TRANSACTION_SUBTAB,
+                transactionsTabListener,
+                "searchAnime", "searchStaff", "saveCredits", "deleteCredits");
+        topView.setActionListeners(
+                TopView.TRANSACTIONS_TAB, TopView.FOLLOW_USER_TRANSACTION_SUBTAB,
+                transactionsTabListener,
+                "searchFollower", "searchFollowed", "follow", "unfollow");
 
         // ## Reports Tab
         reportListener = new ReportsTabListener(animeSystem, topView);

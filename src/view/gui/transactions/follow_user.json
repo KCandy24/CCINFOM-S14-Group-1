@@ -4,13 +4,17 @@
             "value": "Search user (follower)"
         },
         {
-            "name": "userId",
+            "name": "username",
             "value": "No user selected",
-            "db_link": "user_id"
+            "db_link": "users.user_name"
+        },
+        {
+            "name": "userId",
+            "db_link": "users.user_id"
         },
         {
             "type": "Button",
-            "name": "searchUser",
+            "name": "searchFollower",
             "value": "Search"
         }
     ],
@@ -19,13 +23,18 @@
             "value": "Search user (followed)"
         },
         {
-            "name": "user2Id",
+            "name": "user2name",
             "value": "No user selected",
-            "db_link": "user_id"
+            "db_link": "users.user_name"
+        },
+        {
+            "name": "user2Id",
+            "value": "",
+            "db_link": "users.user_id"
         },
         {
             "type": "Button",
-            "name": "searchUser2",
+            "name": "searchFollowed",
             "value": "Search"
         }
     ],

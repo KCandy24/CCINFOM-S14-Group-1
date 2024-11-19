@@ -31,7 +31,7 @@ import src.view.widget.WidgetFactory;
 public class Subtab extends NamedPanel {
     private ArrayList<ArrayList<JComponent>> components;
     private HashMap<String, JComponent> componentName;
-    private HashMap<String, JComponent> componentColumns;
+    private HashMap<String, JComponent> componentDbLinks;
     private String name;
 
     private static final String JSON_PATH_PREFIX = "src/view/gui/";
@@ -40,10 +40,11 @@ public class Subtab extends NamedPanel {
         this.name = name;
         this.components = new ArrayList<>();
         this.componentName = new HashMap<>();
-        this.componentColumns = new HashMap<>();
+        this.componentDbLinks = new HashMap<>();
         this.setComponents(jsonPathString);
         this.addComponents();
     }
+
 
     /**
      * Sets the components ArrayList and the componentName HashMap.
@@ -72,7 +73,7 @@ public class Subtab extends NamedPanel {
                     String column = cell.optString("db_link");
                     if (!column.isEmpty()) {
                         System.out.println("\t" + name + " component is associated with the " + column + " column.");
-                        if (componentColumns.put(column, component) != null) {
+                        if (componentDbLinks.put(column, component) != null) {
                             System.out.println("\t\tAnother component was associated with this column before!");
                         } ;
                     }
@@ -128,7 +129,11 @@ public class Subtab extends NamedPanel {
      * @return
      */
     private JComponent getAssociatedComponent(String columnName) {
-        return componentColumns.get(columnName);
+        return componentDbLinks.get(columnName);
+    }
+
+    public void setAssociatedComponent(String columnName, String componentName) {
+        componentDbLinks.put(columnName, getComponent(componentName));
     }
 
     public void setComponentText(JComponent component, String text) {
@@ -169,7 +174,7 @@ public class Subtab extends NamedPanel {
      * column.
      */
     public void resetFields() {
-        for (JComponent component : componentColumns.values()) {
+        for (JComponent component : componentDbLinks.values()) {
             setComponentText(component, "");
         }
     }
