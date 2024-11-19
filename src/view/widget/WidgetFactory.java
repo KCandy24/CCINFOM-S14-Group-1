@@ -184,6 +184,18 @@ public class WidgetFactory {
         return jTextField;
     }
 
+    public static JScrollPane createJTextArea() {
+        JTextArea jTextArea = new JTextArea(10, 30);
+        jTextArea.setLineWrap(true);
+        jTextArea.setWrapStyleWord(true);
+        JScrollPane jScrollPane = new JScrollPane(jTextArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        WidgetFactory.styleComponent(jTextArea);
+        jScrollPane.setMinimumSize(new Dimension(jScrollPane.getPreferredSize().width,
+                jScrollPane.getPreferredSize().height));
+        return jScrollPane;
+    }
+
     public static JList<String> createJList() {
         JList<String> jList = new JList<String>();
         WidgetFactory.styleComponent(jList);
@@ -277,6 +289,9 @@ public class WidgetFactory {
                 break;
             case "TextField":
                 component = WidgetFactory.createJTextField();
+                break;
+            case "TextArea":
+                component = WidgetFactory.createJTextArea();
                 break;
             case "Label":
             default:
