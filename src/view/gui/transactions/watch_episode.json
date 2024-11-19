@@ -9,7 +9,7 @@
             "column": "user_name"
         },
         {
-            "name": "username",
+            "name": "userId",
             "value": "",
             "column": "user_id"
         },
