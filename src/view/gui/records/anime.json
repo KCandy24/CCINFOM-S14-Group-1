@@ -16,7 +16,7 @@
         {
             "type": "Button",
             "value": "Add new",
-            "name": "addNew"
+            "name": "addNewAnime"
         }
     ],
     [
@@ -82,12 +82,12 @@
     [
         {
             "type": "Button",
-            "name": "save",
+            "name": "saveAnime",
             "value": "Save"
         },
         {
             "type": "Button",
-            "name": "delete",
+            "name": "deleteAnime",
             "value": "Delete"
         }
     ]

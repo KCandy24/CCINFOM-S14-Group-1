@@ -16,7 +16,7 @@
         {
             "type": "Button",
             "value": "Add new",
-            "name": "addNew"
+            "name": "addNewStaff"
         }
     ],
     [
@@ -62,12 +62,12 @@
     [
         {
             "type": "Button",
-            "name": "save",
+            "name": "saveStaff",
             "value": "Save"
         },
         {
             "type": "Button",
-            "name": "delete",
+            "name": "deleteStaff",
             "value": "Delete"
         }
     ]

@@ -16,7 +16,7 @@
         {
             "type": "Button",
             "value": "Add new",
-            "name": "addNew"
+            "name": "addNewUser"
         }
     ],
     [
@@ -53,12 +53,12 @@
     [
         {
             "type": "Button",
-            "name": "save",
+            "name": "saveUser",
             "value": "Save"
         },
         {
             "type": "Button",
-            "name": "delete",
+            "name": "deleteUser",
             "value": "Delete"
         }
     ]

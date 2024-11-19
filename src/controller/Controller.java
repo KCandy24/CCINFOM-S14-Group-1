@@ -12,16 +12,13 @@ public class Controller {
 
     // # Listeners
 
-    // Records
-    AnimeRecordsListener animeRecordsListener;
-    UserRecordsListener userRecordsListener;
-    StudioRecordsListener studioRecordsListener;
-    StaffRecordsListener staffRecordsListener;
-
     RecordTableListener animeRecordTableListener;
     RecordTableListener userRecordTableListener;
     RecordTableListener studioRecordTableListener;
     RecordTableListener staffRecordTableListener;
+
+    // Records
+    RecordsTabListener recordsTabListener;
 
     // Transactions
     ActionListener transactionListener;
@@ -39,38 +36,32 @@ public class Controller {
         // # Initialize and set listeners
 
         // Records
-        // TODO: Consolidate to one RecordsTabListener
-        animeRecordsListener = new AnimeRecordsListener(animeSystem, topView);
+        recordsTabListener = new RecordsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
-                animeRecordsListener,
-                "searchAnime", "addNew", "save", "delete");
-
-        userRecordsListener = new UserRecordsListener(animeSystem, topView);
+                recordsTabListener,
+                "searchAnime", "addNewAnime", "saveAnime", "deleteAnime");
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB,
-                userRecordsListener,
-                "searchUser", "addNew", "save", "delete");
-
-        studioRecordsListener = new StudioRecordsListener(animeSystem, topView);
+                recordsTabListener,
+                "searchUser", "addNewUser", "saveUser", "deleteUser");
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB,
-                studioRecordsListener,
-                "searchStudio", "addNew", "save", "delete");
-
-        staffRecordsListener = new StaffRecordsListener(animeSystem, topView);
+                recordsTabListener,
+                "searchStudio", "addNewStudio", "saveStudio", "deleteStudio");
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB,
-                staffRecordsListener,
-                "searchStaff", "addNew", "save", "delete");
-
+                recordsTabListener,
+                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
 
         // Record Tables ("Search Pop-up")
-        // TODO: RecordTableListeners for Transaction subtabs
+
+        // TODO: Revise RecordTable to make it work in other tabs aside from the Records
         animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
         userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
         staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");
         studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Records", "Studio");
+
         topView.setRecordTableListener("animes", animeRecordTableListener);
         topView.setRecordTableListener("users", userRecordTableListener);
         topView.setRecordTableListener("staff", staffRecordTableListener);
