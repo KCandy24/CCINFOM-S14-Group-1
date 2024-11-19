@@ -25,10 +25,12 @@ public class RecordTable extends JDialog {
     private GridBagConstraints c = new GridBagConstraints();
     private String[] shownColumnNames;
     private String[] columnNames;
+    private String recordName;
 
     public RecordTable(JFrame frame, String recordName, String noun, String... shownColumnNames) {
         super(frame, "Please select " + noun, true);
         this.shownColumnNames = shownColumnNames;
+        this.recordName = recordName;
         this.setSize(new Dimension(800, 600));
         this.setResizable(true);
         panel = new JPanel();
@@ -48,9 +50,8 @@ public class RecordTable extends JDialog {
         boolean show;
         for (int i = columnNames.length - 1; i >= 0; i--) {
             show = false;
-            System.out.println("Examining " + columnNames[i]);
             for (int j = 0; j < shownColumnNames.length; j++) {
-                if (shownColumnNames[j].equals(columnNames[i])) {
+                if ((recordName + "." + shownColumnNames[j]).equals(columnNames[i])) {
                     System.out.println("\tThis column must be shown.");
                     show = true;
                     break;

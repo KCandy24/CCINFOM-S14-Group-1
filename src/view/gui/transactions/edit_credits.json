@@ -6,7 +6,7 @@
         {
             "name": "anime",
             "value": "No anime selected",
-            "column": "title"
+            "db_link": "animes.title"
         },
         {
             "type": "Button",
@@ -20,7 +20,8 @@
         },
         {
             "name": "staffId",
-            "value": "No staff selected"
+            "value": "No staff selected",
+            "db_link": "staff.staff_id"
         },
         {
             "type": "Button",

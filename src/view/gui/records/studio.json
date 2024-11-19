@@ -6,7 +6,7 @@
         {
             "value": "No studio selected",
             "name": "studioId",
-            "column": "studio_id"
+            "db_link": "studios.studio_id"
         },
         {
             "type": "Button",
@@ -26,7 +26,7 @@
         {
             "type": "TextField",
             "name": "studioName",
-            "column": "studio_name"
+            "db_link": "studios.studio_name"
         }
     ],
     [

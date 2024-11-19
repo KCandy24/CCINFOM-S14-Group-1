@@ -49,7 +49,7 @@ public class AnimeSystem {
 
         ArrayList<String> returnVal = new ArrayList<String>();
         String query = String.format("""
-                SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS`
+                SELECT `TABLE_NAME`, `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS`
                 WHERE `TABLE_SCHEMA` = 'dbanime'
                 AND `TABLE_NAME` IN (%s)
                 """, recordNamesString);
@@ -58,7 +58,7 @@ public class AnimeSystem {
         try {
             dbResultSet = dbStatement.executeQuery(query);
             while (dbResultSet.next()) {
-                returnVal.add(dbResultSet.getString("COLUMN_NAME"));
+                returnVal.add(dbResultSet.getString("TABLE_NAME") + "." + dbResultSet.getString("COLUMN_NAME"));
             }
         } catch (Exception e) {
             System.err.println("Query to 'dbanime' Failed.");

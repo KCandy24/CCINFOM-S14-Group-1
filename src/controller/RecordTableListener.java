@@ -25,8 +25,15 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
     }
 
     public void setData() {
-        this.columns = animeSystem.getRecordColNames(associatedRecord.name);
-        this.data = animeSystem.selectColumns(this.columns, associatedRecord.name);
+        if (associatedRecord != Records.ANIME) {
+            this.columns = animeSystem.getRecordColNames(associatedRecord.name);
+            this.data = animeSystem.selectColumns(this.columns, associatedRecord.name);
+        } else {
+            // Anime record table is special since we also want the studio names.
+            this.columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
+            this.data = animeSystem.selectColumns(this.columns,
+                    "animes JOIN studios ON animes.studio_id = studios.studio_id");
+        }
         topView.initializeRecordTableData(associatedRecord.name, this.data, this.columns);
     }
 

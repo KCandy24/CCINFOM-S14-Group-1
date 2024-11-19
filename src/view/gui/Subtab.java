@@ -69,7 +69,7 @@ public class Subtab extends NamedPanel {
                         componentName.put(name, component);
                     }
 
-                    String column = cell.optString("column");
+                    String column = cell.optString("db_link");
                     if (!column.isEmpty()) {
                         System.out.println("\t" + name + " component is associated with the " + column + " column.");
                         if (componentColumns.put(column, component) != null) {

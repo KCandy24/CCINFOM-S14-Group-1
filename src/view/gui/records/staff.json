@@ -6,7 +6,7 @@
         {
             "value": "No staff selected",
             "name": "staffId",
-            "column": "staff_id"
+            "db_link": "staff.staff_id"
         },
         {
             "type": "Button",
@@ -26,7 +26,7 @@
         {
             "type": "TextField",
             "name": "firstName",
-            "column": "first_name"
+            "db_link": "staff.first_name"
         }
     ],
     [
@@ -36,7 +36,7 @@
         {
             "type": "TextField",
             "name": "lastName",
-            "column": "last_name"
+            "db_link": "staff.last_name"
         }
     ],
     [
@@ -46,7 +46,7 @@
         {
             "type": "TextField",
             "name": "occupation",
-            "column": "occupation"
+            "db_link": "staff.occupation"
         }
     ],
     [
@@ -56,7 +56,7 @@
         {
             "type": "TextField",
             "name": "birthday",
-            "column": "birthday"
+            "db_link": "staff.birthday"
         }
     ],
     [

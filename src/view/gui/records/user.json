@@ -6,7 +6,7 @@
         {
             "value": "No user selected",
             "name": "userId",
-            "column": "user_id"
+            "db_link": "users.user_id"
         },
         {
             "type": "Button",
@@ -26,7 +26,7 @@
         {
             "type": "TextField",
             "name": "username",
-            "column": "user_name"
+            "db_link": "users.user_name"
         }
     ],
     [
@@ -36,7 +36,7 @@
         {
             "type": "ComboBox",
             "name": "region",
-            "column": "region",
+            "db_link": "users.region",
             "combobox_type": "region"
         }
     ],
@@ -47,7 +47,7 @@
         {
             "type": "TextField",
             "name": "joinDate",
-            "column": "join_date"
+            "db_link": "users.join_date"
         }
     ],
     [

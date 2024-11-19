@@ -15,7 +15,7 @@
         {
             "value": "No studio selected",
             "name": "studioId",
-            "column": "studio_id"
+            "db_link": "studios.studio_id"
         },
         {
             "type": "Button",
