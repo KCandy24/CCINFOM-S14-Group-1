@@ -17,6 +17,9 @@ public class Controller {
     RecordTableListener studioRecordTableListener;
     RecordTableListener staffRecordTableListener;
 
+    CurrentTabListener currentTabListener;
+    CurrentSubtabListener currentSubtabListener;
+
     // Per-Tab Listeners
     RecordsTabListener recordsTabListener;
     TransactionsTabListener transactionsTabListener;
@@ -35,15 +38,19 @@ public class Controller {
         // TODO: Revise RecordTable to make it work in other tabs aside from the Records
         // ? Solution: Make TopView store the current tab and subtab?
         // ? + Set listeners to the JTabbedPanes to update the current tab, subtab
-        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes", "Records", "Anime");
-        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users", "Records", "User");
-        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff", "Records", "Staff");
-        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios", "Records", "Studio");
+        animeRecordTableListener = new RecordTableListener(animeSystem, topView, "animes");
+        userRecordTableListener = new RecordTableListener(animeSystem, topView, "users");
+        staffRecordTableListener = new RecordTableListener(animeSystem, topView, "staff");
+        studioRecordTableListener = new RecordTableListener(animeSystem, topView, "studios");
 
         topView.setRecordTableListener("animes", animeRecordTableListener);
         topView.setRecordTableListener("users", userRecordTableListener);
         topView.setRecordTableListener("staff", staffRecordTableListener);
         topView.setRecordTableListener("studios", studioRecordTableListener);
+
+        currentTabListener = new CurrentTabListener(topView);
+        currentSubtabListener = new CurrentSubtabListener(topView);
+        topView.setTabListeners(currentTabListener, currentSubtabListener);
 
         // ## Records Tab
         recordsTabListener = new RecordsTabListener(animeSystem, topView);

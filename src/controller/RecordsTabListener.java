@@ -5,11 +5,8 @@ import java.sql.SQLException;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import com.mysql.cj.protocol.a.SqlDateValueEncoder;
 
 import src.model.AnimeSystem;
 import src.model.UserRegion;
@@ -32,7 +29,7 @@ public class RecordsTabListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = ((JComponent) e.getSource()).getName();
-        System.out.println("\nRecords?buttonName=" + name);
+        System.out.printf("%s/%s?%s\n", topView.getCurrentTabName(), topView.getCurrentSubtabName(), name);
 
         switch (name) {
             // Anime subtab
@@ -145,7 +142,7 @@ public class RecordsTabListener implements ActionListener {
         JTextField joinDateField = (JTextField) subtab.getComponent("joinDate");
 
         String userName = userNameField.getText();
-        String region = regionComboBox.getSelectedItem().toString();
+        String region = UserRegion.findCode(regionComboBox.getSelectedItem().toString());
         String joinDate = joinDateField.getText();
 
         try {
@@ -153,7 +150,7 @@ public class RecordsTabListener implements ActionListener {
                 "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
                     userName, region, joinDate);
         } catch (SQLException exception) {
-            topView.dialogPopUp(exception.toString(), exception.getMessage());
+            topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }
 
@@ -166,7 +163,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
         } catch (SQLException exception) {
-            topView.dialogPopUp(exception.toString(), exception.getMessage());
+            topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }
 

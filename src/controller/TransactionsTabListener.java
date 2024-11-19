@@ -20,7 +20,7 @@ public class TransactionsTabListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = ((JComponent) e.getSource()).getName();
-        System.out.println("\nTransactions?buttonName=" + name);
+        System.out.printf("%s/%s?%s\n", topView.getCurrentTabName(), topView.getCurrentSubtabName(), name);
 
         switch (name) {
             // Watch episode

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javax.swing.JTabbedPane;
 
+import src.controller.CurrentSubtabListener;
 import src.view.widget.WidgetFactory;
 
 public class Tab extends NamedPanel {
@@ -33,5 +34,9 @@ public class Tab extends NamedPanel {
 
     public String getName() {
         return name;
+    }
+
+    public void addChangeListener(CurrentSubtabListener listener) {
+        this.tabbedPane.getModel().addChangeListener(listener);
     }
 }
