@@ -9,6 +9,9 @@
             "db_link": "animes.anime_id"
         },
         {
+            "value": ""
+        },
+        {
             "type": "Button",
             "name": "searchAnime",
             "value": "Search"

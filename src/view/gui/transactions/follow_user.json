@@ -10,6 +10,7 @@
         },
         {
             "name": "userId",
+            "value": "",
             "db_link": "users.user_id"
         },
         {
