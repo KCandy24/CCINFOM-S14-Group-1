@@ -3,8 +3,10 @@ package src.controller;
 import java.awt.event.*;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 import src.model.AnimeSystem;
+import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
 public class TransactionsTabListener implements ActionListener {
@@ -31,7 +33,7 @@ public class TransactionsTabListener implements ActionListener {
                 this.searchAnimeWatchEpisode();
                 break;
             case "watchEpisode":
-                this.watchEpisode();
+                this.watchEpisode(this.getUserIDFromTopView(), this.getAnimeIDFromTopView());
                 break;
 
             // Rate anime
@@ -60,17 +62,56 @@ public class TransactionsTabListener implements ActionListener {
         topView.selectFromTable("animes");
     }
 
+    public int getUserIDFromTopView(){
+        try {
+            Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
+            JLabel userIDLabel = (JLabel)subtab.getComponent("userId");
+            String userIDString = userIDLabel.getText();
+            int user_id = Integer.parseInt(userIDString);
+            return user_id;
+        } catch (Exception e) {
+            return 0;
+        }
+    } 
+
     public void searchUserWatchEpisode() {
         topView.selectFromTable("users");
     }
 
-    public void watchEpisode() {
-        int user_id = 2; // Get From topview
-        int anime_id = 2; // Get From topview
+    
+    public int getAnimeIDFromTopView(){
+        try {
+            Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
+            JLabel animeIDLabel = (JLabel)subtab.getComponent("animeId");
+            String animeIDString = animeIDLabel.getText();
+            int anime_id = Integer.parseInt(animeIDString);
+            return anime_id;
+        } catch (Exception e) {
+            return 0;
+        }
+    } 
 
-        int lastWatched = Integer.parseInt(animeSystem
-                .getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
-        topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + lastWatched);
+    public void watchEpisode(int user_id, int anime_id) {
+        if (user_id == 0 || anime_id == 0) {
+            topView.dialogPopUp("Watch Episode", "User ID and Anime ID cannot be empty");
+        }
+        else{
+            int lastWatched = Integer.parseInt(animeSystem.getProcedureSingleResult
+                            (String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
+            int maxEpisodes = Integer.parseInt(animeSystem.singleQuery("SELECT num_of_episodes FROM animes WHERE anime_id = " + anime_id));
+            if (lastWatched == maxEpisodes) {
+                topView.dialogPopUp("Watch Episode", "User has watched all episodes of this anime.");
+            }
+            else
+            {
+                try {
+                    animeSystem.callProcedure("WatchAnime(?, ?)", Integer.toString(user_id), Integer.toString(anime_id));
+                    topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + (lastWatched + 1));
+                } catch (Exception e) {
+                    topView.dialogPopUp("Watch Episode", "An error occured, cannot watch episode.");
+                }
+            }
+        }
     }
 
     // Rate anime

@@ -52,13 +52,12 @@ public class AnimeSystem {
 
     // }
 
-    public void callProcedure(String procedure) {
-        try {
-            dbStatement.executeQuery("CALL " + procedure);
-        } catch (Exception e) {
-            System.err.println("Procedure" + " Failed to Execute.");
-            e.printStackTrace();
+    public void callProcedure(String procedure, String... arguments) throws SQLException{
+        PreparedStatement statement = dbConnection.prepareStatement("CALL " + procedure);
+        for (int i = 0; i < arguments.length; i++) {
+            statement.setString(i + 1, arguments[i]);
         }
+        statement.execute();
     }
 
     public String getProcedureSingleResult(String procedure) {
