@@ -3,13 +3,13 @@ package src.model;
 /**
  */
 public enum Records {
-    ANIME("animes", "an anime", "title"),
+    ANIME("animes", "an anime", "animes.title"),
     USER("users", "a user",
-            "user_name"),
+            "users.user_name"),
     STAFF("staff", "a staff member",
-            "first_name", "last_name"),
+            "staff.first_name", "staff.last_name"),
     STUDIO("studios", "a studio",
-            "studio_name");
+            "studios.studio_name");
 
     public final String name;
     public final String noun;

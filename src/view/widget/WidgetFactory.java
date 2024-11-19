@@ -212,8 +212,8 @@ public class WidgetFactory {
     public static JScrollPane createJScrollPane(JTable table) {
         JScrollPane scrollPane = new JScrollPane(
                 table,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         WidgetFactory.styleComponent(scrollPane);
         return scrollPane;
     }

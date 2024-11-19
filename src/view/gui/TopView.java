@@ -316,8 +316,6 @@ public class TopView {
     }
 
     /**
-     * TODO: Store current tabName, subtabName in TopView; make tab pane listeners
-     * 
      * @param data A HashMap mapping column names of a record to their corresponding
      *             data values.
      */
