@@ -62,10 +62,8 @@ public class ReportsTabListener implements ActionListener {
 
     public HashMap<String[], String> generateHighestRatedAnime(String period, String genre){
         try {
-            animeSystem.callProcedure("SelectBestAnime" + period + "()");
-            String[][] results = animeSystem.rawQuery("SELECT * FROM `best_anime`" +
-                                                    " WHERE genre = \"" + genre + 
-                                                    "\" OR \"" + genre + "\" = \"None\"");
+            animeSystem.callProcedure("SelectBestAnime" + period + "(?)", genre);
+            String[][] results = animeSystem.rawQuery("SELECT * FROM `best_anime`");
 
             return stringArrayToMap(results);
         } catch (Exception e) {
