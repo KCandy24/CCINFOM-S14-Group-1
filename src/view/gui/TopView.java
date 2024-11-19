@@ -317,7 +317,7 @@ public class TopView {
      *             data values.
      */
     public void setFieldsFromData(HashMap<String, String> data) {
-        System.out.printf("Setting fields in %s/%s\n", getCurrentTabName(), getCurrentTabName());
+        System.out.printf("Setting fields in %s/%s\n", getCurrentTabName(), getCurrentSubtabName());
         Subtab subtab = mainTabs.get(getCurrentTabName()).getSubtab(getCurrentSubtabName());
         subtab.setFields(data);
     }
