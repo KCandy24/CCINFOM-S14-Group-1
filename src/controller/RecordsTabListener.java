@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -142,24 +143,30 @@ public class RecordsTabListener implements ActionListener {
         JTextField userNameField = (JTextField) subtab.getComponent("username");
         JComboBox<String> regionComboBox = (JComboBox<String>) subtab.getComponent("region");
         JTextField joinDateField = (JTextField) subtab.getComponent("joinDate");
+
+        String userName = userNameField.getText();
+        String region = regionComboBox.getSelectedItem().toString();
+        String joinDate = joinDateField.getText();
+
         try {
             animeSystem.safeUpdate(
                 "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
-                userNameField.getText(), regionComboBox.getSelectedItem().toString(), joinDateField.getText());
+                    userName, region, joinDate);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            topView.dialogPopUp(exception.toString(), exception.getMessage());
         }
-
     }
 
     public void deleteUser() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
         JLabel userIdLabel = (JLabel) subtab.getComponent("userId");
+
         String userId = userIdLabel.getText();
+
         try {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            topView.dialogPopUp(exception.toString(), exception.getMessage());
         }
     }
 
