@@ -1,10 +1,14 @@
 package src.controller;
 
 import java.awt.event.*;
+import java.sql.SQLException;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import com.mysql.cj.protocol.a.SqlDateValueEncoder;
 
 import src.model.AnimeSystem;
 import src.model.UserRegion;
@@ -138,13 +142,25 @@ public class RecordsTabListener implements ActionListener {
         JTextField userNameField = (JTextField) subtab.getComponent("username");
         JComboBox<String> regionComboBox = (JComboBox<String>) subtab.getComponent("region");
         JTextField joinDateField = (JTextField) subtab.getComponent("joinDate");
-        animeSystem.safeUpdate(
+        try {
+            animeSystem.safeUpdate(
                 "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
                 userNameField.getText(), regionComboBox.getSelectedItem().toString(), joinDateField.getText());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
     }
 
     public void deleteUser() {
-        // TODO: IMPLEMENTATION
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
+        JLabel userIdLabel = (JLabel) subtab.getComponent("userId");
+        String userId = userIdLabel.getText();
+        try {
+            animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     // Staff records management

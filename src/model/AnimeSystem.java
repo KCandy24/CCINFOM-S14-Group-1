@@ -93,8 +93,8 @@ public class AnimeSystem {
             return null;
         }
     }
-    
-    public String singleQuery(String query){
+
+    public String singleQuery(String query) {
         try {
             dbResultSet = dbStatement.executeQuery(query);
             dbResultSet.next();
@@ -159,16 +159,12 @@ public class AnimeSystem {
         }
     }
 
-    public void safeUpdate(String query, String... arguments) {
-        try {
-            PreparedStatement statement = dbConnection.prepareStatement(query);
-            for (int i = 0; i < arguments.length; i++) {
-                statement.setString(i + 1, arguments[i]);
-            }
-            System.out.println(statement);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void safeUpdate(String query, String... arguments) throws SQLException {
+        PreparedStatement statement = dbConnection.prepareStatement(query);
+        for (int i = 0; i < arguments.length; i++) {
+            statement.setString(i + 1, arguments[i]);
         }
+        System.out.println(statement);
+        statement.executeUpdate();
     }
 }
