@@ -66,11 +66,10 @@ DROP TABLE IF EXISTS `credits`;
 CREATE TABLE `credits` (
 	`staff_id` INT NOT NULL,
     `anime_id` INT NOT NULL,
-    `episode_number` INT NOT NULL,
     `position` VARCHAR(32) NOT NULL,
     `department` ENUM('DP', 'AD', 'AN', 'EV', 'SS', 'TO') NOT NULL,
     -- DEPARTMENTS: Direction and Production, Art and Design, Animation, Sound and Music, Editing and Visual Effects, Script and Storyboarding, Technical and Other Staff
-    PRIMARY KEY(`staff_id`, `anime_id`, `episode_number`),
+    PRIMARY KEY(`staff_id`, `anime_id`),
     FOREIGN KEY(`staff_id`) REFERENCES `staff`(`staff_id`),
     FOREIGN KEY(`anime_id`) REFERENCES `animes`(`anime_id`)
 );
@@ -175,18 +174,18 @@ INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES
 ('Ayumi',   'Kobayashi', 'Music Composer', '1992-12-17'), -- 7
 ('Daichi',  'Tanaka',    'Editor',         '1985-06-13'); -- 8
 
-INSERT INTO `credits` (`staff_id`, `anime_id`, `episode_number`, `position`, `department`) VALUES
-(1, 1, 1, 'Director', 'DP'),
-(1, 7, 1, 'Director', 'DP'),
-(2, 1, 2, 'Producer', 'DP'),
-(2, 4, 3, 'Producer', 'DP'),
-(3, 2, 2, 'Animator', 'AN'),
-(4, 3, 3, 'Sound Engineer', 'SS'),
-(4, 6, 2, 'Sound Engineer', 'SS'),
-(5, 4, 1, 'Scriptwriter', 'TO'),
-(6, 5, 2, 'Art Designer', 'AD'),
-(7, 6, 3, 'Editor', 'EV'),
-(8, 7, 1, 'Animator', 'AN');
+INSERT INTO `credits` (`staff_id`, `anime_id`, `position`, `department`) VALUES
+(1, 1, 'Director', 'DP'),
+(1, 7, 'Director', 'DP'),
+(2, 1, 'Producer', 'DP'),
+(2, 4, 'Producer', 'DP'),
+(3, 2, 'Animator', 'AN'),
+(4, 3, 'Sound Engineer', 'SS'),
+(4, 6, 'Sound Engineer', 'SS'),
+(5, 4, 'Scriptwriter', 'TO'),
+(6, 5, 'Art Designer', 'AD'),
+(7, 6, 'Editor', 'EV'),
+(8, 7, 'Animator', 'AN');
 
 INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VALUES
 (1, 2, '2022-02-03'),
@@ -204,11 +203,13 @@ INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VAL
 -- Creates a table called `best_anime` for overall best anime based on rating
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `SelectBestAnimeOverall`; 
-CREATE PROCEDURE `SelectBestAnimeOverall`()
+CREATE PROCEDURE `SelectBestAnimeOverall`(
+	IN param_genre VARCHAR(4)
+)
 BEGIN
 	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
 	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
-		overall VARCHAR(8),
+		overall VARCHAR(10),
         title VARCHAR(255),
         genre VARCHAR(255),
         studio_name VARCHAR(255),
@@ -227,6 +228,8 @@ BEGIN
         studios s ON a.studio_id = s.studio_id
     JOIN 
         ratings r ON a.anime_id = r.anime_id
+	WHERE
+		(a.genre = param_genre OR param_genre = "None")
     GROUP BY 
         a.anime_id
     ORDER BY 
@@ -244,7 +247,8 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS SelectBestAnimeInMonth;
 CREATE PROCEDURE `SelectBestAnimeInMonth`(
-	IN param_month INT
+	IN param_month INT,
+	IN param_genre VARCHAR(4)
 )
 BEGIN
 	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
@@ -269,7 +273,8 @@ BEGIN
     JOIN 
         ratings r ON a.anime_id = r.anime_id
     WHERE
-        MONTH(a.air_date) = param_month
+        MONTH(a.air_date) = param_month AND
+		(a.genre = param_genre OR param_genre = "None")
     GROUP BY 
         a.anime_id
     ORDER BY 
@@ -284,7 +289,9 @@ DELIMITER ;
 -- Creates a table called `best_anime` for all the months with their top 5 animes
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS SelectBestAnimeMonthly;
-CREATE PROCEDURE `SelectBestAnimeMonthly`()
+CREATE PROCEDURE `SelectBestAnimeMonthly`(
+	IN param_genre VARCHAR(4)
+)
 BEGIN
 	DECLARE i INT DEFAULT 1;
 	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
@@ -297,7 +304,7 @@ BEGIN
     );
 	
 	WHILE i <= 12 DO
-		CALL SelectBestAnimeInMonth(i);
+		CALL SelectBestAnimeInMonth(i, param_genre);
 		SET i = i + 1;
 	END WHILE;
 END //
@@ -314,7 +321,8 @@ DELIMITER //
 CREATE PROCEDURE `SelectBestAnimeInSeason`(
     IN from_month INT,
     IN to_month INT,
-    IN season_name VARCHAR(6)
+    IN season_name VARCHAR(6),
+    IN param_genre VARCHAR(4)
 )
 BEGIN
 	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
@@ -340,6 +348,7 @@ BEGIN
         ratings r ON a.anime_id = r.anime_id
     WHERE
         MONTH(a.air_date) BETWEEN from_month AND to_month
+        AND (a.genre = param_genre OR param_genre = "None")
     GROUP BY 
         a.anime_id
     ORDER BY 
@@ -353,7 +362,9 @@ DELIMITER ;
 -- Creates a table called `best_anime` with each season containing the top 5 animes aired in that season
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `SelectBestAnimeSeasonal`;
-CREATE PROCEDURE `SelectBestAnimeSeasonal`()
+CREATE PROCEDURE `SelectBestAnimeSeasonal`(
+	IN param_genre VARCHAR(4)
+)
 BEGIN
 	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
 	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
@@ -364,10 +375,10 @@ BEGIN
         rating DECIMAL(5, 2)
     );
 
-    CALL SelectBestAnimeInSeason(1, 3, 'Winter');
-    CALL SelectBestAnimeInSeason(4, 6, 'Spring');
-    CALL SelectBestAnimeInSeason(7, 9, 'Summer');
-    CALL SelectBestAnimeInSeason(10, 12, 'Fall');
+    CALL SelectBestAnimeInSeason(1, 3, 'Winter', param_genre);
+    CALL SelectBestAnimeInSeason(4, 6, 'Spring', param_genre);
+    CALL SelectBestAnimeInSeason(7, 9, 'Summer', param_genre);
+    CALL SelectBestAnimeInSeason(10, 12, 'Fall', param_genre);
 END //
 DELIMITER ;
 
@@ -378,7 +389,8 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `SelectBestAnimeInYear`;
 CREATE PROCEDURE `SelectBestAnimeInYear`(
-	IN param_year INT
+	IN param_year INT,
+    IN param_genre VARCHAR(4)
 )
 BEGIN
     CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime`(
@@ -404,11 +416,12 @@ BEGIN
         ratings r ON a.anime_id = r.anime_id
     WHERE
         YEAR(a.air_date) = param_year
+		AND (a.genre = param_genre OR param_genre = "None")
     GROUP BY 
         a.anime_id
     ORDER BY 
         rating DESC
-    LIMIT 3;
+    LIMIT 5;
 END //
 DELIMITER ;
 
@@ -417,7 +430,9 @@ DELIMITER ;
 -- Creates a table called `best_anime` for all the years with their top 5 animes
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `SelectBestAnimeYearly`;
-CREATE PROCEDURE `SelectBestAnimeYearly`()
+CREATE PROCEDURE `SelectBestAnimeYearly`(
+	IN param_genre VARCHAR(4)
+)
 BEGIN
 	DECLARE min INT;
     DECLARE max INT;
@@ -435,7 +450,7 @@ BEGIN
     );
     
 	WHILE min <= max DO
-		CALL SelectBestAnimeInYear(min);
+		CALL SelectBestAnimeInYear(min, param_genre);
 		SET min = min + 1;
 	END WHILE;
 END //
