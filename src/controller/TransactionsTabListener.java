@@ -3,7 +3,6 @@ package src.controller;
 import java.awt.event.*;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
 import src.model.AnimeSystem;
 import src.view.gui.Subtab;
@@ -24,6 +23,9 @@ public class TransactionsTabListener implements ActionListener {
         String name = ((JComponent) e.getSource()).getName();
         System.out.printf("%s/%s?%s\n", topView.getCurrentTabName(), topView.getCurrentSubtabName(), name);
 
+        int user_id = this.getUserIDFromTopView();
+        int anime_id = this.getAnimeIDFromTopView();
+
         switch (name) {
             // Watch episode
             case "searchUserWatchEpisode":
@@ -33,7 +35,7 @@ public class TransactionsTabListener implements ActionListener {
                 this.searchAnimeWatchEpisode();
                 break;
             case "watchEpisode":
-                this.watchEpisode(this.getUserIDFromTopView(), this.getAnimeIDFromTopView());
+                this.watchEpisode(user_id, anime_id);
                 break;
 
             // Rate anime
@@ -53,6 +55,12 @@ public class TransactionsTabListener implements ActionListener {
             default:
                 System.err.println("No associated action for " + name);
                 break;
+        }
+
+        if (user_id != 0 && anime_id != 0) {
+            Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
+            subtab.setComponentText(subtab.getComponent("episode"), 
+            animeSystem.getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
         }
     }
 
