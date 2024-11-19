@@ -48,6 +48,7 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
             System.out.printf("%d\t%s : %s\n", i, this.columns[i], this.data[index][i]);
         }
         topView.setFieldsFromData(tabName, subtabName, rowData);
+        topView.setRecordTableVisible(this.recordName, false);
     }
 
     /**

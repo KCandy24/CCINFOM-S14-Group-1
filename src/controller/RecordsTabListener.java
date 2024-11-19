@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 
 import src.model.AnimeSystem;
 import src.model.UserRegion;
+import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
 /**
@@ -133,19 +134,13 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void saveUser() {
-        // TODO: ???????
-
-        String userName = ((JTextField) topView.getComponent(
-                TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "username")).getText();
-        String region = UserRegion.findCode(
-                ((String) ((JComboBox<String>) topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB,
-                        "region")).getSelectedItem()));
-        String joinDate = ((String) ((JTextField) topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB,
-                "joinDate")).getText());
-
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
+        JTextField userNameField = (JTextField) subtab.getComponent("username");
+        JComboBox<String> regionComboBox = (JComboBox<String>) subtab.getComponent("region");
+        JTextField joinDateField = (JTextField) subtab.getComponent("joinDate");
         animeSystem.safeUpdate(
                 "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
-                userName, region, joinDate);
+                userNameField.getText(), regionComboBox.getSelectedItem().toString(), joinDateField.getText());
     }
 
     public void deleteUser() {

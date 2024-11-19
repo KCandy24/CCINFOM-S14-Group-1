@@ -52,21 +52,12 @@
     ],
     [
         {
-            "value": "Available from"
+            "value": "Air date"
         },
         {
             "type": "TextField",
             "name": "from",
-            "column": "available_from_date"
-        },
-        {
-            "value": "to",
-            "align": "center"
-        },
-        {
-            "type": "TextField",
-            "name": "to",
-            "column": "available_to_date"
+            "column": "air_date"
         }
     ],
     [

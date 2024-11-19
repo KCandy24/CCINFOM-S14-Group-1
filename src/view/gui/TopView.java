@@ -156,6 +156,10 @@ public class TopView {
         mainTabs.get(tabName).getSubtab(subtabName).resetFields();
     }
 
+    public Subtab getSubtab(String mainTab, String subTab) {
+        return mainTabs.get(mainTab).getSubtab(subTab);
+    }
+
     public JComponent getComponent(String mainTab, String subTab, String component) {
         return mainTabs.get(mainTab).getSubtab(subTab).getComponent(component);
     }
@@ -172,5 +176,9 @@ public class TopView {
 
         popup.setLocationRelativeTo(frame);
         popup.setVisible(true);
+    }
+
+    public void setRecordTableVisible(String recordName, boolean b) {
+        this.recordTables.get(recordName).setVisible(b);
     }
 }
