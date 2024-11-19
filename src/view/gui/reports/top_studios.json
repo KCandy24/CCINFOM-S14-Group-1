@@ -14,6 +14,11 @@
         },
         {
             "value": "No studio selected",
+            "name": "studioName",
+            "db_link": "studios.studio_name"
+        },
+        {
+            "value": "",
             "name": "studioId",
             "db_link": "studios.studio_id"
         },
@@ -27,7 +32,7 @@
         {
             "type": "Button",
             "value": "Check",
-            "name": "check"
+            "name": "checkTopStudio"
         }
     ]
 ]

@@ -71,6 +71,11 @@
             "type": "Button",
             "value": "Save rating",
             "name": "rateAnime"
+        },
+        {
+            "type": "Button",
+            "value": "Load rating (Todo: this, but in other subtabs here)",
+            "name": "loadRating"
         }
     ]
 ]

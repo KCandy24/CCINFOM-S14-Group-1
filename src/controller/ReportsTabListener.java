@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.swing.JComponent;
 
 import src.model.AnimeSystem;
+import src.model.Records;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
@@ -41,13 +42,27 @@ public class ReportsTabListener implements ActionListener {
                 //     System.out.println();
                 // }
                 break;
+            case "searchUser":
+                this.searchUser();
+                break;
+            case "searchStudio":
+                this.searchStudio();
+                break;
             default:
                 System.err.println("No associated action for " + name);
                 break;
         }
     }
 
+    // General
+    public void searchUser() {
+        topView.selectFromTable(Records.USER.name);
+    }
 
+    public void searchStudio() {
+        topView.selectFromTable(Records.STUDIO.name);
+    }
+    //
 
     public String[] removeFirstElement(String[] array) {
         if (array == null || array.length == 0) {

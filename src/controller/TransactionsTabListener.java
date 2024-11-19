@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.JComponent;
 
 import src.model.AnimeSystem;
+import src.model.Records;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
@@ -89,15 +90,15 @@ public class TransactionsTabListener implements ActionListener {
     // General
 
     public void searchAnime() {
-        topView.selectFromTable("animes");
+        topView.selectFromTable(Records.ANIME.name);
     }
 
     public void searchUser() {
-        topView.selectFromTable("users");
+        topView.selectFromTable(Records.USER.name);
     }
 
     public void searchStaff() {
-        topView.selectFromTable("staff");
+        topView.selectFromTable(Records.STAFF.name);
     }
 
     // Watch episode transaction

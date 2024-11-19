@@ -4,6 +4,7 @@ import java.awt.event.*;
 import src.model.AnimeSystem;
 import src.model.Records;
 import src.view.gui.TopView;
+
 /**
  * The controller communicates between the model and the view.
  */
@@ -25,7 +26,7 @@ public class Controller {
     RecordsTabListener recordsTabListener;
     TransactionsTabListener transactionsTabListener;
     ActionListener reportListener;
-    
+
     /**
      * Initializes the listeners to listen to the view.
      */
@@ -33,27 +34,15 @@ public class Controller {
         this.animeSystem = animeSystem;
         this.topView = topView;
 
-        // # Initialize and set listeners
-
-        // ## RecordTableListeners ("search pop-up")
-        // TODO: Revise RecordTable to make it work in other tabs aside from the Records
-        // ? Solution: Make TopView store the current tab and subtab?
-        // ? + Set listeners to the JTabbedPanes to update the current tab, subtab
-        animeRecordTableListener = new RecordTableListener(animeSystem, topView, Records.ANIME);
-        userRecordTableListener = new RecordTableListener(animeSystem, topView, Records.USER);
-        staffRecordTableListener = new RecordTableListener(animeSystem, topView, Records.STAFF);
-        studioRecordTableListener = new RecordTableListener(animeSystem, topView, Records.STUDIO);
-
-        topView.setRecordTableListener("animes", animeRecordTableListener);
-        topView.setRecordTableListener("users", userRecordTableListener);
-        topView.setRecordTableListener("staff", staffRecordTableListener);
-        topView.setRecordTableListener("studios", studioRecordTableListener);
-
         currentTabListener = new CurrentTabListener(topView);
         currentSubtabListener = new CurrentSubtabListener(topView);
         topView.setTabListeners(currentTabListener, currentSubtabListener);
 
-        // ## Records Tab
+        for (Records record : Records.values()) {
+            System.out.println("Setting record table for " + record.name);
+            topView.setRecordTableListener(record.name, new RecordTableListener(animeSystem, topView, record));
+        }
+
         recordsTabListener = new RecordsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
@@ -72,7 +61,6 @@ public class Controller {
                 recordsTabListener,
                 "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
 
-        // ## Transactions Tab
         transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
@@ -91,10 +79,22 @@ public class Controller {
                 transactionsTabListener,
                 "searchFollower", "searchFollowed", "follow", "unfollow");
 
-        // ## Reports Tab
         reportListener = new ReportsTabListener(animeSystem, topView);
-        // TODO: Set report listeners
-        topView.setActionListeners(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB,
-        reportListener, "checkButton");
+        topView.setActionListeners(
+                TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB,
+                reportListener,
+                "checkButton");
+        topView.setActionListeners(
+                TopView.REPORTS_TAB, TopView.RECOMMEND_ANIME_REPORT_SUBTAB,
+                reportListener,
+                "searchUser", "checkRecommendedAnime");
+        topView.setActionListeners(
+                TopView.REPORTS_TAB, TopView.TOP_STUDIOS_REPORT_SUBTAB,
+                reportListener,
+                "searchStudio", "checkTopStudio");
+        topView.setActionListeners(
+                TopView.REPORTS_TAB, TopView.USER_PROFILE_REPORT_SUBTAB,
+                reportListener,
+                "searchUser", "checkUserProfile");
     }
 }

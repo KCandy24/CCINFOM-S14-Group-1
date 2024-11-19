@@ -4,8 +4,14 @@
             "value": "User"
         },
         {
+            "name": "username",
+            "value": "",
+            "db_link": "users.user_name"
+        },
+        {
             "name": "userId",
-            "value": "No user selected"
+            "value": "No user selected",
+            "db_link": "users.user_id"
         },
         {
             "type": "Button",
@@ -17,7 +23,7 @@
         {
             "type": "Button",
             "value": "Check",
-            "name": "check"
+            "name": "checkUserProfile"
         }
     ]
 ]
