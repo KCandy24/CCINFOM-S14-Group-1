@@ -322,6 +322,10 @@ public class TopView {
         subtab.setFields(data);
     }
 
+    public void displayHighestRatedAnimes(String[] headers, HashMap<String, String[][]> data){
+        
+    }
+
     /**
      * Alert the user with a dialog pop-up.
      * 

@@ -207,13 +207,15 @@ CREATE PROCEDURE `SelectBestAnimeOverall`()
 BEGIN
 	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
 	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
+		overall VARCHAR(8),
         title VARCHAR(255),
         genre VARCHAR(255),
         studio_name VARCHAR(255),
         rating DECIMAL(5, 2)
     ); 
-    INSERT INTO `best_anime` (title, genre, studio_name, rating)
+    INSERT INTO `best_anime` (overall, title, genre, studio_name, rating)
     SELECT 
+		"Overall" AS overall,
         title, 
         genre, 
         studio_name,
@@ -227,7 +229,8 @@ BEGIN
     GROUP BY 
         a.anime_id
     ORDER BY 
-        rating DESC;
+        rating DESC
+    LIMIT 3;
 END //
 DELIMITER ;
 
@@ -270,17 +273,17 @@ BEGIN
         a.anime_id
     ORDER BY 
         rating DESC
-	LIMIT 5;
+	LIMIT 3;
 END //
 DELIMITER ;
 
 
 -- PROCEDURE
--- Usage: "CALL SelectBestAnimeMonths()"
+-- Usage: "CALL SelectBestAnimeMonthly()"
 -- Creates a table called `best_anime` for all the months with their top 5 animes
 DELIMITER //
--- DROP PROCEDURE IF EXISTS SelectBestAnimeMonths;
-CREATE PROCEDURE `SelectBestAnimeMonths`()
+-- DROP PROCEDURE IF EXISTS SelectBestAnimeMonthly;
+CREATE PROCEDURE `SelectBestAnimeMonthly`()
 BEGIN
 	DECLARE i INT DEFAULT 1;
 	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
@@ -340,16 +343,16 @@ BEGIN
         a.anime_id
     ORDER BY 
         rating DESC
-    LIMIT 5;
+    LIMIT 3;
 END //
 DELIMITER ;
 
 -- PROCEDURE
--- Usage: "CALL SelectBestAnimeSeason()"
+-- Usage: "CALL SelectBestAnimeSeasonal()"
 -- Creates a table called `best_anime` with each season containing the top 5 animes aired in that season
 DELIMITER //
--- DROP PROCEDURE IF EXISTS `SelectBestAnimeSeason`;
-CREATE PROCEDURE `SelectBestAnimeSeason`()
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeSeasonal`;
+CREATE PROCEDURE `SelectBestAnimeSeasonal`()
 BEGIN
 	DROP TEMPORARY TABLE IF EXISTS `best_anime`;
 	CREATE TEMPORARY TABLE IF NOT EXISTS `best_anime` (
@@ -404,16 +407,16 @@ BEGIN
         a.anime_id
     ORDER BY 
         rating DESC
-    LIMIT 5;
+    LIMIT 3;
 END //
 DELIMITER ;
 
 -- PROCEDURE
--- Usage: "CALL SelectBestAnimeMonths()"
+-- Usage: "CALL SelectBestAnimeYearly()"
 -- Creates a table called `best_anime` for all the years with their top 5 animes
 DELIMITER //
--- DROP PROCEDURE IF EXISTS `SelectBestAnimeYear`;
-CREATE PROCEDURE `SelectBestAnimeYear`()
+-- DROP PROCEDURE IF EXISTS `SelectBestAnimeYearly`;
+CREATE PROCEDURE `SelectBestAnimeYearly`()
 BEGIN
 	DECLARE min INT;
     DECLARE max INT;

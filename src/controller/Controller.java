@@ -86,6 +86,7 @@ public class Controller {
         // ## Reports Tab
         reportListener = new ReportsTabListener(animeSystem, topView);
         // TODO: Set report listeners
-
+        topView.setActionListeners(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB,
+        reportListener, "checkButton");
     }
 }
