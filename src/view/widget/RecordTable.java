@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -25,12 +26,10 @@ public class RecordTable extends JDialog {
     private GridBagConstraints c = new GridBagConstraints();
     private String[] shownColumnNames;
     private String[] columnNames;
-    private String recordName;
 
     public RecordTable(JFrame frame, String recordName, String noun, String... shownColumnNames) {
         super(frame, "Please select " + noun, true);
         this.shownColumnNames = shownColumnNames;
-        this.recordName = recordName;
         this.setSize(new Dimension(800, 600));
         this.setResizable(true);
         panel = new JPanel();
@@ -51,7 +50,7 @@ public class RecordTable extends JDialog {
         for (int i = columnNames.length - 1; i >= 0; i--) {
             show = false;
             for (int j = 0; j < shownColumnNames.length; j++) {
-                if ((recordName + "." + shownColumnNames[j]).equals(columnNames[i])) {
+                if (shownColumnNames[j].equals(columnNames[i])) {
                     System.out.println("\tThis column must be shown.");
                     show = true;
                     break;
