@@ -267,6 +267,9 @@ public class Subtab extends NamedPanel {
                     case "recommendations":
                         retval = selection;
                         break;
+                    case "years":
+                        retval = selection;
+                        break;
                     default:
                         System.err.println("Unhandled comboBoxType " + comboBoxType[0]);
                         break;
