@@ -1,7 +1,7 @@
 package src.model;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.sql.*;
 
 /**
@@ -183,5 +183,38 @@ public class AnimeSystem {
         }
         System.out.println(statement);
         statement.executeUpdate();
+    }
+
+    /**
+     * Execute a query with arguments expecting one row returned, returning a
+     * HashMap mapping column name to its value.
+     * 
+     * @param query
+     * @param arguments
+     * @return
+     * @throws SQLException
+     */
+    public HashMap<String, String> safeSingleQuery(String query, String... arguments) throws SQLException {
+        PreparedStatement statement = dbConnection.prepareStatement(query);
+        for (int i = 0; i < arguments.length; i++) {
+            System.out.println(arguments[i]);
+            statement.setString(i + 1, arguments[i]);
+        }
+        System.out.println(statement);
+
+        HashMap<String, String> data = new HashMap<>();
+        try {
+            dbResultSet = statement.executeQuery();
+            dbMetaData = dbResultSet.getMetaData();
+            dbResultSet.next();
+            for (int i = 1; i <= dbMetaData.getColumnCount(); i++) {
+                System.out.println(dbMetaData.getColumnCount() + " " + i);
+                data.put(dbMetaData.getColumnLabel(i), dbResultSet.getString(i));
+            }
+        } catch (Exception e) {
+            System.err.println("Query to 'dbanime' Failed.");
+            e.printStackTrace();
+        }
+        return data;
     }
 }

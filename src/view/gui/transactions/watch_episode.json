@@ -46,6 +46,14 @@
         {
             "value": "0",
             "name": "episode"
+        },
+        {
+            "value": ""
+        },
+        {
+            "type": "Button",
+            "value": "Refresh",
+            "name": "refreshLastWatched"
         }
     ],
     [

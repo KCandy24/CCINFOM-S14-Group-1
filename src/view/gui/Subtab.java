@@ -47,7 +47,6 @@ public class Subtab extends NamedPanel {
         this.addComponents();
     }
 
-
     /**
      * Sets the components ArrayList and the componentName HashMap.
      * 
@@ -108,6 +107,14 @@ public class Subtab extends NamedPanel {
                 } else {
                     c.fill = GridBagConstraints.HORIZONTAL;
                 }
+
+                if (component instanceof JScrollPane) {
+                    // Allocate more space to a JTextArea
+                    // (which is contained in a JScrollPane)
+                    c.gridwidth = 3;
+                } else {
+                    c.gridwidth = 1;
+                }
                 this.add(component, c);
                 c.gridx++;
             }
@@ -138,8 +145,11 @@ public class Subtab extends NamedPanel {
         componentDbLinks.put(columnName, getComponent(componentName));
     }
 
+    public void setComponentText(String componentName, String text) {
+        setComponentText(getComponent(componentName), text);
+    }
+
     /**
-     * TODO: This, but accepts componentName.
      * 
      * @param component
      * @param text
@@ -149,6 +159,11 @@ public class Subtab extends NamedPanel {
             ((AbstractButton) component).setText(text);
         } else if (component instanceof JLabel) {
             ((JLabel) component).setText(text);
+        } else if (component instanceof JTextField) {
+            ((JTextField) component).setText(text);
+        } else if (component instanceof JScrollPane) { // which contains a Viewport, which contains a JTextArea
+            // TODO: This is untested -- would component 0 always be a JTextArea?
+            ((JTextArea) ((JScrollPane) component).getViewport().getComponent(0)).setText(text);
         } else if (component instanceof JTextField) {
             ((JTextField) component).setText(text);
         } else if (component instanceof JComboBox) {
@@ -244,9 +259,8 @@ public class Subtab extends NamedPanel {
                         break;
                     case "genre_with_none":
                         if (selection.equals("None")) {
-                            retval = "None";            
-                        }
-                        else {
+                            retval = "None";
+                        } else {
                             retval = Genre.findCode(selection);
                         }
                         break;

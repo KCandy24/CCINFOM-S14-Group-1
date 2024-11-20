@@ -53,6 +53,10 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
         topView.setFieldsFromData(rowData);
         topView.setLastRowData(rowData);
         topView.setRecordTableVisible(associatedRecord.name, false);
+
+        // ?
+        // TODO: topView.refresh();
+        // ?
     }
 
     /**

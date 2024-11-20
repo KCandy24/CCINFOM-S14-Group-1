@@ -62,19 +62,29 @@
             "value": "Last episode watched"
         },
         {
-            "name": "lastEpisodeWatched",
+            "name": "episode",
             "value": "0"
+        },
+        {
+            "type": "Button",
+            "value": "Refresh",
+            "name": "refreshLastWatched"
         }
     ],
     [
         {
             "type": "Button",
-            "value": "Save rating",
-            "name": "rateAnime"
+            "value": "Save",
+            "name": "saveRating"
         },
         {
             "type": "Button",
-            "value": "Load rating (Todo: this, but in other subtabs here)",
+            "value": "Delete",
+            "name": "deleteRating"
+        },
+        {
+            "type": "Button",
+            "value": "Load",
             "name": "loadRating"
         }
     ]

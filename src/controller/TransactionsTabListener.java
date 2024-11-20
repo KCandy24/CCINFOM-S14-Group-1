@@ -1,6 +1,9 @@
 package src.controller;
 
 import java.awt.event.*;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComponent;
 
@@ -22,7 +25,6 @@ public class TransactionsTabListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = ((JComponent) e.getSource()).getName();
-        Subtab subtab;
         System.out.printf("%s/%s?%s\n", topView.getCurrentTabName(), topView.getCurrentSubtabName(), name);
 
         int user_id = this.getUserIDFromTopView();
@@ -44,10 +46,19 @@ public class TransactionsTabListener implements ActionListener {
             case "watchEpisode":
                 this.watchEpisode(user_id, anime_id);
                 break;
+            case "refreshLastWatched":
+                this.refreshLastWatched(user_id, anime_id);
+                break;
 
             // Rate anime
-            case "rateAnime":
-                this.rateAnime();
+            case "saveRating":
+                this.saveRating();
+                break;
+            case "deleteRating":
+                this.deleteRating();
+                break;
+            case "loadRating":
+                this.loadRating();
                 break;
 
             // Edit credits
@@ -56,6 +67,9 @@ public class TransactionsTabListener implements ActionListener {
                 break;
             case "deleteCredits":
                 this.deleteCredits();
+                break;
+            case "loadCredits":
+                this.loadCredits();
                 break;
 
             // Follow user
@@ -77,14 +91,8 @@ public class TransactionsTabListener implements ActionListener {
                 break;
         }
 
-        if (user_id != 0 && anime_id != 0) {
-            subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB,
-                    TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
-            subtab.setComponentText(subtab.getComponent("episode"),
-                    animeSystem.getProcedureSingleResult(
-                            String.format("GetLastWatchedQ(%d, %d)",
-                                    user_id, anime_id)));
-        }
+        refreshLastWatched(user_id, anime_id);
+
     }
 
     // General
@@ -105,7 +113,7 @@ public class TransactionsTabListener implements ActionListener {
 
     public int getUserIDFromTopView() {
         try {
-            Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
+            Subtab subtab = topView.getCurrentSubtab();
             String userIDString = subtab.getComponentText("userId");
             int user_id = Integer.parseInt(userIDString);
             return user_id;
@@ -116,7 +124,7 @@ public class TransactionsTabListener implements ActionListener {
 
     public int getAnimeIDFromTopView() {
         try {
-            Subtab subtab = topView.getSubtab(TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB);
+            Subtab subtab = topView.getCurrentSubtab();
             String animeIDString = subtab.getComponentText("animeId");
             int anime_id = Integer.parseInt(animeIDString);
             return anime_id;
@@ -148,20 +156,63 @@ public class TransactionsTabListener implements ActionListener {
         }
     }
 
+    public void refreshLastWatched(int user_id, int anime_id) {
+        if (user_id != 0 && anime_id != 0) {
+            Subtab subtab = topView.getCurrentSubtab();
+            subtab.setComponentText(
+                    subtab.getComponent("episode"),
+                    animeSystem.getProcedureSingleResult(
+                            String.format(
+                                    "GetLastWatchedQ(%d, %d)",
+                                    user_id, anime_id)));
+        }
+    }
+
     // Rate anime
-    public void rateAnime() {
+    public void saveRating() {
+        // TODO: IMPLEMENTATION
+    }
+
+    public void loadRating() {
+        // Get rating data
+        Integer user_id = getUserIDFromTopView();
+        Integer anime_id = getAnimeIDFromTopView();
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery("""
+                    SELECT * FROM ratings
+                    WHERE user_id = ? AND anime_id = ?
+                    """, user_id.toString(), anime_id.toString());
+            for (Map.Entry<String, String> pair : data.entrySet()) {
+                System.out.println(pair.getKey() + " : " + pair.getValue());
+            }
+
+            // Set to GUI
+            Subtab subtab = topView.getCurrentSubtab();
+            subtab.setComponentText("rating", data.get("rating"));
+            subtab.setComponentText("comment", data.get("comment"));
+            subtab.setComponentText("episode", data.get("last_episode_watched"));
+
+        } catch (SQLException e) {
+            topView.dialogPopUp("SQL Exception", e.getStackTrace().toString());
+        }
+    }
+
+    public void deleteRating() {
         // TODO: IMPLEMENTATION
     }
 
     // Edit credits
     public void saveCredits() {
         // TODO: IMPLEMENTATION
-
     }
 
     public void deleteCredits() {
         // TODO: IMPLEMENTATION
+    }
 
+    public void loadCredits() {
+        // TODO: IMPLEMENTATION
+        // ? Need a procedure, maybe
     }
 
     // Follow user

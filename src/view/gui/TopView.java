@@ -278,6 +278,10 @@ public class TopView {
         return mainTabs.get(mainTab).getSubtab(subTab);
     }
 
+    public Subtab getCurrentSubtab() {
+        return mainTabs.get(getCurrentTabName()).getSubtab(getCurrentSubtabName());
+    }
+
     /**
      * Reset the fields of a subtab.
      * 

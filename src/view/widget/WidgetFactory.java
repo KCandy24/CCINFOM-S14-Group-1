@@ -184,8 +184,9 @@ public class WidgetFactory {
         return jTextField;
     }
 
-    public static JScrollPane createJTextArea() {
+    public static JScrollPane createJTextArea(String name) {
         JTextArea jTextArea = new JTextArea(10, 30);
+        jTextArea.setName(name);
         jTextArea.setLineWrap(true);
         jTextArea.setWrapStyleWord(true);
         JScrollPane jScrollPane = new JScrollPane(jTextArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -252,6 +253,7 @@ public class WidgetFactory {
         JComponent component;
         String type = cell.optString("type", "Label");
         String value = cell.optString("value", "default");
+        String name = cell.optString("name");
 
         switch (type) {
             case "ComboBox":
@@ -296,7 +298,7 @@ public class WidgetFactory {
                 component = WidgetFactory.createJTextField();
                 break;
             case "TextArea":
-                component = WidgetFactory.createJTextArea();
+                component = WidgetFactory.createJTextArea(name);
                 break;
             case "Label":
             default:
@@ -323,7 +325,6 @@ public class WidgetFactory {
                 break;
         }
 
-        String name = cell.optString("name");
         if (!name.isEmpty()) {
             component.setName(name);
         } else {

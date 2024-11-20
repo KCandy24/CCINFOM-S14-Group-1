@@ -75,6 +75,11 @@
             "type": "Button",
             "name": "deleteCredits",
             "value": "Delete"
+        },
+        {
+            "type": "Button",
+            "value": "Load",
+            "name": "loadCredits"
         }
     ]
 ]
