@@ -201,6 +201,7 @@ public class TransactionsTabListener implements ActionListener {
         // Rating must be a value from 1 - 5
         // Rating must not go through if a person has not watched at least 1 episode of that anime
         // Pls also double check if the refresh episode thing works lol
+        // Add error message for if no user is selected (for follows and ratings pls hehe)
 
         if (ratingExists) {
             try {
