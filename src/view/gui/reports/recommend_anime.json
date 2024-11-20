@@ -43,15 +43,6 @@
     ],
     [
         {
-            "value": "Year"
-        },
-        {
-            "type": "TextField",
-            "name": "year"
-        }
-    ],
-    [
-        {
             "type": "Button",
             "value": "Check recommendations",
             "name": "checkRecommendedAnime"

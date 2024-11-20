@@ -565,17 +565,21 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS RecommendFromWatchList;
 CREATE PROCEDURE RecommendFromWatchList(
-	IN param_user_id INT
+	IN param_user_id INT,
+    IN param_year INT
 ) 
 BEGIN
 	SELECT
 		a.title,
         MAX(v.watched_episode) AS `last_watched`,
-		a.num_of_episodes
+		a.num_of_episodes,
+        a.air_date
     FROM
 		animes a
 	JOIN
 		views v ON a.anime_id = v.anime_id AND v.user_id = param_user_id
+	WHERE	
+		YEAR(a.air_date) = param_year OR param_year = 0
     GROUP BY
 		a.anime_id
 	HAVING
@@ -592,7 +596,8 @@ DELIMITER ;
 DELIMITER // 
 -- DROP PROCEDURE IF EXISTS RecommendFromGenre;
 CREATE PROCEDURE RecommendFromGenre(
-	IN param_user_id INT
+	IN param_user_id INT,
+    IN param_year INT
 )
 BEGIN
 	SELECT
@@ -607,9 +612,10 @@ BEGIN
 				aa.genre = a.genre AND aa.anime_id NOT IN(
 					SELECT DISTINCT(aaa.anime_id) FROM animes aaa JOIN views vv
                     ON aaa.anime_id = vv.anime_id AND vv.user_id = param_user_id
-                )
+                ) AND (YEAR(aa.air_date) = param_year OR param_year = 0)
 			GROUP BY aa.anime_id ORDER BY AVG(r.rating) DESC LIMIT 1
-		)	AS `top_rated_anime`
+		)	AS `top_rated_anime`,
+        (SELECT aaaa.air_date FROM animes aaaa WHERE `top_rated_anime` = aaaa.title) AS `top_rated_air_date`
 	FROM
 		users u
 	LEFT JOIN
@@ -617,7 +623,7 @@ BEGIN
 	LEFT JOIN
 		animes a ON v.anime_id = a.anime_id
 	WHERE
-		u.user_id = param_user_id
+		u.user_id = param_user_id 
 	GROUP BY
 		a.genre
 	ORDER BY
@@ -632,14 +638,16 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS RecommendFromFollows;
 CREATE PROCEDURE RecommendFromFollows(
-	IN param_user_id INT
+	IN param_user_id INT,
+    IN param_year INT
 )
 BEGIN
 	SELECT 
 		u.user_name,
         a.title,
         r.`comment`,
-        r.rating
+        r.rating,
+        a.air_date
     FROM
 		`follows` f
 	JOIN
@@ -647,7 +655,10 @@ BEGIN
 	JOIN
 		users u ON f.followed_id = u.user_id
 	JOIN
-		animes a ON r.anime_id = a.anime_id;
+		animes a ON r.anime_id = a.anime_id
+	WHERE
+		YEAR(a.air_date) = param_year OR param_year = 0;
+        
 END //
 DELIMITER ;
 

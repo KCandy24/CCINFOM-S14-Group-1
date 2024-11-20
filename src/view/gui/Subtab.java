@@ -268,7 +268,10 @@ public class Subtab extends NamedPanel {
                         retval = selection;
                         break;
                     case "years":
-                        retval = selection;
+                        if(selection.equals("All time")){
+                            retval = "0";
+                        } else 
+                            retval = selection;
                         break;
                     default:
                         System.err.println("Unhandled comboBoxType " + comboBoxType[0]);

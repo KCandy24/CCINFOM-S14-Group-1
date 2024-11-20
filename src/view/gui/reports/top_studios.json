@@ -21,7 +21,7 @@
     ],
     [  
         {
-            "name": "yearStudipLabel",
+            "name": "yearStudioLabel",
     
             "value": "Select Year Anime is released"
         },
@@ -29,15 +29,6 @@
             "type": "ComboBox",
             "name": "yearStudioComboBox",
             "combobox_type": "years"
-        }
-    ],
-    [
-        {
-            "value": "Year"
-        },
-        {
-            "type": "TextField",
-            "name": "year"
         }
     ],
     [
