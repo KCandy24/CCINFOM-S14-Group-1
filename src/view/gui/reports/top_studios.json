@@ -1,15 +1,6 @@
 [
     [
         {
-            "value": "Input year"
-        },
-        {
-            "type": "TextField",
-            "name": "episodes"
-        }
-    ],
-    [
-        {
             "value": "Studio"
         },
         {
@@ -26,6 +17,18 @@
             "type": "Button",
             "value": "Search",
             "name": "searchStudio"
+        }
+    ],
+    [  
+        {
+            "name": "yearStudioLabel",
+    
+            "value": "Select Year Anime is released"
+        },
+        {
+            "type": "ComboBox",
+            "name": "yearStudioComboBox",
+            "combobox_type": "years"
         }
     ],
     [

@@ -41,7 +41,7 @@
     ],
     [
         {
-            "value": "Last episode watched"
+            "value": "Last Episode Watched"
         },
         {
             "value": "0",
@@ -60,7 +60,7 @@
         {
             "type": "Button",
             "name": "watchEpisode",
-            "value": "Watch next episode"
+            "value": "Watch Next Episode"
         }
     ]
 ]

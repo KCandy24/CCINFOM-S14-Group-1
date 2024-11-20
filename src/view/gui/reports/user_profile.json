@@ -19,6 +19,18 @@
             "value": "Search"
         }
     ],
+    [  
+        {
+            "name": "yearUserLabel",
+    
+            "value": "Select Year of User Information"
+        },
+        {
+            "type": "ComboBox",
+            "name": "yearUserComboBox",
+            "combobox_type": "years"
+        }
+    ],
     [
         {
             "type": "Button",

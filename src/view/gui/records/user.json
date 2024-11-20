@@ -1,7 +1,7 @@
 [
     [
         {
-            "value": "User ID"
+            "value": "User"
         },
         {
             "value": "No user selected",
@@ -15,7 +15,7 @@
         },
         {
             "type": "Button",
-            "value": "Add new",
+            "value": "Add New",
             "name": "addNewUser"
         }
     ],
@@ -42,7 +42,7 @@
     ],
     [
         {
-            "value": "Join date"
+            "value": "Date Joined"
         },
         {
             "type": "TextField",

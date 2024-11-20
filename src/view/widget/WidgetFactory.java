@@ -294,6 +294,12 @@ public class WidgetFactory {
                         comboBox.addItem("From Following");
                         comboBox.addItem("From Top Genres Watched");
                         break;
+                    case "years":
+                        comboBox.addItem("All time");
+                        for (int i = 1990; i <= 2024; i++) {
+                            comboBox.addItem(Integer.toString(i));
+                        }
+                        break;
                 }
                 component = comboBox;
                 break;

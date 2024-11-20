@@ -19,15 +19,26 @@
             "value": "Search"
         }
     ],
-    [
-        {
+    [  {
             "name": "recommendationTypeLabel",
-            "value": "Select Recommendation Type"
+       
+           "value": "Select Recommendation Type"
         },
         {
             "type": "ComboBox",
             "name": "recommendationComboBox",
             "combobox_type": "recommendations"
+        }
+    ],
+    [  {
+            "name": "yearRecommLabel",
+       
+           "value": "Select Year Anime is released"
+        },
+        {
+            "type": "ComboBox",
+            "name": "yearRecommComboBox",
+            "combobox_type": "years"
         }
     ],
     [

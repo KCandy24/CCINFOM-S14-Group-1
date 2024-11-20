@@ -38,10 +38,11 @@ public class ReportsTabListener implements ActionListener {
                 subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.RECOMMEND_ANIME_REPORT_SUBTAB);
                 try {
                     String username = subtab.getComponentText("username");
+                    String year = subtab.getComponentText("yearRecommComboBox", "years");
                     int user_id = Integer.parseInt( subtab.getComponentText("userId"));
                     System.out.println(user_id + username);
                     String mode = subtab.getComponentText("recommendationComboBox", "recommendations");
-                    this.generateRecommendations(mode, user_id, username);
+                    this.generateRecommendations(mode, year, user_id, username);
                 } catch (Exception ex) {
                     topView.dialogPopUp("Recommend Anime", "Error User field cannot be empty");
                 }
@@ -96,22 +97,22 @@ public class ReportsTabListener implements ActionListener {
         }
     }
 
-    public void generateRecommendations(String mode, int user_id, String username){
+    public void generateRecommendations(String mode, String year, int user_id, String username){
         String[][] data;
 
         try {
             switch (mode) {
                 case "Continue Watching":
-                    data = animeSystem.getProcedureResults("RecommendFromWatchList(?)", Integer.toString(user_id));
-                    topView.displayRecommendations(data, new String[]{"Anime Title", "Watched Episodes", "Total Episodes"}, mode, username);
+                    data = animeSystem.getProcedureResults("RecommendFromWatchList(?, ?)", Integer.toString(user_id), year);
+                    topView.displayRecommendations(data, new String[]{"Anime Title", "Watched Episodes", "Total Episodes", "Date Released"}, mode, username);
                     break;
                 case "From Following":
-                    data = animeSystem.getProcedureResults("RecommendFromFollows(?)", Integer.toString(user_id));
+                    data = animeSystem.getProcedureResults("RecommendFromFollows(?, ?)", Integer.toString(user_id), year);
                     topView.displayRecommendations(data, new String[]{"Followed User","Anime Title", "Comments", "Rating"}, mode, username);
                     break;
                 case "From Top Genres Watched":
-                    data = animeSystem.getProcedureResults("RecommendFromGenre(?)", Integer.toString(user_id));
-                    topView.displayRecommendations(data, new String[]{"Genre", "Total episodes watched of Genre", "Top Unwatched Anime"}, mode, username);
+                    data = animeSystem.getProcedureResults("RecommendFromGenre(?, ?)", Integer.toString(user_id), year);
+                    topView.displayRecommendations(data, new String[]{"Genre", "Total episodes watched of Genre", "Top Unwatched Anime", "Date Released"}, mode, username);
                     break;
             }
         } catch (Exception e) {
