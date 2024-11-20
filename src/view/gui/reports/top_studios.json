@@ -1,15 +1,6 @@
 [
     [
         {
-            "value": "Input year"
-        },
-        {
-            "type": "TextField",
-            "name": "episodes"
-        }
-    ],
-    [
-        {
             "value": "Studio"
         },
         {
@@ -26,6 +17,15 @@
             "type": "Button",
             "value": "Search",
             "name": "searchStudio"
+        }
+    ],
+    [
+        {
+            "value": "Year"
+        },
+        {
+            "type": "TextField",
+            "name": "year"
         }
     ],
     [

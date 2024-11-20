@@ -15,7 +15,7 @@
         },
         {
             "type": "Button",
-            "value": "Add new",
+            "value": "Add New",
             "name": "addNewStudio"
         }
     ],
