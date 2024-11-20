@@ -124,7 +124,10 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void deleteAnime() {
+        topView.resetFields(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB);
+
         // TODO: IMPLEMENTATION
+        // TODO: DISABLE DELETE BUTTON
     }
 
     // User records management
@@ -137,6 +140,8 @@ public class RecordsTabListener implements ActionListener {
 
     public void addNewUser() {
         topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
+
+        // TODO: DISABLE DELETE BUTTON
     }
 
     /**
@@ -167,8 +172,6 @@ public class RecordsTabListener implements ActionListener {
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
-
-        // TODO: DISABLE DELETE BUTTON
     }
 
     public void updateUser(String userId, String username, String region, String joinDate) {
