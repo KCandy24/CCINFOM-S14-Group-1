@@ -170,24 +170,43 @@ public class TransactionsTabListener implements ActionListener {
 
     // Rate anime
     public void saveRating() {
-        // TODO: IMPLEMENTATION
+        // Grab data from GUI
+        Subtab subtab = topView.getCurrentSubtab();
+        String user_id = subtab.getComponentText("userId");
+        String anime_id = subtab.getComponentText("animeId");
+        String rating = subtab.getComponentText("rating");
+        String comment = subtab.getComponentText("comment");
+        String last_episode_watched = subtab.getComponentText("episode");
+        String query = """
+                INSERT INTO ratings
+                (user_id, anime_id, rating, comment, last_episode_watched, last_edited_timestamp)
+                VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)""";
+        // Save to model
+        try {
+            animeSystem.safeUpdate(query,
+                    user_id, anime_id, rating, comment, last_episode_watched);
+        } catch (SQLException e) {
+            System.out.println(e.getStackTrace());
+        }
+
     }
 
     public void loadRating() {
         // Get rating data
-        Integer user_id = getUserIDFromTopView();
-        Integer anime_id = getAnimeIDFromTopView();
+        Subtab subtab = topView.getCurrentSubtab();
+        String user_id = subtab.getComponentText("userId");
+        String anime_id = subtab.getComponentText("animeId");
         try {
             HashMap<String, String> data = animeSystem.safeSingleQuery("""
                     SELECT * FROM ratings
                     WHERE user_id = ? AND anime_id = ?
-                    """, user_id.toString(), anime_id.toString());
+                    """, user_id, anime_id);
             for (Map.Entry<String, String> pair : data.entrySet()) {
                 System.out.println(pair.getKey() + " : " + pair.getValue());
             }
 
             // Set to GUI
-            Subtab subtab = topView.getCurrentSubtab();
+            subtab = topView.getCurrentSubtab();
             subtab.setComponentText("rating", data.get("rating"));
             subtab.setComponentText("comment", data.get("comment"));
             subtab.setComponentText("episode", data.get("last_episode_watched"));

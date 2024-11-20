@@ -240,8 +240,8 @@ public class Subtab extends NamedPanel {
             case "JTextField":
                 retval = ((JTextField) component).getText();
                 break;
-            case "JTextArea":
-                retval = ((JTextArea) ((JScrollPane) component).getComponent(0)).getText();
+            case "JScrollPane":
+                retval = ((JTextArea) ((JScrollPane) component).getViewport().getComponent(0)).getText();
                 System.out.println("\tGetting text from a text area is untested");
                 break;
             case "JComboBox":
