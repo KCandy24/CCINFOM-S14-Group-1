@@ -125,6 +125,8 @@ public class RecordsTabListener implements ActionListener {
 
     public void searchUser() {
         topView.selectFromTable("users");
+
+        // TODO: ENABLE DELETE BUTTON IF DISABLED
     }
 
     public void addNewUser() {
@@ -148,6 +150,7 @@ public class RecordsTabListener implements ActionListener {
             // This must be a new record
             createUser(username, region, joinDate);
         }
+        // TODO: ENABLE DELETE BUTTON IF DISABLED
     }
 
     public void createUser(String username, String region, String joinDate) {
@@ -158,6 +161,8 @@ public class RecordsTabListener implements ActionListener {
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
+
+        // TODO: DISABLE DELETE BUTTON
     }
 
     public void updateUser(String userId, String username, String region, String joinDate) {
