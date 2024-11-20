@@ -72,7 +72,7 @@ public class AnimeSystem {
 
     // }
 
-    public void callProcedure(String procedure, String... arguments) throws SQLException{
+    public void callProcedure(String procedure, String... arguments) throws SQLException {
         PreparedStatement statement = dbConnection.prepareStatement("CALL " + procedure);
         for (int i = 0; i < arguments.length; i++) {
             statement.setString(i + 1, arguments[i]);
@@ -92,7 +92,7 @@ public class AnimeSystem {
         }
     }
 
-    public String[][] getProcedureResults(String procedure, String... arguments) throws SQLException{
+    public String[][] getProcedureResults(String procedure, String... arguments) throws SQLException {
         ArrayList<String[]> data = new ArrayList<String[]>();
         PreparedStatement statement = dbConnection.prepareStatement("CALL " + procedure);
         for (int i = 0; i < arguments.length; i++) {
@@ -166,14 +166,10 @@ public class AnimeSystem {
         return string;
     }
 
-    public void rawUpdate(String query) {
+    public void rawUpdate(String query) throws SQLException {
         System.out.println(query);
-        try {
-            dbStatement.executeUpdate(query);
-        } catch (Exception e) {
-            System.err.println("Query to 'dbanime' Failed.");
-            e.printStackTrace();
-        }
+        dbStatement.executeUpdate(query);
+        System.err.println("Query to 'dbanime' Failed.");
     }
 
     public void safeUpdate(String query, String... arguments) throws SQLException {
@@ -203,17 +199,12 @@ public class AnimeSystem {
         System.out.println(statement);
 
         HashMap<String, String> data = new HashMap<>();
-        try {
-            dbResultSet = statement.executeQuery();
-            dbMetaData = dbResultSet.getMetaData();
-            dbResultSet.next();
-            for (int i = 1; i <= dbMetaData.getColumnCount(); i++) {
-                System.out.println(dbMetaData.getColumnCount() + " " + i);
-                data.put(dbMetaData.getColumnLabel(i), dbResultSet.getString(i));
-            }
-        } catch (Exception e) {
-            System.err.println("Query to 'dbanime' Failed.");
-            e.printStackTrace();
+        dbResultSet = statement.executeQuery();
+        dbMetaData = dbResultSet.getMetaData();
+        dbResultSet.next();
+        for (int i = 1; i <= dbMetaData.getColumnCount(); i++) {
+            System.out.println(dbMetaData.getColumnCount() + " " + i);
+            data.put(dbMetaData.getColumnLabel(i), dbResultSet.getString(i));
         }
         return data;
     }

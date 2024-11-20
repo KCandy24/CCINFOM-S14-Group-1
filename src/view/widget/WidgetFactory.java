@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import src.model.Genre;
 import src.model.UserRegion;
 import src.view.gui.NamedPanel;
+
 /**
  * The WidgetFactory class enables quick creation of styled UI elements such as
  * Labels and Buttons via static methods.
@@ -19,16 +20,16 @@ public class WidgetFactory {
     private static final String DEFAULT_FONT_FAMILY = "Inter";
 
     /**
-     * This class is not meant to be instantiated. Use the various static
-     * methods to create widgets.
+     * This class is not meant to be instantiated. Use the various static methods to
+     * create widgets.
      */
     private WidgetFactory() {
 
     }
 
     /**
-     * The following fonts were selected based on Microsoft's typography
-     * guidelines which were accessed via the following link:
+     * The following fonts were selected based on Microsoft's typography guidelines
+     * which were accessed via the following link:
      * https://learn.microsoft.com/en-us/windows/apps/design/style/xaml-theme-resources#the-xaml-type-ramp
      * 
      */
@@ -216,6 +217,11 @@ public class WidgetFactory {
                 tableColumn.setPreferredWidth(Math.max(componentPreferredWidth, columnPreferredWidth));
                 return component;
             }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
         WidgetFactory.styleComponent(table);
         table.getTableHeader().setFont(WidgetFactory.Fonts.BODY.getFont());
@@ -303,8 +309,8 @@ public class WidgetFactory {
             case "Label":
             default:
                 /**
-                 * "default:" is technically unnecessary as optString has a
-                 * default value of "Label", but this signals it to the compiler
+                 * "default:" is technically unnecessary as optString has a default value of
+                 * "Label", but this signals it to the compiler
                  */
                 component = WidgetFactory.createJLabel(value);
                 String align = cell.optString("align", "left");

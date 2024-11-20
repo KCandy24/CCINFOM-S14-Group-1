@@ -10,9 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.JButton;
 
 import src.controller.RecordTableListener;
@@ -66,6 +68,7 @@ public class RecordTable extends JDialog {
     public void initializeData(String[][] data, String[] columnNames) {
         this.columnNames = columnNames;
         this.table = WidgetFactory.createJTable(data, columnNames);
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.hideColumns();
         this.scrollPane = WidgetFactory.createJScrollPane(table);
 
@@ -84,25 +87,12 @@ public class RecordTable extends JDialog {
     }
 
     public void setData(String[][] data, String[] columnNames) {
-        table.setModel(new AbstractTableModel() {
-
-            public int getRowCount() {
-                return data.length;
+        TableModel model = table.getModel();
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < columnNames.length; j++) {
+                model.setValueAt(data[i][j], i, j);
             }
-
-            public int getColumnCount() {
-                return data[0].length;
-            }
-
-            public Object getValueAt(int rowIndex, int columnIndex) {
-                return data[rowIndex][columnIndex];
-            }
-
-            public String getColumnName(int columnIndex) {
-                return columnNames[columnIndex];
-            }
-        });
-        this.hideColumns();
+        }
     }
 
     public void setListener(RecordTableListener listener) {
