@@ -1,7 +1,6 @@
 [
     [
         {
-            "name": "periodLabel",
             "value": "Select Period"
         },
         {
@@ -12,7 +11,6 @@
     ],
     [
         {
-            "name": "genreLabel",
             "value": "Filter by Genre"
         },
         {

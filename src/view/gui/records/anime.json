@@ -1,7 +1,7 @@
 [
     [
         {
-            "value": "Anime ID"
+            "value": "Anime"
         },
         {
             "value": "No anime selected",
@@ -18,7 +18,7 @@
         },
         {
             "type": "Button",
-            "value": "Add new",
+            "value": "Add New",
             "name": "addNewAnime"
         }
     ],
@@ -67,7 +67,7 @@
     ],
     [
         {
-            "value": "Air date"
+            "value": "Date Aired"
         },
         {
             "type": "TextField",
@@ -77,7 +77,7 @@
     ],
     [
         {
-            "value": "Episodes"
+            "value": "Number of Episodes"
         },
         {
             "type": "TextField",

@@ -66,6 +66,7 @@ DROP TABLE IF EXISTS `credits`;
 CREATE TABLE `credits` (
 	`staff_id` INT NOT NULL,
     `anime_id` INT NOT NULL,
+    `episode` INT NOT NULL,
     `position` VARCHAR(32) NOT NULL,
     `department` ENUM('DP', 'AD', 'AN', 'EV', 'SS', 'TO') NOT NULL,
     -- DEPARTMENTS: Direction and Production, Art and Design, Animation, Sound and Music, Editing and Visual Effects, Script and Storyboarding, Technical and Other Staff
@@ -174,18 +175,18 @@ INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES
 ('Ayumi',   'Kobayashi', 'Music Composer', '1992-12-17'), -- 7
 ('Daichi',  'Tanaka',    'Editor',         '1985-06-13'); -- 8
 
-INSERT INTO `credits` (`staff_id`, `anime_id`, `position`, `department`) VALUES
-(1, 1, 'Director', 'DP'),
-(1, 7, 'Director', 'DP'),
-(2, 1, 'Producer', 'DP'),
-(2, 4, 'Producer', 'DP'),
-(3, 2, 'Animator', 'AN'),
-(4, 3, 'Sound Engineer', 'SS'),
-(4, 6, 'Sound Engineer', 'SS'),
-(5, 4, 'Scriptwriter', 'TO'),
-(6, 5, 'Art Designer', 'AD'),
-(7, 6, 'Editor', 'EV'),
-(8, 7, 'Animator', 'AN');
+INSERT INTO `credits` (`staff_id`, `anime_id`, `episode`, `position`, `department`) VALUES
+(1, 1, 2, 'Director', 'DP'),
+(1, 7, 1, 'Director', 'DP'),
+(2, 1, 2, 'Producer', 'DP'),
+(2, 4, 3, 'Producer', 'DP'),
+(3, 2, 2, 'Animator', 'AN'),
+(4, 3, 4, 'Sound Engineer', 'SS'),
+(4, 6, 2, 'Sound Engineer', 'SS'),
+(5, 4, 3, 'Scriptwriter', 'TO'),
+(6, 5, 1, 'Art Designer', 'AD'),
+(7, 6, 2, 'Editor', 'EV'),
+(8, 7, 1, 'Animator', 'AN');
 
 INSERT INTO `follows` (`follower_id`, `followed_id`, `following_since_date`) VALUES
 (1, 2, '2022-02-03'),

@@ -1,7 +1,7 @@
 [
     [
         {
-            "value": "Search user (follower)"
+            "value": "Follower"
         },
         {
             "name": "username",
@@ -21,7 +21,7 @@
     ],
     [
         {
-            "value": "Search user (followed)"
+            "value": "Followed User"
         },
         {
             "name": "user2name",

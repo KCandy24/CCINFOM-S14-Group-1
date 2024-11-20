@@ -1,7 +1,7 @@
 [
     [
         {
-            "value": "Studio ID"
+            "value": "Studio"
         },
         {
             "value": "No studio selected",
@@ -15,13 +15,13 @@
         },
         {
             "type": "Button",
-            "value": "Add new",
+            "value": "Add New",
             "name": "addNewStudio"
         }
     ],
     [
         {
-            "value": "Studio name"
+            "value": "Studio Name"
         },
         {
             "type": "TextField",
