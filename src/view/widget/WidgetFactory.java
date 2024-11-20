@@ -281,6 +281,11 @@ public class WidgetFactory {
                             comboBox.addItem(genre.name);
                         }
                         break;
+                    case "recommendations":
+                        comboBox.addItem("Continue Watching");
+                        comboBox.addItem("From Following");
+                        comboBox.addItem("From Top Genres Watched");
+                        break;
                 }
                 component = comboBox;
                 break;

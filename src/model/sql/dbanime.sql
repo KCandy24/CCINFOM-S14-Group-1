@@ -598,7 +598,7 @@ BEGIN
 		a.genre,
 		COUNT(a.anime_id) AS `genre_count`,
 		(
-			SELECT aa.title            
+			SELECT aa.title 
 			FROM ratings r
 			LEFT JOIN
 				animes aa ON r.anime_id = aa.anime_id
@@ -637,7 +637,6 @@ BEGIN
 	SELECT 
 		u.user_name,
         a.title,
-        a.genre,
         r.`comment`,
         r.rating
     FROM

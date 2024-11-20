@@ -334,7 +334,7 @@ public class TopView {
         HashSet<String> tabs = new HashSet<String>(data.values());
 
         for (String tab : tabs) {
-            tabbedPane.addTab(tab, createTabTable(tab, data));
+            tabbedPane.addTab(tab, createTabTableHighestRated(tab, data));
         }
 
         highestRatedPane.add(tabbedPane, BorderLayout.CENTER);
@@ -344,7 +344,7 @@ public class TopView {
         highestRatedPane.setVisible(true);
     }
 
-    private JScrollPane createTabTable(String tabName, HashMap<String[], String> data) {
+    private JScrollPane createTabTableHighestRated(String tabName, HashMap<String[], String> data) {
         String[] columns = {"Rank", "Anime Title", "Genre", "Studio", "Average Rating"};
         ArrayList<String[]> tableValues = new ArrayList<String[]>();
 
@@ -372,6 +372,28 @@ public class TopView {
         DefaultTableModel tableModel = new DefaultTableModel(tableValuesArr, columns);
         JTable table = new JTable(tableModel);
         return new JScrollPane(table);
+    }
+
+    public void displayRecommendations(String[][] data, String[] columns, String mode, String username){
+        JDialog recommendationPanes = new JDialog(frame, "Anime Recommendations");
+        recommendationPanes.setLayout(new BorderLayout());
+
+        if (mode.equals("From Top Genres Watched")) {
+            for (String[] row : data) {
+                row[0] = Genre.findName(row[0]);
+            }
+        }
+
+        JLabel topLabel = new JLabel(mode + " recommendations for " + username, JLabel.CENTER);
+        topLabel.setFont(new Font("Inter", Font.BOLD, 16));
+
+        recommendationPanes.add(topLabel, BorderLayout.NORTH);
+        recommendationPanes.add(new JScrollPane(new JTable(new DefaultTableModel(data, columns))), BorderLayout.CENTER);
+
+        recommendationPanes.setSize(500, 400);
+        recommendationPanes.setLocationRelativeTo(frame);
+        recommendationPanes.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        recommendationPanes.setVisible(true);
     }
 
     /**

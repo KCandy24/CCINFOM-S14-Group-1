@@ -21,6 +21,17 @@
     ],
     [
         {
+            "name": "recommendationTypeLabel",
+            "value": "Select Recommendation Type"
+        },
+        {
+            "type": "ComboBox",
+            "name": "recommendationComboBox",
+            "combobox_type": "recommendations"
+        }
+    ],
+    [
+        {
             "type": "Button",
             "value": "Check recommendations",
             "name": "checkRecommendedAnime"

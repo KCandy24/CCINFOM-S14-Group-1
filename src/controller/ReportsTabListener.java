@@ -23,24 +23,33 @@ public class ReportsTabListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String name = ((JComponent) e.getSource()).getName();
         System.out.println("\nTransactions/?buttonName=" + name);
-
-        Subtab subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB);
+        Subtab subtab;
 
         switch (name) {
             case "checkButton":
+                subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB);
                 String period = subtab.getComponentText("periodComboBox", "period");
                 String genre = subtab.getComponentText("genreComboBox", "genre_with_none");
                 HashMap<String[], String> data = generateHighestRatedAnime(period, genre);
                 topView.displayHighestRatedAnimes(data, period);
-                // for (Map.Entry<String, String[]> entry : data.entrySet()) {
-                //     String key = entry.getKey();
-                //     String[] value = entry.getValue();
-                //     System.out.println(key);
-                //     for (String string : value) {
-                //         System.out.println(string);
-                //     }
-                //     System.out.println();
-                // }
+                break;
+
+            case "checkRecommendedAnime":
+                subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.RECOMMEND_ANIME_REPORT_SUBTAB);
+                try {
+                    String username = subtab.getComponentText("username");
+                    int user_id = Integer.parseInt( subtab.getComponentText("userId"));
+                    System.out.println(user_id + username);
+                    String mode = subtab.getComponentText("recommendationComboBox", "recommendations");
+                    this.generateRecommendations(mode, user_id, username);
+                } catch (Exception ex) {
+                    topView.dialogPopUp("Recommend Anime", "Error User field cannot be empty");
+                }
+                break;
+            case "checkTopStudio":
+                break;
+            case "checkUserProfile":
+                
                 break;
             case "searchUser":
                 this.searchUser();
@@ -84,6 +93,29 @@ public class ReportsTabListener implements ActionListener {
         } catch (Exception e) {
             topView.dialogPopUp("Highest Rated Anime", "Error cant make report.");
             return null;
+        }
+    }
+
+    public void generateRecommendations(String mode, int user_id, String username){
+        String[][] data;
+
+        try {
+            switch (mode) {
+                case "Continue Watching":
+                    data = animeSystem.getProcedureResults("RecommendFromWatchList(?)", Integer.toString(user_id));
+                    topView.displayRecommendations(data, new String[]{"Anime Title", "Watched Episodes", "Total Episodes"}, mode, username);
+                    break;
+                case "From Following":
+                    data = animeSystem.getProcedureResults("RecommendFromFollows(?)", Integer.toString(user_id));
+                    topView.displayRecommendations(data, new String[]{"Followed User","Anime Title", "Comments", "Rating"}, mode, username);
+                    break;
+                case "From Top Genres Watched":
+                    data = animeSystem.getProcedureResults("RecommendFromGenre(?)", Integer.toString(user_id));
+                    topView.displayRecommendations(data, new String[]{"Genre", "Total episodes watched of Genre", "Top Unwatched Anime"}, mode, username);
+                    break;
+            }
+        } catch (Exception e) {
+            topView.dialogPopUp("Recommend Anime", "Error cannot fetch recommendations");
         }
     }
 

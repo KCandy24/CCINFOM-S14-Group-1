@@ -250,6 +250,9 @@ public class Subtab extends NamedPanel {
                             retval = Genre.findCode(selection);
                         }
                         break;
+                    case "recommendations":
+                        retval = selection;
+                        break;
                     default:
                         System.err.println("Unhandled comboBoxType " + comboBoxType[0]);
                         break;
