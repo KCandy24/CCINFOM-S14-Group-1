@@ -1,7 +1,7 @@
 [
     [
         {
-            "value": "Staff ID"
+            "value": "Staff"
         },
         {
             "value": "No staff selected",
@@ -21,7 +21,7 @@
     ],
     [
         {
-            "value": "First name"
+            "value": "First Name"
         },
         {
             "type": "TextField",
@@ -31,7 +31,7 @@
     ],
     [
         {
-            "value": "Last name"
+            "value": "Last Name"
         },
         {
             "type": "TextField",

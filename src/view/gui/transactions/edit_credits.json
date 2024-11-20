@@ -24,6 +24,16 @@
     ],
     [
         {
+            "value": "Episode"
+        },
+        {
+            "type": "TextField",
+            "name": "position",
+            "db_link": "credits.episode"
+        }
+    ],
+    [
+        {
             "value": "Staff"
         },
         {
