@@ -458,7 +458,7 @@ END //
 DELIMITER ;
 
 -- PROCEDURE
--- Usage: "CALL ViewUserProfiel(<param_user_id>)"
+-- Usage: "CALL ViewUserProfile(<param_user_id>)"
 -- Returns the given user's name, number of unique anime's watched, and number of ratings made
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `ViewUserProfile`;
@@ -529,28 +529,41 @@ END //
 DELIMITER ;
 
 -- PROCEDURE
--- Usage "CALL ViewBestStudio(<param_year>, <param_genre>)"
+-- Usage "CALL ViewBestStudio(<param_year>)"
 -- Returns each studio with their average rating
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `ViewBestStudio`;
 CREATE PROCEDURE `ViewBestStudio`(
-	IN param_year YEAR,
-    IN param_genre VARCHAR(2)
+	IN param_year YEAR
 )
 BEGIN
 	SELECT 
 		s.studio_name,
-		ROUND(AVG(r.rating), 2) AS `studio_rating`
+		ROUND(AVG(r.rating), 2) AS `studio_rating`,
+        (
+			SELECT 
+				aa.title 
+			FROM 
+				animes aa
+			JOIN
+				ratings rr ON aa.anime_id = rr.anime_id
+			WHERE
+				aa.studio_id = s.studio_id AND 
+                (YEAR(aa.air_date) = param_year OR param_year = 0)
+			GROUP BY
+				aa.anime_id
+			ORDER BY
+				AVG(rr.rating) DESC
+			LIMIT 1
+		) AS `highest_rated_anime`
 	FROM
 		studios s
 	JOIN
-		animes asub ON s.studio_id = asub.studio_id
+		animes a ON s.studio_id = a.studio_id
 	JOIN
-		ratings r ON asub.anime_id = r.anime_id
+		ratings r ON a.anime_id = r.anime_id
 	WHERE
-		(param_year IS NULL OR YEAR(asub.air_date) = param_year)
-			AND
-				(param_genre IS NULL OR asub.genre = param_genre)
+		(YEAR(a.air_date) = param_year OR param_year = 0)
 	GROUP BY
 		s.studio_id
 	ORDER BY
@@ -579,7 +592,7 @@ BEGIN
 	JOIN
 		views v ON a.anime_id = v.anime_id AND v.user_id = param_user_id
 	WHERE	
-		YEAR(a.air_date) = param_year OR param_year = 0
+		(YEAR(aa.air_date) = param_year OR param_year = 0)
     GROUP BY
 		a.anime_id
 	HAVING

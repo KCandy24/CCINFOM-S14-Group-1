@@ -92,12 +92,13 @@ public class AnimeSystem {
         }
     }
 
-    public String[][] getProcedureResults(String procedure, String... arguments) throws SQLException {
+    public String[][] getProcedureResults(String procedure, Object... arguments) throws SQLException {
         ArrayList<String[]> data = new ArrayList<String[]>();
         PreparedStatement statement = dbConnection.prepareStatement("CALL " + procedure);
         for (int i = 0; i < arguments.length; i++) {
-            statement.setString(i + 1, arguments[i]);
+            statement.setObject(i + 1, arguments[i]);
         }
+        System.out.println(statement);
         dbResultSet = statement.executeQuery();
         dbMetaData = dbResultSet.getMetaData();
         int columnCount = dbMetaData.getColumnCount();

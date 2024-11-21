@@ -399,6 +399,23 @@ public class TopView {
         recommendationPanes.setVisible(true);
     }
 
+    public void displayTopStudios(String[][] data, String year){
+        JDialog topStudiosPane = new JDialog(frame, "Top Studios");
+        topStudiosPane.setLayout(new BorderLayout());
+
+        JLabel topLabel = new JLabel("Top Studios" + (year.equals("0") ? "" : " For Year " + year), JLabel.CENTER);
+        topLabel.setFont(new Font("Inter", Font.BOLD, 16));
+
+        topStudiosPane.add(topLabel, BorderLayout.NORTH);
+        topStudiosPane.add(new JScrollPane(new JTable(new DefaultTableModel(data, 
+        new String[]{"Studio Name", "Studio Rating across all animes", "Top Rated Anime"}))), BorderLayout.CENTER);
+
+        topStudiosPane.setSize(500, 400);
+        topStudiosPane.setLocationRelativeTo(frame);
+        topStudiosPane.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        topStudiosPane.setVisible(true);
+    }
+
     /**
      * Alert the user with a dialog pop-up.
      * 

@@ -90,8 +90,7 @@ public class Controller {
                 "searchUser", "checkRecommendedAnime");
         topView.setActionListeners(
                 TopView.REPORTS_TAB, TopView.TOP_STUDIOS_REPORT_SUBTAB,
-                reportListener,
-                "searchStudio", "checkTopStudio");
+                reportListener, "checkTopStudio");
         topView.setActionListeners(
                 TopView.REPORTS_TAB, TopView.USER_PROFILE_REPORT_SUBTAB,
                 reportListener,
