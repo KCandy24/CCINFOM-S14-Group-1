@@ -1,37 +1,15 @@
 [
-    [
-        {
-            "value": "Studio"
-        },
-        {
-            "value": "No studio selected",
-            "name": "studioName",
-            "db_link": "studios.studio_name"
-        },
-        {
-            "value": "",
-            "name": "studioId",
-            "db_link": "studios.studio_id"
-        },
-        {
-            "type": "Button",
-            "value": "Search",
-            "name": "searchStudio"
-        }
-    ],
     [  
         {
             "name": "yearStudioLabel",
     
-            "value": "Select Year Anime is released"
+            "value": "Select Year Basis"
         },
         {
             "type": "ComboBox",
             "name": "yearStudioComboBox",
             "combobox_type": "years"
-        }
-    ],
-    [
+        },
         {
             "type": "Button",
             "value": "Check",

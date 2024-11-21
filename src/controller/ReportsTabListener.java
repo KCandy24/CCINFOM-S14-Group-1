@@ -1,8 +1,8 @@
 package src.controller;
 
+import javax.swing.*;
 import java.awt.event.*;
 import java.util.HashMap;
-import javax.swing.JComponent;
 
 import src.model.AnimeSystem;
 import src.model.Records;
@@ -42,12 +42,16 @@ public class ReportsTabListener implements ActionListener {
                     int user_id = Integer.parseInt( subtab.getComponentText("userId"));
                     System.out.println(user_id + username);
                     String mode = subtab.getComponentText("recommendationComboBox", "recommendations");
-                    this.generateRecommendations(mode, year, user_id, username);
+                    this.generateRecommendations(mode, Integer.parseInt(year), user_id, username);
                 } catch (Exception ex) {
                     topView.dialogPopUp("Recommend Anime", "Error User field cannot be empty");
                 }
                 break;
             case "checkTopStudio":
+                subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.TOP_STUDIOS_REPORT_SUBTAB);
+                String year = subtab.getComponentText("yearStudioComboBox", "years");
+                System.out.println(year);
+                this.generateTopStudios(Integer.parseInt(year), subtab);
                 break;
             case "checkUserProfile":
                 
@@ -97,26 +101,47 @@ public class ReportsTabListener implements ActionListener {
         }
     }
 
-    public void generateRecommendations(String mode, String year, int user_id, String username){
+    public void generateRecommendations(String mode, int year, int user_id, String username){
         String[][] data;
 
         try {
             switch (mode) {
                 case "Continue Watching":
-                    data = animeSystem.getProcedureResults("RecommendFromWatchList(?, ?)", Integer.toString(user_id), year);
+                    data = animeSystem.getProcedureResults("RecommendFromWatchList(?, ?)", user_id, year);
                     topView.displayRecommendations(data, new String[]{"Anime Title", "Watched Episodes", "Total Episodes", "Date Released"}, mode, username);
                     break;
                 case "From Following":
-                    data = animeSystem.getProcedureResults("RecommendFromFollows(?, ?)", Integer.toString(user_id), year);
-                    topView.displayRecommendations(data, new String[]{"Followed User","Anime Title", "Comments", "Rating"}, mode, username);
+                    data = animeSystem.getProcedureResults("RecommendFromFollows(?, ?)", user_id, year);
+                    topView.displayRecommendations(data, new String[]{"Followed User","Anime Title", "Comments", "Rating", "Date Released"}, mode, username);
                     break;
                 case "From Top Genres Watched":
-                    data = animeSystem.getProcedureResults("RecommendFromGenre(?, ?)", Integer.toString(user_id), year);
+                    data = animeSystem.getProcedureResults("RecommendFromGenre(?, ?)", user_id, year);
                     topView.displayRecommendations(data, new String[]{"Genre", "Total episodes watched of Genre", "Top Unwatched Anime", "Date Released"}, mode, username);
                     break;
             }
         } catch (Exception e) {
             topView.dialogPopUp("Recommend Anime", "Error cannot fetch recommendations");
+        }
+    }
+
+    public void generateTopStudios(int year, Subtab subtab){
+        try {
+            String[][] data;
+            // if (year.equals("0")) 
+            //     data = animeSystem.getProcedureResults("ViewBestStudio(0)");
+            // else
+                data = animeSystem.getProcedureResults("ViewBestStudio(?)", year);
+
+            // for (String[] strings : data) {
+            //     for (String strings2 : strings) {
+            //         System.out.println(strings2);
+            //     }
+            //     System.out.println();
+            // }
+
+            topView.displayTopStudios(data, Integer.toString(year));
+        } catch (Exception e) {
+            topView.dialogPopUp("Top Studios", "Error cannot fetch studio data");
         }
     }
 
