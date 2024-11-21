@@ -39,6 +39,11 @@
             "type": "Button",
             "name": "deleteStudio",
             "value": "Delete"
+        },
+        {
+            "type": "Button",
+            "name": "searchAllAnime",
+            "value": "GetAnime"
         }
     ]
 ]

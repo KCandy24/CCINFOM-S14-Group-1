@@ -83,13 +83,15 @@ public class RecordsTabListener implements ActionListener {
             case "addNewStudio":
                 addNewStudio();
                 break;
+
             case "saveStudio":
                 saveStudio();
                 updateFields("studio");
                 break;
+
             case "deleteStudio":
                 deleteStudio();
-                updateFields("studio");
+                updateFields("studios");
                 break;
             default:
                 System.err.println("No action associated for " + name);
@@ -224,10 +226,43 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void saveStudio() {
-        // TODO: IMPLEMENTATION
+
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
+        String studioId = subtab.getComponentText("studioId");
+        String studio_name = subtab.getComponentText("studioName");
+ 
+        try {
+            Integer.parseInt(studioId);
+            // User ID field was parsed successfully; this must be an existing record
+            updateStudio(studioId, studio_name);
+        } catch (NumberFormatException exception) {
+            createStudio(studio_name);
+        }
+    }
+
+    public void createStudio(String studio_name){
+        try {
+            animeSystem.safeUpdate(
+                    "INSERT INTO `studios` (`studio_name`) VALUES (?)",
+                    studio_name);d
+        } catch (SQLException exception) {
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
+    }
+
+
+    public void updateStudio(String studioID, String studio_name) {
+        try {
+            animeSystem.safeUpdate(
+                    "UPDATE `studios` SET `studio_name` = ? WHERE `studio_id` = ?",
+                    studio_name, studioID);
+        } catch (SQLException exception) {
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
     }
 
     public void deleteStudio() {
         // TODO: IMPLEMENTATION
     }
+
 }
