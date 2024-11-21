@@ -91,7 +91,7 @@ public class RecordsTabListener implements ActionListener {
 
             case "saveStudio":
                 saveStudio();
-                updateFields("studio");
+                updateFields("studios");
                 break;
 
             case "deleteStudio":
@@ -352,7 +352,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
-                    studio_name);d
+                    studio_name);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -370,7 +370,8 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void deleteStudio() {
-        // TODO: IMPLEMENTATION
+        String checkExist =  
+        returnValue.get("checkExistingQuery").equals("0")
     }
 
 }
