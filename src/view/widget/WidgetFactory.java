@@ -321,6 +321,12 @@ public class WidgetFactory {
             case "TextArea":
                 component = WidgetFactory.createJTextArea(name);
                 break;
+            case "Icon":
+                Icon icon = UIManager.getIcon("OptionPane.questionIcon");
+                JLabel iconLabel = WidgetFactory.createJLabel("");
+                iconLabel.setIcon(icon);
+                component = iconLabel;
+                break;
             case "Label":
             default:
                 /**

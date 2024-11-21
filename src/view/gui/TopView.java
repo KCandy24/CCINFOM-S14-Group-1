@@ -18,6 +18,7 @@ import src.controller.CurrentTabListener;
 import src.controller.RecordTableListener;
 import src.model.Genre;
 import src.model.Records;
+import src.model.UserRegion;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
 
@@ -416,6 +417,38 @@ public class TopView {
         topStudiosPane.setVisible(true);
     }
 
+
+    public void displayUserProfile(String[] userDetails, String[][] userGenres){
+        JDialog profilePopup = new JDialog(frame);
+        JTabbedPane profileTabs = new JTabbedPane(JTabbedPane.TOP);
+
+        String[] formatSequence = {"userName", "region", "joinDate", "viewedAnimes", "totalEpisodes", "ratingsMade"};
+        Subtab defaultProfile = new Subtab(userDetails[0] + " Profile", "reports/user_profile_template.json");
+        for (int i = 0; i < userDetails.length; i++) {
+            if (i == 1) 
+                userDetails[i] = UserRegion.findName(userDetails[i]);
+            defaultProfile.setComponentText(formatSequence[i], userDetails[i]);
+        }
+
+
+        Subtab genreProfile = new Subtab("Top 3 Genres", "reports/user_profile_genre.json");
+        int i = 1;
+        for (String[] row : userGenres) {
+            genreProfile.setComponentText("rank"+i, Genre.findName(row[0]));
+            genreProfile.setComponentText("topAnime"+i, row[2]);
+            i++;
+        }
+
+        profileTabs.addTab(defaultProfile.getName(), defaultProfile);
+        profileTabs.addTab(genreProfile.getName(), genreProfile);
+        profilePopup.add(profileTabs);
+
+        profilePopup.setSize(400, 600);
+        profilePopup.setLocationRelativeTo(frame);
+        profilePopup.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        profilePopup.setVisible(true);
+        
+    }
     /**
      * Alert the user with a dialog pop-up.
      * 

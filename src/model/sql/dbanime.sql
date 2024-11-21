@@ -463,20 +463,23 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `ViewUserProfile`;
 CREATE PROCEDURE `ViewUserProfile`(
-    IN param_user_id INT
+    IN param_user_id INT,
+    IN param_year INT
 )
 BEGIN
     SELECT 
         u.user_name,
+        u.region,
+        u.join_date,
         COUNT(DISTINCT v.anime_id) AS viewed_anime_count,
         COUNT(v.watched_episode) AS episodes_watched,
-		COUNT(r.rating) AS ratings_made
+		COUNT(DISTINCT(r.last_edited_timestamp)) AS ratings_made
     FROM 
         users u
     LEFT JOIN 
-        views v ON u.user_id = v.user_id
+        views v ON u.user_id = v.user_id AND (YEAR(v.timestamp_watched) = param_year OR param_year = 0)
 	LEFT JOIN 
-        ratings r ON u.user_id = r.user_id
+        ratings r ON u.user_id = r.user_id AND (YEAR(r.last_edited_timestamp) = param_year OR param_year = 0)
     WHERE
         u.user_id = param_user_id
     GROUP BY
@@ -491,7 +494,8 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `ViewUserGenreAnime`;
 CREATE PROCEDURE `ViewUserGenreAnime`(
-    IN param_user_id INT
+    IN param_user_id INT,
+    IN param_year INT
 )
 BEGIN
 	SELECT
@@ -507,6 +511,7 @@ BEGIN
 			WHERE
 				r.user_id = param_user_id
 				AND asub.genre = a.genre
+                AND (YEAR(r.last_edited_timestamp) = param_year OR param_year = 0)
 			GROUP BY
 				asub.anime_id
 			ORDER BY
@@ -516,7 +521,7 @@ BEGIN
 	FROM
 		users u
 	LEFT JOIN
-		views v ON u.user_id = v.user_id
+		views v ON u.user_id = v.user_id AND (YEAR(v.timestamp_watched) = param_year OR param_year = 0)
 	LEFT JOIN
 		animes a ON v.anime_id = a.anime_id
 	WHERE
@@ -592,7 +597,7 @@ BEGIN
 	JOIN
 		views v ON a.anime_id = v.anime_id AND v.user_id = param_user_id
 	WHERE	
-		(YEAR(aa.air_date) = param_year OR param_year = 0)
+		(YEAR(a.air_date) = param_year OR param_year = 0)
     GROUP BY
 		a.anime_id
 	HAVING
