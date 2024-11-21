@@ -2,6 +2,7 @@ package src.controller;
 
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -206,6 +207,8 @@ public class RecordsTabListener implements ActionListener {
 
         try {
             animeSystem.safeUpdate("DELETE FROM `animes` WHERE `anime_id` = ?", animeId);
+        } catch (SQLIntegrityConstraintViolationException Exception) {
+            topView.dialogPopUp("Anime", "Could not delete due to existing transactions connected to " + subtab.getComponentText("animeTitle"));
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
