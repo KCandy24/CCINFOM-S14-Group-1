@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -87,12 +88,9 @@ public class RecordTable extends JDialog {
     }
 
     public void setData(String[][] data, String[] columnNames) {
-        TableModel model = table.getModel();
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < columnNames.length; j++) {
-                model.setValueAt(data[i][j], i, j);
-            }
-        }
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setDataVector(data, columnNames);
+        this.hideColumns();
     }
 
     public void setListener(RecordTableListener listener) {

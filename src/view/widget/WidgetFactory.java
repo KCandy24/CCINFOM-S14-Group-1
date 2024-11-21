@@ -3,6 +3,7 @@ package src.view.widget;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -207,7 +208,7 @@ public class WidgetFactory {
     }
 
     public static JTable createJTable(String[][] data, String[] columnNames) {
-        JTable table = new JTable(data, columnNames) {
+        JTable table = new JTable(data.length, columnNames.length) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int columnIndex) {
                 Component component = super.prepareRenderer(renderer, rowIndex, columnIndex);
@@ -222,7 +223,15 @@ public class WidgetFactory {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
+
+            @Override
+            public String getColumnName(int columnIndex) {
+                return columnNames[columnIndex];
+            }
         };
+
+        ((DefaultTableModel) table.getModel()).setDataVector(data, columnNames);
+
         WidgetFactory.styleComponent(table);
         table.getTableHeader().setFont(WidgetFactory.Fonts.BODY.getFont());
         return table;

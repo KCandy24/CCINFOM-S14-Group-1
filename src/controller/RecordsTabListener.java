@@ -226,6 +226,10 @@ public class RecordsTabListener implements ActionListener {
         topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(true);
     }
 
+    /**
+     * Reset the fields of the user record subtab -- this "prompts" the user to
+     * input data for a new user.
+     */
     public void addNewUser() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
         topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
