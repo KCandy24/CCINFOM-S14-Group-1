@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 import javax.swing.JComponent;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
+
 import src.model.AnimeSystem;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
@@ -141,31 +143,43 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void createAnime(String studioId, String animeTitle, String genre, String episodes) {
-        try {
-            String query = """
-                    INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`) VALUES
-                    (?, ?, ?, NOW(), ?)
-                    """;
-            animeSystem.safeUpdate(query, studioId, animeTitle, genre, episodes);
-        } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+        if (animeTitle.equals(""))
+            topView.dialogPopUp("Anime", "Title must not be empty");
+        else {
+            try {
+                String query = """
+                        INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`) VALUES
+                        (?, ?, ?, NOW(), ?)
+                        """;
+                animeSystem.safeUpdate(query, studioId, animeTitle, genre, episodes);
+            } catch (MysqlDataTruncation exception) {
+                topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
+            } catch (SQLException exception) {
+                topView.dialogPopUp("Anime", "Invalid Number of Episodes");
+            }
         }
     }
 
     public void updateAnime(String animeId, String studioId, String animeTitle, String genre, String airDate, String episodes) {
-        try {
-            String query = """
-                    UPDATE  `animes`
-                    SET     `studio_id` = ?,
-                    `title` = ?,
-                    `genre` = ?,
-                    `air_date` = ?,
-                    `num_of_episodes` = ?
-                    WHERE `anime_id` = ?
-                    """;
-            animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
-        } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+        if (animeTitle.equals(""))
+            topView.dialogPopUp("Anime", "Title must not be empty");
+        else {
+            try {
+                String query = """
+                        UPDATE  `animes`
+                        SET     `studio_id` = ?,
+                        `title` = ?,
+                        `genre` = ?,
+                        `air_date` = ?,
+                        `num_of_episodes` = ?
+                        WHERE `anime_id` = ?
+                        """;
+                animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
+            } catch (MysqlDataTruncation exception) {
+                topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
+            } catch (SQLException exception) {
+                topView.dialogPopUp("Anime", "Invalid Number of Episodes");
+            }
         }
     }
 
@@ -223,6 +237,7 @@ public class RecordsTabListener implements ActionListener {
                     "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
                     username, region, joinDate);
         } catch (SQLException exception) {
+            System.out.println("Exception class = " + exception.getClass());
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }
@@ -233,6 +248,7 @@ public class RecordsTabListener implements ActionListener {
                     "UPDATE `users` SET `user_name` = ?, `region` = ?, `join_date` = ? WHERE `user_id` = ?",
                     username, region, joinDate, userId);
         } catch (SQLException exception) {
+            System.out.println("Exception class = " + exception.getClass());
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }

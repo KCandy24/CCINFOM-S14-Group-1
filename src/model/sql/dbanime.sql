@@ -34,7 +34,7 @@ CREATE TABLE `animes` (
     `genre` ENUM('AD', 'CO', 'DR', 'HO', 'SF') NOT NULL,
     -- GENRES: Adventure, Comedy, Drama, Horror, Sci-Fi
     `air_date` DATE NOT NULL,
-    `num_of_episodes` INT DEFAULT 0,
+    `num_of_episodes` INT DEFAULT 1 CHECK (`num_of_episodes` > 0),
     FOREIGN KEY(`studio_id`) REFERENCES `studios`(`studio_id`)
 );
 
