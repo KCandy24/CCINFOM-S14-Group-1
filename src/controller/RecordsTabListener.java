@@ -3,6 +3,7 @@ package src.controller;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 import javax.swing.JComponent;
 
@@ -161,6 +162,20 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void updateAnime(String animeId, String studioId, String animeTitle, String genre, String airDate, String episodes) {
+        String checkCurrentEpisodeCount = """
+                SELECT num_of_episodes
+                FROM animes
+                WHERE anime_id = ?
+                """;
+        int currentEpisodeCount = 1;
+
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkCurrentEpisodeCount, animeId);
+            currentEpisodeCount = Integer.parseInt(data.get("num_of_episodes"));
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+        }
+
         if (animeTitle.equals(""))
             topView.dialogPopUp("Anime", "Title must not be empty");
         else {
@@ -174,6 +189,8 @@ public class RecordsTabListener implements ActionListener {
                         `num_of_episodes` = ?
                         WHERE `anime_id` = ?
                         """;
+                if (currentEpisodeCount > Integer.parseInt(episodes))
+                    throw new SQLException();
                 animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
             } catch (MysqlDataTruncation exception) {
                 topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
