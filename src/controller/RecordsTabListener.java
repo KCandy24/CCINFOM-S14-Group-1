@@ -173,6 +173,8 @@ public class RecordsTabListener implements ActionListener {
         try {
             HashMap<String, String> data = animeSystem.safeSingleQuery(checkCurrentEpisodeCount, animeId);
             currentEpisodeCount = Integer.parseInt(data.get("num_of_episodes"));
+        } catch (SQLIntegrityConstraintViolationException exception) {
+            topView.dialogPopUp("Anime", "Anime Title must be unique");
         } catch (Exception e) {
             System.out.println("error occurred: " + e);
         }
@@ -221,13 +223,16 @@ public class RecordsTabListener implements ActionListener {
     public void searchUser() {
         topView.selectFromTable("users");
 
-        topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteUser").setEnabled(true);
+        topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(true);
     }
 
     public void addNewUser() {
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
         topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
 
-        topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteUser").setEnabled(false);
+        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "joinDate"), String.valueOf(LocalDate.now()));
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(false);
     }
 
     /**
@@ -248,17 +253,23 @@ public class RecordsTabListener implements ActionListener {
             createUser(username, region, joinDate);
         }
 
-        topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteUser").setEnabled(true);
+        topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(true);
     }
 
     public void createUser(String username, String region, String joinDate) {
-        try {
-            animeSystem.safeUpdate(
-                    "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
-                    username, region, joinDate);
-        } catch (SQLException exception) {
-            System.out.println("Exception class = " + exception.getClass());
-            topView.dialogPopUp("SQLException", exception.getMessage());
+        if (username.equals(""))
+            topView.dialogPopUp("User", "Username cannot be empty");
+        else {
+            try {
+                animeSystem.safeUpdate(
+                        "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
+                        username, region, joinDate);
+            } catch (SQLIntegrityConstraintViolationException exception) {
+                topView.dialogPopUp("User", "Username must be unique");
+            } catch (SQLException exception) {
+                System.out.println("Exception class = " + exception.getClass());
+                topView.dialogPopUp("SQLException", exception.getMessage());
+            }
         }
     }
 
@@ -279,11 +290,13 @@ public class RecordsTabListener implements ActionListener {
 
         try {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
+        } catch (SQLIntegrityConstraintViolationException Exception) {
+            topView.dialogPopUp("User", "Could not delete due to existing transactions connected to " + subtab.getComponentText("username"));
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
 
-        topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteUser").setEnabled(false);
+        topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(false);
     }
 
     // Staff records management
