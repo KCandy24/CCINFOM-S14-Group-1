@@ -71,7 +71,7 @@
         },
         {
             "type": "TextField",
-            "name": "from",
+            "name": "airDate",
             "db_link": "animes.air_date"
         }
     ],
