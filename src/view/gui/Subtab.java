@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import src.model.Genre;
+import src.model.StaffDepartment;
 import src.model.UserRegion;
 import src.view.widget.WidgetFactory;
 
@@ -294,6 +295,9 @@ public class Subtab extends NamedPanel {
                             retval = "0";
                         } else 
                             retval = selection;
+                        break;
+                    case "department":
+                        retval = StaffDepartment.findCode(selection);
                         break;
                     default:
                         System.err.println("Unhandled comboBoxType " + comboBoxType[0]);

@@ -10,6 +10,7 @@ import javax.swing.table.TableColumn;
 import org.json.JSONObject;
 
 import src.model.Genre;
+import src.model.StaffDepartment;
 import src.model.UserRegion;
 import src.view.gui.NamedPanel;
 
@@ -291,6 +292,11 @@ public class WidgetFactory {
                         comboBox.addItem("Monthly");
                         comboBox.addItem("Seasonal");
                         comboBox.addItem("Yearly");
+                        break;
+                    case "department":
+                        for (StaffDepartment staffDepartment : StaffDepartment.values()) {
+                            comboBox.addItem(staffDepartment.name);
+                        }
                         break;
                     case "genre_with_none":
                         comboBox.addItem("None");

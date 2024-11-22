@@ -354,18 +354,171 @@ public class TransactionsTabListener implements ActionListener {
 
     // Edit credits
     public void saveCredits() {
-        // TODO: IMPLEMENTATION
-    }
+        // Grab data from GUI
+        Subtab subtab = topView.getCurrentSubtab();
+        String staff_id = subtab.getComponentText("staffId");
+        String anime_id = subtab.getComponentText("animeId");
+        String episode = subtab.getComponentText("episode");
+        String position = subtab.getComponentText("position");
+        String department = subtab.getComponentText("department", "department");
 
-    public void deleteCredits() {
-        // TODO: IMPLEMENTATION
-    }
+        String query = """
+                INSERT INTO credits
+                (staff_id, anime_id, episode, position, department)
+                VALUES (?, ?, ?, ?, ?)""";
+        String saveMaxEpisodes = """
+                SELECT num_of_episodes
+                FROM animes
+                WHERE anime_id = ?
+                """;
+        String checkExistingQuery = """
+                SELECT EXISTS(SELECT *
+                FROM credits
+                WHERE staff_id = ? AND anime_id = ? AND episode = ?)
+                AS checkExistingQuery
+                """;
+        
+        int maxEpisodes = 1;
+        
+        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
+                validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
+                return;
+        
+        if (position.length() > 32) {
+            topView.errorPopUp("Edit Credits", "Position name is too long.");
+            return;
+        }
+        
+        try {
+            maxEpisodes = Integer.parseInt(animeSystem.safeSingleQuery(saveMaxEpisodes, anime_id).get("num_of_episodes"));
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e.getMessage());
+        }
+            
+        try {
+            int episodeSelected = Integer.parseInt(episode);
+            if (episodeSelected < 1 || episodeSelected > maxEpisodes) {
+                topView.errorPopUp("Invalid episode number", "Please input an episode from 1-" + maxEpisodes +".");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            topView.errorPopUp("No episode number", "Please input an episode from 1-" + maxEpisodes +".");
+            return;
+        }
 
+        boolean creditExists = false;
+
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, staff_id, anime_id, episode);
+            creditExists = data.get("checkExistingQuery").equals("1");
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+        }
+
+        // Attempt to make the credit
+
+        if (creditExists) {
+            try {
+                query = """
+                        UPDATE credits
+                        SET position = ?,
+                        department = ?
+                        WHERE staff_id = ? AND anime_id = ? AND episode = ?
+                        """;
+                animeSystem.safeUpdate(query,
+                        position, department, staff_id, anime_id, episode);
+                topView.dialogPopUp("Edit Credits", "Successfully updated credits.");
+            } catch (SQLException e) {
+                topView.errorPopUp("Edit Credits", "Something went wrong.");
+                System.out.println(e.getStackTrace());
+            }
+        }
+        else {
+            try {
+                animeSystem.safeUpdate(query, staff_id, anime_id, episode, position, department);
+                topView.dialogPopUp("Edit Credits", "Successfully saved credits.");
+            } catch (SQLException e) {
+                topView.errorPopUp("Edit Credits", "Something went wrong.");
+                System.out.println(e.getStackTrace());
+            }
+        }
+    }
+    
     public void loadCredits() {
-        // TODO: IMPLEMENTATION
-        // ? Need a procedure, maybe
-    }
+        // Get rating data
+        Subtab subtab = topView.getCurrentSubtab();
+        String staff_id = subtab.getComponentText("staffId");
+        String anime_id = subtab.getComponentText("animeId");
+        String episode = subtab.getComponentText("episode");
 
+        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
+                validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
+            return;
+
+        String checkExistingQuery = """
+            SELECT EXISTS(SELECT *
+            FROM credits
+            WHERE staff_id = ? AND anime_id = ? AND episode = ?)
+            AS checkExistingQuery
+            """;
+
+        boolean creditExists = false;
+
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, staff_id, anime_id, episode);
+            creditExists = data.get("checkExistingQuery").equals("1");
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+        }
+
+        if (creditExists) {
+            try {
+                HashMap<String, String> data = animeSystem.safeSingleQuery("""
+                        SELECT * FROM credits
+                        WHERE staff_id = ? AND anime_id = ? AND episode = ?
+                        """, staff_id, anime_id, episode);
+                for (Map.Entry<String, String> pair : data.entrySet()) {
+                    System.out.println(pair.getKey() + " : " + pair.getValue());
+                }
+
+                // Set to GUI
+                subtab = topView.getCurrentSubtab();
+                subtab.setComponentText("position", data.get("position"));
+                subtab.setComponentText("department", data.get("department"));
+
+                topView.dialogPopUp("Edit Credits", "Successfully loaded the credits.");
+            } catch (SQLException e) {
+                topView.errorPopUp("SQL Exception", e.getStackTrace().toString());
+            }
+        } else {
+            topView.errorPopUp("Edit Credits", "Credits entry does not exist.");
+        }
+    }
+    
+    public void deleteCredits() {
+        Subtab subtab = topView.getCurrentSubtab();
+        String staff_id = subtab.getComponentText("staffId");
+        String anime_id = subtab.getComponentText("animeId");
+        String episode = subtab.getComponentText("episode");
+        String query = """
+                DELETE FROM credits
+                WHERE staff_id = ? AND anime_id = ?
+                AND episode = ?
+                """;
+
+        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
+                validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
+            return;
+            
+        try {
+            animeSystem.safeUpdate(query, staff_id, anime_id, episode);
+            topView.dialogPopUp("Edit Credits", "Successfully deleted credits.");
+        } catch (SQLException e) {
+            System.out.println(e);
+            topView.errorPopUp("Edit Credits", "Credits entry doesn't exist.");
+        }
+    }
+    
     // Follow
 
     /**

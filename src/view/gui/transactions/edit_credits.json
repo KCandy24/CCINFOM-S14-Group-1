@@ -28,7 +28,7 @@
         },
         {
             "type": "TextField",
-            "name": "position",
+            "name": "episode",
             "db_link": "credits.episode"
         }
     ],
@@ -72,7 +72,9 @@
         },
         {
             "type": "ComboBox",
-            "name": "department"
+            "name": "department",
+            "db_link": "animes.department",
+            "combobox_type": "department"
         }
     ],
     [
