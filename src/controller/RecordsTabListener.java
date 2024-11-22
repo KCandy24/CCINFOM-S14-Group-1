@@ -309,18 +309,86 @@ public class RecordsTabListener implements ActionListener {
 
     public void searchStaff() {
         topView.selectFromTable("staff");
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);
     }
 
     public void addNewStaff() {
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
         topView.resetFields(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+    
+        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "birthday"), "1970-01-01");
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(false);
     }
 
     public void saveStaff() {
-        // TODO: IMPLEMENTATION
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+        String staffId = subtab.getComponentText("staffId");
+        String firstName = subtab.getComponentText("firstName");
+        String lastName = subtab.getComponentText("lastName");
+        String occupation = subtab.getComponentText("occupation");
+        String birthday = subtab.getComponentText("birthday");
+
+        try {
+            Integer.parseInt(staffId);
+            updateStaff(staffId, firstName, lastName, occupation, birthday);
+        } catch (NumberFormatException exception) {
+            createStaff(firstName, lastName, occupation, birthday);
+        }
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);   
+    }
+
+    public void createStaff(String firstName, String lastName, String occupation, String birthday) {
+        if (firstName.equals("") || lastName.equals(""))
+            topView.dialogPopUp("Staff", "First and last name cannot be empty");
+        else {
+            try {
+                animeSystem.safeUpdate(
+                "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?)",
+                firstName, lastName, occupation, birthday);
+            } catch (MysqlDataTruncation exception) {
+                topView.dialogPopUp("Anime", (firstName.length() > 16) ? "First Name is too long" :
+                                                    (lastName.length() > 16) ? "Last Name is too long" :
+                                                    (occupation.length() > 32) ? "Occupation name is too long" :
+                                                    "Invalid Date");
+            } catch (SQLException exception) {
+                System.out.println("Exception class = " + exception.getClass());
+                topView.dialogPopUp("SQLException", exception.getMessage());
+            }
+        }
+    }
+
+    public void updateStaff(String staffId, String firstName, String lastName, String occupation, String birthday) {
+        try {
+            animeSystem.safeUpdate(
+                "Update `staff` SET `first_name` = ?, `last_name` = ?, `occupation` = ?, `birthday` = ? WHERE `staff_id` = ?",
+                staffId, firstName, lastName, occupation, birthday);
+        } catch (MysqlDataTruncation exception) {
+            topView.dialogPopUp("Anime", (firstName.length() > 16) ? "First Name is too long" :
+                                                (lastName.length() > 16) ? "Last Name is too long" :
+                                                (occupation.length() > 32) ? "Occupation name is too long" :
+                                                "Invalid Date");
+        } catch (SQLException exception) {
+            System.out.println("Exception class = " + exception.getClass());
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
     }
 
     public void deleteStaff() {
-        // TODO: IMPLEMENTATION
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+        String staffId = subtab.getComponentText("staffId");
+
+        try {
+            animeSystem.safeUpdate("DELETE FROM `staff` WHERE `staff_id` = ?", staffId);
+        } catch (SQLIntegrityConstraintViolationException Exception) {
+            topView.dialogPopUp("Staff", "Could not delete due to existing transactions connected to " + subtab.getComponentText("firstName") + " " + subtab.getComponentText("lastName"));
+        } catch (SQLException exception) {
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(false);
     }
 
     // Studio records management
@@ -352,7 +420,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
-                    studio_name);d
+                    studio_name);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
