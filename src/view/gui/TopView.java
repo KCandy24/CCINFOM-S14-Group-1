@@ -406,7 +406,7 @@ public class TopView {
 
 
     public void displayUserProfile(String[] userDetails, String[][] userGenres){
-        JDialog profilePopup = new JDialog(frame);
+        JDialog profilePopup = new JDialog(frame, "User Profile", true);
         JTabbedPane profileTabs = new JTabbedPane(JTabbedPane.TOP);
 
         String[] formatSequence = {"userName", "region", "joinDate", "viewedAnimes", "totalEpisodes", "ratingsMade"};
@@ -418,7 +418,7 @@ public class TopView {
         }
 
 
-        Subtab genreProfile = new Subtab("Top 3 Genres", "reports/user_profile_genre.json");
+        Subtab genreProfile = new Subtab(userDetails[0]+"'s Top 3 Genres", "reports/user_profile_genre.json");
         int i = 1;
         for (String[] row : userGenres) {
             genreProfile.setComponentText("rank"+i, Genre.findName(row[0]));
