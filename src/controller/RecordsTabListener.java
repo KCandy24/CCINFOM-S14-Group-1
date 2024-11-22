@@ -132,7 +132,8 @@ public class RecordsTabListener implements ActionListener {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB);
         topView.resetFields(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB);
 
-        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "airDate"), String.valueOf(LocalDate.now()));
+        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "airDate"),
+                String.valueOf(LocalDate.now()));
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(false);
     }
@@ -153,7 +154,7 @@ public class RecordsTabListener implements ActionListener {
         } catch (NumberFormatException exception) {
             createAnime(studioId, animetitle, genre, episodes);
         }
-        
+
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(true);
     }
 
@@ -176,7 +177,8 @@ public class RecordsTabListener implements ActionListener {
         }
     }
 
-    public void updateAnime(String animeId, String studioId, String animeTitle, String genre, String airDate, String episodes) {
+    public void updateAnime(String animeId, String studioId, String animeTitle, String genre, String airDate,
+            String episodes) {
         String checkCurrentEpisodeCount = """
                 SELECT num_of_episodes
                 FROM animes
@@ -227,7 +229,8 @@ public class RecordsTabListener implements ActionListener {
             this.refreshRecordTableData(Records.ANIME);
 
         } catch (SQLIntegrityConstraintViolationException Exception) {
-            topView.dialogPopUp("Anime", "Could not delete due to existing transactions connected to " + subtab.getComponentText("animeTitle"));
+            topView.dialogPopUp("Anime", "Could not delete due to existing transactions connected to "
+                    + subtab.getComponentText("animeTitle"));
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -251,7 +254,8 @@ public class RecordsTabListener implements ActionListener {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
         topView.resetFields(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
 
-        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "joinDate"), String.valueOf(LocalDate.now()));
+        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "joinDate"),
+                String.valueOf(LocalDate.now()));
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(false);
     }
@@ -314,7 +318,8 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
             this.refreshRecordTableData(Records.USER);
         } catch (SQLIntegrityConstraintViolationException Exception) {
-            topView.dialogPopUp("User", "Could not delete due to existing transactions connected to " + subtab.getComponentText("username"));
+            topView.dialogPopUp("User", "Could not delete due to existing transactions connected to "
+                    + subtab.getComponentText("username"));
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -326,21 +331,91 @@ public class RecordsTabListener implements ActionListener {
 
     public void searchStaff() {
         topView.selectFromTable("staff");
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);
     }
 
     public void addNewStaff() {
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
         topView.resetFields(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+
+        subtab.setComponentText(topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "birthday"),
+                "1970-01-01");
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(false);
     }
 
     public void saveStaff() {
-        // TODO: IMPLEMENTATION
-        // * After creating a new staff, call this.setTopViewWithNewest(Records.STAFF)
-        this.refreshRecordTableData(Records.STAFF);
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+        String staffId = subtab.getComponentText("staffId");
+        String firstName = subtab.getComponentText("firstName");
+        String lastName = subtab.getComponentText("lastName");
+        String occupation = subtab.getComponentText("occupation");
+        String birthday = subtab.getComponentText("birthday");
+
+        try {
+            Integer.parseInt(staffId);
+            updateStaff(staffId, firstName, lastName, occupation, birthday);
+        } catch (NumberFormatException exception) {
+            createStaff(firstName, lastName, occupation, birthday);
+        }
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);
+    }
+
+    public void createStaff(String firstName, String lastName, String occupation, String birthday) {
+        if (firstName.equals("") || lastName.equals(""))
+            topView.dialogPopUp("Staff", "First and last name cannot be empty");
+        else {
+            try {
+                animeSystem.safeUpdate(
+                        "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?)",
+                        firstName, lastName, occupation, birthday);
+            } catch (MysqlDataTruncation exception) {
+                topView.dialogPopUp("Anime",
+                        (firstName.length() > 16) ? "First Name is too long"
+                                : (lastName.length() > 16) ? "Last Name is too long"
+                                        : (occupation.length() > 32) ? "Occupation name is too long" : "Invalid Date");
+            } catch (SQLException exception) {
+                System.out.println("Exception class = " + exception.getClass());
+                topView.dialogPopUp("SQLException", exception.getMessage());
+            }
+        }
+    }
+
+    public void updateStaff(String staffId, String firstName, String lastName, String occupation, String birthday) {
+        try {
+            animeSystem.safeUpdate(
+                    "Update `staff` SET `first_name` = ?, `last_name` = ?, `occupation` = ?, `birthday` = ? WHERE `staff_id` = ?",
+                    firstName, lastName, occupation, birthday, staffId);
+            this.refreshRecordTableData(Records.STAFF);
+        } catch (MysqlDataTruncation exception) {
+            topView.dialogPopUp("Anime",
+                    (firstName.length() > 16) ? "First Name is too long"
+                            : (lastName.length() > 16) ? "Last Name is too long"
+                                    : (occupation.length() > 32) ? "Occupation name is too long" : "Invalid Date");
+        } catch (SQLException exception) {
+            System.out.println("Exception class = " + exception.getClass());
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
+
     }
 
     public void deleteStaff() {
-        // TODO: IMPLEMENTATION
-        this.refreshRecordTableData(Records.STAFF); // do this on success
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+        String staffId = subtab.getComponentText("staffId");
+
+        try {
+            animeSystem.safeUpdate("DELETE FROM `staff` WHERE `staff_id` = ?", staffId);
+            this.refreshRecordTableData(Records.STAFF);
+        } catch (SQLIntegrityConstraintViolationException Exception) {
+            topView.dialogPopUp("Staff", "Could not delete due to existing transactions connected to "
+                    + subtab.getComponentText("firstName") + " " + subtab.getComponentText("lastName"));
+        } catch (SQLException exception) {
+            topView.dialogPopUp("SQLException", exception.getMessage());
+        }
+
+        topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(false);
     }
 
     // Studio records management
@@ -358,7 +433,7 @@ public class RecordsTabListener implements ActionListener {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
         String studioId = subtab.getComponentText("studioId");
         String studio_name = subtab.getComponentText("studioName");
- 
+
         try {
             Integer.parseInt(studioId);
             // User ID field was parsed successfully; this must be an existing record
@@ -368,7 +443,7 @@ public class RecordsTabListener implements ActionListener {
         }
     }
 
-    public void createStudio(String studio_name){
+    public void createStudio(String studio_name) {
         try {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
@@ -378,7 +453,6 @@ public class RecordsTabListener implements ActionListener {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }
-
 
     public void updateStudio(String studioID, String studio_name) {
         try {
