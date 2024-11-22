@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.print.DocFlavor.STRING;
 import javax.swing.JComponent;
 
 import src.model.AnimeSystem;
