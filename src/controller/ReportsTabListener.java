@@ -24,12 +24,14 @@ public class ReportsTabListener implements ActionListener {
         String name = ((JComponent) e.getSource()).getName();
         System.out.println("\nTransactions/?buttonName=" + name);
         Subtab subtab;
+        String period, genre, username, year;
+        int user_id;
 
         switch (name) {
             case "checkButton":
                 subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB);
-                String period = subtab.getComponentText("periodComboBox", "period");
-                String genre = subtab.getComponentText("genreComboBox", "genre_with_none");
+                period = subtab.getComponentText("periodComboBox", "period");
+                genre = subtab.getComponentText("genreComboBox", "genre_with_none");
                 HashMap<String[], String> data = generateHighestRatedAnime(period, genre);
                 topView.displayHighestRatedAnimes(data, period);
                 break;
@@ -37,9 +39,9 @@ public class ReportsTabListener implements ActionListener {
             case "checkRecommendedAnime":
                 subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.RECOMMEND_ANIME_REPORT_SUBTAB);
                 try {
-                    String username = subtab.getComponentText("username");
-                    String year = subtab.getComponentText("yearRecommComboBox", "years");
-                    int user_id = Integer.parseInt( subtab.getComponentText("userId"));
+                    username = subtab.getComponentText("username");
+                    year = subtab.getComponentText("yearRecommComboBox", "years");
+                    user_id = Integer.parseInt( subtab.getComponentText("userId"));
                     System.out.println(user_id + username);
                     String mode = subtab.getComponentText("recommendationComboBox", "recommendations");
                     this.generateRecommendations(mode, Integer.parseInt(year), user_id, username);
@@ -49,18 +51,23 @@ public class ReportsTabListener implements ActionListener {
                 break;
             case "checkTopStudio":
                 subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.TOP_STUDIOS_REPORT_SUBTAB);
-                String year = subtab.getComponentText("yearStudioComboBox", "years");
+                year = subtab.getComponentText("yearStudioComboBox", "years");
                 System.out.println(year);
-                this.generateTopStudios(Integer.parseInt(year), subtab);
+                this.generateTopStudios(Integer.parseInt(year));
                 break;
             case "checkUserProfile":
+                subtab = topView.getSubtab(TopView.REPORTS_TAB, TopView.USER_PROFILE_REPORT_SUBTAB);
+                try {
+                    user_id = Integer.parseInt(subtab.getComponentText("userId"));
+                    year = subtab.getComponentText("yearUserComboBox", "years");
+                    this.generateUserProfile(user_id, Integer.parseInt(year));
+                } catch (Exception ex) {
+                    topView.dialogPopUp("User Profile", "Error User field cannot be empty");
+                }
                 
                 break;
             case "searchUser":
                 this.searchUser();
-                break;
-            case "searchStudio":
-                this.searchStudio();
                 break;
             default:
                 System.err.println("No associated action for " + name);
@@ -124,24 +131,28 @@ public class ReportsTabListener implements ActionListener {
         }
     }
 
-    public void generateTopStudios(int year, Subtab subtab){
+    public void generateTopStudios(int year){
         try {
-            String[][] data;
-            // if (year.equals("0")) 
-            //     data = animeSystem.getProcedureResults("ViewBestStudio(0)");
-            // else
-                data = animeSystem.getProcedureResults("ViewBestStudio(?)", year);
-
-            // for (String[] strings : data) {
-            //     for (String strings2 : strings) {
-            //         System.out.println(strings2);
-            //     }
-            //     System.out.println();
-            // }
-
+            String[][] data = animeSystem.getProcedureResults("ViewBestStudio(?)", year);
             topView.displayTopStudios(data, Integer.toString(year));
         } catch (Exception e) {
             topView.dialogPopUp("Top Studios", "Error cannot fetch studio data");
+        }
+    }
+
+    public void generateUserProfile(int user_id, int year){
+        String[][] data;
+        String[] userDetails;
+        try {
+            data = animeSystem.getProcedureResults("ViewUserProfile(?, ?)", user_id, year);
+            userDetails = data[0];
+            
+            data = animeSystem.getProcedureResults("ViewUserGenreAnime(?, ?)", user_id, year);
+
+            topView.displayUserProfile(userDetails, data);
+        } catch (Exception e) {
+            topView.dialogPopUp("Top Studios", "Error cannot fetch recommendations");
+
         }
     }
 
