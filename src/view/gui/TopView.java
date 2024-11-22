@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
 import src.controller.CurrentSubtabListener;
 import src.controller.CurrentTabListener;
@@ -21,6 +20,7 @@ import src.model.Records;
 import src.model.UserRegion;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
+import src.view.widget.WidgetFactory.Fonts;
 
 public class TopView {
     private JFrame frame;
@@ -57,6 +57,7 @@ public class TopView {
     private int[] currentSubtabIndex = {
             0, 0, 0
     };
+
     /**
      * Initialize the top view.
      */
@@ -222,8 +223,8 @@ public class TopView {
      * 
      * @param recordName the name of the record (table) to display.
      */
-    public void selectFromTable(String recordName) {
-        recordTables.get(recordName).setVisible(true);
+    public void selectFromTable(Records record) {
+        recordTables.get(record.name).setVisible(true);
     }
 
     /**
@@ -235,7 +236,6 @@ public class TopView {
     public int getSelected(String recordName) {
         return recordTables.get(recordName).getSelected();
     }
-
 
     /**
      * Set the visibility of a record table.
@@ -319,33 +319,30 @@ public class TopView {
         subtab.setFields(data);
     }
 
-    public void displayHighestRatedAnimes(HashMap<String[], String> data, String mode){
-        JDialog highestRatedPane = new JDialog(frame, "Highest Rated Anime " + mode);
-        highestRatedPane.setLayout(new BorderLayout());
-        JTabbedPane tabbedPane = new JTabbedPane();
-        
-        HashSet<String> tabs = new HashSet<String>(data.values());
+    public void displayHighestRatedAnimes(HashMap<String[], String> data, String mode) {
+        JDialog highestRatedPane = WidgetFactory.createJDialog(frame, "Highest Rated Anime " + mode);
+        JTabbedPane tabbedPane = WidgetFactory.createJTabbedPane();
 
+        HashSet<String> tabs = new HashSet<String>(data.values());
         for (String tab : tabs) {
             tabbedPane.addTab(tab, createTabTableHighestRated(tab, data));
         }
-
         highestRatedPane.add(tabbedPane, BorderLayout.CENTER);
-        highestRatedPane.setSize(500, 400);
-        highestRatedPane.setLocationRelativeTo(frame);
-        highestRatedPane.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
         highestRatedPane.setVisible(true);
     }
 
     private JScrollPane createTabTableHighestRated(String tabName, HashMap<String[], String> data) {
-        String[] columns = {"Rank", "Anime Title", "Genre", "Studio", "Average Rating"};
+        String[] columns = {
+                "Rank", "Anime Title", "Genre", "Studio", "Average Rating"
+        };
         ArrayList<String[]> tableValues = new ArrayList<String[]>();
 
         int rank = 1;
         for (Map.Entry<String[], String> entry : data.entrySet()) {
             String[] key = entry.getKey();
             String value = entry.getValue();
-            if(tabName.equals(value)){
+            if (tabName.equals(value)) {
                 tableValues.add(key);
             }
         }
@@ -354,7 +351,7 @@ public class TopView {
         Arrays.sort(tableValuesArr, (a, b) -> {
             double ratingA = Double.parseDouble(a[4]);
             double ratingB = Double.parseDouble(b[4]);
-            return Double.compare(ratingB, ratingA); 
+            return Double.compare(ratingB, ratingA);
         });
 
         for (String[] strings : tableValuesArr) {
@@ -362,14 +359,11 @@ public class TopView {
             strings[2] = Genre.findName(strings[2]);
             rank++;
         }
-        DefaultTableModel tableModel = new DefaultTableModel(tableValuesArr, columns);
-        JTable table = new JTable(tableModel);
-        return new JScrollPane(table);
+        return WidgetFactory.createJTableInScrollPane(tableValuesArr, columns);
     }
 
-    public void displayRecommendations(String[][] data, String[] columns, String mode, String username){
-        JDialog recommendationPanes = new JDialog(frame, "Anime Recommendations");
-        recommendationPanes.setLayout(new BorderLayout());
+    public void displayRecommendations(String[][] data, String[] columns, String mode, String username) {
+        JDialog recommendationPanes = WidgetFactory.createJDialog(frame, "Anime Recommendations");
 
         if (mode.equals("From Top Genres Watched")) {
             for (String[] row : data) {
@@ -377,77 +371,64 @@ public class TopView {
             }
         }
 
-        JLabel topLabel = new JLabel(mode + " recommendations for " + username, JLabel.CENTER);
-        topLabel.setFont(new Font("Inter", Font.BOLD, 16));
+        JLabel topLabel = WidgetFactory.createJLabel(
+                String.format("%s recommendations for %s", mode, username),
+                Fonts.SUBTITLE);
 
         recommendationPanes.add(topLabel, BorderLayout.NORTH);
-        recommendationPanes.add(new JScrollPane(new JTable(new DefaultTableModel(data, columns))), BorderLayout.CENTER);
+        recommendationPanes.add(WidgetFactory.createJTableInScrollPane(data, columns), BorderLayout.CENTER);
 
-        recommendationPanes.setSize(500, 400);
-        recommendationPanes.setLocationRelativeTo(frame);
-        recommendationPanes.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         recommendationPanes.setVisible(true);
     }
 
-    public void displayTopStudios(String[][] data, String year){
-        JDialog topStudiosPane = new JDialog(frame, "Top Studios");
-        topStudiosPane.setLayout(new BorderLayout());
+    public void displayTopStudios(String[][] data, String year) {
+        JDialog topStudiosPane = WidgetFactory.createJDialog(frame, "Top Studios");
 
-        JLabel topLabel = new JLabel("Top Studios" + (year.equals("0") ? "" : " For Year " + year), JLabel.CENTER);
-        topLabel.setFont(new Font("Inter", Font.BOLD, 16));
-
+        JLabel topLabel = WidgetFactory.createJLabel(
+                "Top Studios" + (year.equals("0") ? "" : (" For " + year)),
+                Fonts.SUBTITLE);
         topStudiosPane.add(topLabel, BorderLayout.NORTH);
-        topStudiosPane.add(new JScrollPane(new JTable(new DefaultTableModel(data, 
-        new String[]{"Studio Name", "Studio Rating across all animes", "Top Rated Anime"}))), BorderLayout.CENTER);
+        topStudiosPane.add(WidgetFactory.createJTableInScrollPane(data,
+                new String[] {
+                        "Studio Name", "Studio Rating across all animes", "Top Rated Anime"
+                }), BorderLayout.CENTER);
 
-        topStudiosPane.setSize(500, 400);
-        topStudiosPane.setLocationRelativeTo(frame);
-        topStudiosPane.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         topStudiosPane.setVisible(true);
     }
 
-
-    public void displayUserProfile(String[] userDetails, String[][] userGenres){
-        JDialog profilePopup = new JDialog(frame, "User Profile", true);
-        JTabbedPane profileTabs = new JTabbedPane(JTabbedPane.TOP);
-
-        String[] formatSequence = {"userName", "region", "joinDate", "viewedAnimes", "totalEpisodes", "ratingsMade"};
+    public void displayUserProfile(String[] userDetails, String[][] userGenres) {
+        JDialog profilePopup = WidgetFactory.createJDialog(frame, "User Profile");
+        JTabbedPane profileTabs = WidgetFactory.createJTabbedPane();
+        profileTabs.setTabPlacement(JTabbedPane.TOP);
+        String[] formatSequence = {
+                "userName", "region", "joinDate", "viewedAnimes", "totalEpisodes", "ratingsMade"
+        };
         Subtab defaultProfile = new Subtab(userDetails[0] + " Profile", "reports/user_profile_template.json");
         for (int i = 0; i < userDetails.length; i++) {
-            if (i == 1) 
+            if (i == 1) {
                 userDetails[i] = UserRegion.findName(userDetails[i]);
+            }
             defaultProfile.setComponentText(formatSequence[i], userDetails[i]);
         }
 
-
-        Subtab genreProfile = new Subtab(userDetails[0]+"'s Top 3 Genres", "reports/user_profile_genre.json");
+        Subtab genreProfile = new Subtab(userDetails[0] + "'s Top 3 Genres", "reports/user_profile_genre.json");
         int i = 1;
         for (String[] row : userGenres) {
-            genreProfile.setComponentText("rank"+i, Genre.findName(row[0]));
-            genreProfile.setComponentText("topAnime"+i, row[2]);
+            genreProfile.setComponentText("rank" + i, Genre.findName(row[0]));
+            genreProfile.setComponentText("topAnime" + i, row[2]);
             i++;
         }
-
         profileTabs.addTab(defaultProfile.getName(), defaultProfile);
         profileTabs.addTab(genreProfile.getName(), genreProfile);
         profilePopup.add(profileTabs);
 
-        profilePopup.setSize(400, 600);
-        profilePopup.setLocationRelativeTo(frame);
-        profilePopup.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         profilePopup.setVisible(true);
-        
+
     }
 
-    public void displayTable(String[][] data, String[] columns, String title){
-        JDialog tablePanes = new JDialog(frame, title);
-        tablePanes.setLayout(new BorderLayout());
-        
-        tablePanes.add(new JScrollPane(new JTable(new DefaultTableModel(data, columns))), BorderLayout.CENTER);
-
-        tablePanes.setSize(500, 400);
-        tablePanes.setLocationRelativeTo(frame);
-        tablePanes.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    public void displayTable(String[][] data, String[] columns, String title) {
+        JDialog tablePanes = WidgetFactory.createJDialog(frame, title);
+        tablePanes.add(WidgetFactory.createJTableInScrollPane(data, columns), BorderLayout.CENTER);
         tablePanes.setVisible(true);
     }
 
@@ -458,14 +439,10 @@ public class TopView {
      * @param message
      */
     public void dialogPopUp(String title, String message) {
-        JDialog popup = new JDialog(frame, title, true);
-        popup.setSize(400, 160);
-        popup.setLayout(new BorderLayout());
-        popup.setLocationRelativeTo(frame);
+        JDialog popup = WidgetFactory.createJDialog(frame, title, WidgetFactory.POPUP_SIZE);
 
-        JLabel messageLabel = WidgetFactory.createJLabel(message);
+        JLabel messageLabel = WidgetFactory.createJLabel(message, SwingConstants.CENTER);
         messageLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
-        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         popup.add(messageLabel, BorderLayout.CENTER);
 
         popup.setVisible(true);
@@ -478,14 +455,10 @@ public class TopView {
      * @param message
      */
     public void errorPopUp(String title, String message) {
-        JDialog popup = new JDialog(frame, title, true);
-        popup.setSize(400, 160);
-        popup.setLayout(new BorderLayout());
-        popup.setLocationRelativeTo(frame);
+        JDialog popup = WidgetFactory.createJDialog(frame, title, WidgetFactory.POPUP_SIZE);
 
-        JLabel messageLabel = WidgetFactory.createJLabel(message);
+        JLabel messageLabel = WidgetFactory.createJLabel(message, SwingConstants.CENTER);
         messageLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
-        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         popup.add(messageLabel, BorderLayout.CENTER);
 
         popup.setVisible(true);

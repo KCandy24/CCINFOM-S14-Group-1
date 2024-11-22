@@ -18,14 +18,10 @@ import src.view.gui.TopView;
 /**
  * Handles events in the Records/Anime subtab.
  */
-public class RecordsTabListener implements ActionListener {
-
-    AnimeSystem animeSystem;
-    TopView topView;
+public class RecordsTabListener extends TabListener {
 
     public RecordsTabListener(AnimeSystem animeSystem, TopView topView) {
-        this.animeSystem = animeSystem;
-        this.topView = topView;
+        super(animeSystem, topView);
     }
 
     @Override
@@ -60,6 +56,9 @@ public class RecordsTabListener implements ActionListener {
                 break;
             case "deleteUser":
                 deleteUser();
+                break;
+            case "viewUserWatchHistory":
+                viewUserWatchHistory();
                 break;
 
             // Staff subtab
@@ -109,6 +108,7 @@ public class RecordsTabListener implements ActionListener {
         if (record.name == Records.ANIME.name) {
             columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
             data = animeSystem.selectColumns(columns, "animes JOIN studios ON animes.studio_id = studios.studio_id");
+            // ^ Anime record is special since in the GUI we also need studio names.
         } else {
             columns = animeSystem.getRecordColNames(recordName);
             data = animeSystem.selectColumns(columns, recordName);
@@ -125,7 +125,7 @@ public class RecordsTabListener implements ActionListener {
     // Anime records management
 
     public void searchAnime() {
-        topView.selectFromTable(Records.ANIME.name);
+        super.searchAnime();
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(true);
     }
@@ -244,8 +244,7 @@ public class RecordsTabListener implements ActionListener {
     // User records management
 
     public void searchUser() {
-        topView.selectFromTable("users");
-
+        super.searchUser();
         topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(true);
     }
 
@@ -317,7 +316,12 @@ public class RecordsTabListener implements ActionListener {
     public void deleteUser() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB);
         String userId = subtab.getComponentText("userId");
-
+        if (!validateId(
+                userId,
+                "User ID blank",
+                "Please select a user to delete.")) {
+            return;
+        }
         try {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
             this.refreshRecordTableData(Records.USER);
@@ -331,11 +335,39 @@ public class RecordsTabListener implements ActionListener {
         topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(false);
     }
 
+    private void viewUserWatchHistory() {
+        String userId = topView.getCurrentSubtab().getComponentText("userId");
+        if (!validateId(
+                userId,
+                "No user selected",
+                "Please select a user to view the watch history of.")) {
+            return;
+        }
+
+        String userName = topView.getCurrentSubtab().getComponentText("username");
+        String query = String.format("""
+                SELECT views.timestamp_watched, animes.title, views.watched_episode
+                FROM animes
+                JOIN views ON animes.anime_id  = views.anime_id
+                AND views.user_id = %s
+                ORDER BY timestamp_watched DESC, animes.title, views.watched_episode
+                """, userId);
+        String[][] data = animeSystem.rawQuery(query);
+        for (String[] row : data) {
+            for (String s : row) {
+                System.out.print(s + '\t');
+            }
+            System.out.println();
+        }
+        topView.displayTable(data, new String[] {
+                "Timestamp", "Anime", "Episode"
+        }, "Watch History of " + userName);
+    }
+
     // Staff records management
 
     public void searchStaff() {
-        topView.selectFromTable("staff");
-
+        super.searchStaff();
         topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);
     }
 
@@ -440,7 +472,7 @@ public class RecordsTabListener implements ActionListener {
                 JOIN animes a ON c.anime_id = a.anime_id
                 WHERE s.staff_id = """;
         String queryB = """
-                
+
                 ORDER BY a.anime_id;
                 """;
 
@@ -448,8 +480,10 @@ public class RecordsTabListener implements ActionListener {
             Integer.parseInt(staffId);
             data = animeSystem.rawQuery(queryA + staffId + queryB);
             topView.displayTable(data,
-                new String[]{"Staff Name", "Anime Title", "Episode", "Position", "Department"},
-                new String(firstName + " " + lastName + "'s Work History"));
+                    new String[] {
+                            "Staff Name", "Anime Title", "Episode", "Position", "Department"
+                    },
+                    new String(firstName + " " + lastName + "'s Work History"));
         } catch (Exception exception) {
             topView.errorPopUp("Staff", "Cannot fetch staff history");
             System.out.println(exception.getMessage());
@@ -457,11 +491,6 @@ public class RecordsTabListener implements ActionListener {
     }
 
     // Studio records management
-
-    public void searchStudio() {
-        topView.selectFromTable("studios");
-    }
-
     public void addNewStudio() {
         topView.resetFields(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
     }
@@ -471,19 +500,19 @@ public class RecordsTabListener implements ActionListener {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
         String studioId = subtab.getComponentText("studioId");
         String studio_name = subtab.getComponentText("studioName");
- 
+
         try {
             Integer.parseInt(studioId);
             // User ID field was parsed successfully; this must be an existing record
             updateStudio(studioId, studio_name);
-            topView.dialogPopUp("Studio", "Studio name successfully changed to "+studio_name+".");
+            topView.dialogPopUp("Studio", "Studio name successfully changed to " + studio_name + ".");
         } catch (NumberFormatException exception) {
             createStudio(studio_name);
-            topView.dialogPopUp("Studio", "Studio "+studio_name+" successfully created.");
+            topView.dialogPopUp("Studio", "Studio " + studio_name + " successfully created.");
         }
     }
 
-    public void createStudio(String studio_name){
+    public void createStudio(String studio_name) {
         try {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
@@ -493,7 +522,6 @@ public class RecordsTabListener implements ActionListener {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }
-
 
     public void updateStudio(String studioID, String studio_name) {
         try {
@@ -514,7 +542,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate("DELETE FROM `studios` WHERE `studio_id` = ?", studio_id);
             this.refreshRecordTableData(Records.STUDIO);
-            topView.dialogPopUp("Studio", "Deletion of Studio "+studio_name+" successful.");
+            topView.dialogPopUp("Studio", "Deletion of Studio " + studio_name + " successful.");
         } catch (SQLIntegrityConstraintViolationException Exception) {
             topView.errorPopUp("Studio", "Could not delete due to existing animes.");
         } catch (SQLException exception) {

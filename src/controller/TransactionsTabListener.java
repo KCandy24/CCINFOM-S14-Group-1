@@ -8,18 +8,13 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 import src.model.AnimeSystem;
-import src.model.Records;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
-public class TransactionsTabListener implements ActionListener {
-
-    AnimeSystem animeSystem;
-    TopView topView;
+public class TransactionsTabListener extends TabListener {
 
     public TransactionsTabListener(AnimeSystem animeSystem, TopView topView) {
-        this.animeSystem = animeSystem;
-        this.topView = topView;
+        super(animeSystem, topView);
     }
 
     @Override
@@ -93,20 +88,6 @@ public class TransactionsTabListener implements ActionListener {
         }
     }
 
-    // General
-
-    public void searchAnime() {
-        topView.selectFromTable(Records.ANIME.name);
-    }
-
-    public void searchUser() {
-        topView.selectFromTable(Records.USER.name);
-    }
-
-    public void searchStaff() {
-        topView.selectFromTable(Records.STAFF.name);
-    }
-
     // Watch episode transaction
 
     public int getUserIDFromTopView() {
@@ -174,15 +155,7 @@ public class TransactionsTabListener implements ActionListener {
 
     // Rate anime
 
-    public boolean validateId(String id, String errorTitle, String errorBody) {
-        try {
-            Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            topView.errorPopUp(errorTitle, errorBody);
-            return false;
-        }
-        return true;
-    }
+
 
     public void saveRating() {
         // Grab data from GUI
@@ -377,32 +350,34 @@ public class TransactionsTabListener implements ActionListener {
                 WHERE staff_id = ? AND anime_id = ? AND episode = ?)
                 AS checkExistingQuery
                 """;
-        
+
         int maxEpisodes = 1;
-        
-        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
-                validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
-                return;
-        
+
+        if ((validateId(staff_id, "No staff selected", "Please select a staff member before creating a credits entry.")
+                && validateId(anime_id, "No anime selected",
+                        "Please select an anime to create a credits entry.")) == false)
+            return;
+
         if (position.length() > 32) {
             topView.errorPopUp("Edit Credits", "Position name is too long.");
             return;
         }
-        
+
         try {
-            maxEpisodes = Integer.parseInt(animeSystem.safeSingleQuery(saveMaxEpisodes, anime_id).get("num_of_episodes"));
+            maxEpisodes = Integer
+                    .parseInt(animeSystem.safeSingleQuery(saveMaxEpisodes, anime_id).get("num_of_episodes"));
         } catch (Exception e) {
             System.out.println("error occurred: " + e.getMessage());
         }
-            
+
         try {
             int episodeSelected = Integer.parseInt(episode);
             if (episodeSelected < 1 || episodeSelected > maxEpisodes) {
-                topView.errorPopUp("Invalid episode number", "Please input an episode from 1-" + maxEpisodes +".");
+                topView.errorPopUp("Invalid episode number", "Please input an episode from 1-" + maxEpisodes + ".");
                 return;
             }
         } catch (NumberFormatException e) {
-            topView.errorPopUp("No episode number", "Please input an episode from 1-" + maxEpisodes +".");
+            topView.errorPopUp("No episode number", "Please input an episode from 1-" + maxEpisodes + ".");
             return;
         }
 
@@ -432,8 +407,7 @@ public class TransactionsTabListener implements ActionListener {
                 topView.errorPopUp("Edit Credits", "Something went wrong.");
                 System.out.println(e.getStackTrace());
             }
-        }
-        else {
+        } else {
             try {
                 animeSystem.safeUpdate(query, staff_id, anime_id, episode, position, department);
                 topView.dialogPopUp("Edit Credits", "Successfully saved credits.");
@@ -443,7 +417,7 @@ public class TransactionsTabListener implements ActionListener {
             }
         }
     }
-    
+
     public void loadCredits() {
         // Get rating data
         Subtab subtab = topView.getCurrentSubtab();
@@ -452,15 +426,16 @@ public class TransactionsTabListener implements ActionListener {
         String episode = subtab.getComponentText("episode");
 
         if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
-                validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
+                validateId(anime_id, "No anime selected",
+                        "Please select an anime to create a credits entry.")) == false)
             return;
 
         String checkExistingQuery = """
-            SELECT EXISTS(SELECT *
-            FROM credits
-            WHERE staff_id = ? AND anime_id = ? AND episode = ?)
-            AS checkExistingQuery
-            """;
+                SELECT EXISTS(SELECT *
+                FROM credits
+                WHERE staff_id = ? AND anime_id = ? AND episode = ?)
+                AS checkExistingQuery
+                """;
 
         boolean creditExists = false;
 
@@ -494,7 +469,7 @@ public class TransactionsTabListener implements ActionListener {
             topView.errorPopUp("Edit Credits", "Credits entry does not exist.");
         }
     }
-    
+
     public void deleteCredits() {
         Subtab subtab = topView.getCurrentSubtab();
         String staff_id = subtab.getComponentText("staffId");
@@ -507,9 +482,10 @@ public class TransactionsTabListener implements ActionListener {
                 """;
 
         if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
-                validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
+                validateId(anime_id, "No anime selected",
+                        "Please select an anime to create a credits entry.")) == false)
             return;
-            
+
         try {
             animeSystem.safeUpdate(query, staff_id, anime_id, episode);
             topView.dialogPopUp("Edit Credits", "Successfully deleted credits.");
@@ -518,7 +494,7 @@ public class TransactionsTabListener implements ActionListener {
             topView.errorPopUp("Edit Credits", "Credits entry doesn't exist.");
         }
     }
-    
+
     // Follow
 
     /**

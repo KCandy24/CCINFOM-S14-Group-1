@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -68,7 +67,6 @@ public class RecordTable extends JDialog {
     public void initializeData(String[][] data, String[] columnNames) {
         this.columnNames = columnNames;
         this.table = WidgetFactory.createJTable(data, columnNames);
-        this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.hideColumns();
         this.scrollPane = WidgetFactory.createJScrollPane(table);
 

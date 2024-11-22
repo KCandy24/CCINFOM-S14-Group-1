@@ -164,7 +164,6 @@ public class Subtab extends NamedPanel {
         } else if (component instanceof JTextField) {
             ((JTextField) component).setText(text);
         } else if (component instanceof JScrollPane) { // which contains a Viewport, which contains a JTextArea
-            // TODO: This is untested -- would component 0 always be a JTextArea?
             ((JTextArea) ((JScrollPane) component).getViewport().getComponent(0)).setText(text);
         } else if (component instanceof JTextField) {
             ((JTextField) component).setText(text);

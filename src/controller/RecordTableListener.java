@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import javax.swing.event.DocumentEvent;
 
 import src.model.AnimeSystem;
 import src.model.Records;
@@ -14,11 +13,14 @@ import src.view.gui.TopView;
 /**
  * Listener for the RecordTable widget.
  */
-public class RecordTableListener extends SearchBoxListener implements ActionListener {
-    Records associatedRecord;
+public class RecordTableListener implements ActionListener {
+    private Records associatedRecord;
+    private AnimeSystem animeSystem;
+    private TopView topView;
 
     public RecordTableListener(AnimeSystem animeSystem, TopView topView, Records associatedRecord) {
-        super(animeSystem, topView);
+        this.animeSystem = animeSystem;
+        this.topView = topView;
         this.associatedRecord = associatedRecord;
         this.setData();
     }
@@ -74,17 +76,6 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
             // Subtab does not have a last episode watched label.
             return;
         }
-
-    }
-
-    /**
-     * TODO: Filter out results. Use the name of the text field being updated in
-     * order to figure out what exactly is being filtered.
-     * 
-     * @param e
-     */
-    @Override
-    public void update(DocumentEvent e) {
 
     }
 }

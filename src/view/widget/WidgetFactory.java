@@ -20,6 +20,8 @@ import src.view.gui.NamedPanel;
  */
 public class WidgetFactory {
     private static final String DEFAULT_FONT_FAMILY = "Inter";
+    public static final Dimension WINDOW_SIZE = new Dimension(800, 600);
+    public static final Dimension POPUP_SIZE = new Dimension(400, 150);
 
     /**
      * This class is not meant to be instantiated. Use the various static methods to
@@ -77,8 +79,6 @@ public class WidgetFactory {
      * @return
      */
     public static JFrame createJFrame(String title) {
-        Dimension windowSize = new Dimension(800, 600);
-
         // Attempt to set system look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -92,7 +92,7 @@ public class WidgetFactory {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         jFrame.getContentPane().setBackground(Color.WHITE);
-        jFrame.setMinimumSize(windowSize);
+        jFrame.setMinimumSize(WINDOW_SIZE);
 
         return jFrame;
     }
@@ -155,6 +155,19 @@ public class WidgetFactory {
     }
 
     /**
+     * Create an ordinary label with a given text and alignment.
+     * 
+     * @param text
+     * @param font any of {@link WidgetFactory.Fonts}
+     * @return
+     */
+    public static JLabel createJLabel(String text, int alignment) {
+        JLabel jLabel = createJLabel(text);
+        jLabel.setHorizontalAlignment(alignment);
+        return jLabel;
+    }
+
+    /**
      * Create an ordinary label with a given text.
      * 
      * @param text
@@ -209,7 +222,7 @@ public class WidgetFactory {
     }
 
     public static JTable createJTable(String[][] data, String[] columnNames) {
-        JTable table = new JTable(data.length, columnNames.length) {
+        JTable table = new JTable(new DefaultTableModel(data, columnNames)) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int columnIndex) {
                 Component component = super.prepareRenderer(renderer, rowIndex, columnIndex);
@@ -225,16 +238,15 @@ public class WidgetFactory {
                 return false;
             }
 
-            @Override
-            public String getColumnName(int columnIndex) {
-                return columnNames[columnIndex];
-            }
+            // @Override
+            // public String getColumnName(int columnIndex) {
+            // return columnNames[columnIndex];
+            // }
         };
-
-        ((DefaultTableModel) table.getModel()).setDataVector(data, columnNames);
 
         WidgetFactory.styleComponent(table);
         table.getTableHeader().setFont(WidgetFactory.Fonts.BODY.getFont());
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         return table;
     }
 
@@ -245,6 +257,33 @@ public class WidgetFactory {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         WidgetFactory.styleComponent(scrollPane);
         return scrollPane;
+    }
+
+    public static JScrollPane createJTableInScrollPane(String[][] data, String[] columnNames) {
+        return createJScrollPane(createJTable(data, columnNames));
+    }
+
+    /**
+     * Create a new JDialog. By default, its layout is BorderLayout.
+     * 
+     * @param frame
+     * @param title
+     * @return
+     */
+    public static JDialog createJDialog(JFrame frame, String title) {
+        JDialog dialog = new JDialog(frame, title, true);
+        dialog.setLayout(new BorderLayout());
+        dialog.setSize(800, 600);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        return dialog;
+    }
+
+    public static JDialog createJDialog(JFrame frame, String title, Dimension size) {
+        JDialog dialog = WidgetFactory.createJDialog(frame, title);
+        dialog.setMaximumSize(size);
+        dialog.setSize(size);
+        return dialog;
     }
 
     // Custom widgets

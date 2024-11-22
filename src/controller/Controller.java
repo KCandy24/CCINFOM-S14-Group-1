@@ -51,7 +51,7 @@ public class Controller {
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB,
                 recordsTabListener,
-                "searchUser", "addNewUser", "saveUser", "deleteUser");
+                "searchUser", "addNewUser", "saveUser", "deleteUser", "viewUserWatchHistory");
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB,
                 recordsTabListener,
