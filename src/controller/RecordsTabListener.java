@@ -488,7 +488,7 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
                     studio_name);
-            this.refreshRecordTableData(Records.STUDIO);
+            this.setTopViewWithNewest(Records.STUDIO);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
