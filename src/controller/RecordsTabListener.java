@@ -155,6 +155,7 @@ public class RecordsTabListener implements ActionListener {
 
         } catch (NumberFormatException exception) {
             createAnime(studioId, animetitle, genre, episodes);
+
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(true);
