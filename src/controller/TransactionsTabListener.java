@@ -91,8 +91,7 @@ public class TransactionsTabListener implements ActionListener {
                 break;
         }
 
-        refreshLastWatched(user_id, anime_id);
-
+        this.refreshLastWatched(user_id, anime_id);
     }
 
     // General
@@ -182,11 +181,45 @@ public class TransactionsTabListener implements ActionListener {
                 (user_id, anime_id, rating, comment, last_episode_watched, last_edited_timestamp)
                 VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)""";
         String checkExistingQuery = """
-            SELECT EXISTS(SELECT *
-            FROM ratings
-            WHERE user_id = ? AND anime_id = ?)
-            AS checkExistingQuery
-            """;
+                SELECT EXISTS(SELECT *
+                FROM ratings
+                WHERE user_id = ? AND anime_id = ?)
+                AS checkExistingQuery
+                """;
+
+        // TODO ? Minor inconvenience: must refresh episode if user previously didn't
+        // watch, watched, then tried to save a rating
+
+        try {
+            Integer.parseInt(user_id);
+        } catch (NumberFormatException e) {
+            topView.errorPopUp("No user selected", "Please select a user before making a rating.");
+            return;
+        }
+
+        try {
+            Integer.parseInt(anime_id);
+        } catch (NumberFormatException e) {
+            topView.errorPopUp("No anime selected", "Please select an anime to rate.");
+            return;
+        }
+
+        int lastEpisodeWatchedValue = Integer.parseInt(last_episode_watched);
+        if (lastEpisodeWatchedValue < 1) {
+            topView.errorPopUp("Cannot rate unwatched anime", "You cannot rate an anime you haven't watched.");
+            return;
+        }
+
+        try {
+            float ratingValue = Float.parseFloat(rating);
+            if (ratingValue < 1 || ratingValue > 5) {
+                topView.errorPopUp("Invalid rating value", "Please input a rating from 1-5.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            topView.errorPopUp("No rating value", "Please input a rating from 1-5.");
+            return;
+        }
 
         boolean ratingExists = false;
 
@@ -196,12 +229,8 @@ public class TransactionsTabListener implements ActionListener {
         } catch (Exception e) {
             System.out.println("error occurred: " + e);
         }
-        
-        // TO-DO: ADD VALIDATOR FOR THE FOLLOWING CONDITIONS
-        // Rating must be a value from 1 - 5
-        // Rating must not go through if a person has not watched at least 1 episode of that anime
-        // Pls also double check if the refresh episode thing works lol
-        // Add error message for if no user is selected (for follows and ratings pls hehe)
+
+        // Attempt to make the rating
 
         if (ratingExists) {
             try {
@@ -220,8 +249,7 @@ public class TransactionsTabListener implements ActionListener {
                 topView.dialogPopUp("Rate An Anime", "Something went wrong.");
                 System.out.println(e.getStackTrace());
             }
-        }
-        else {
+        } else {
             try {
                 animeSystem.safeUpdate(query,
                         user_id, anime_id, rating, comment, last_episode_watched);
@@ -241,11 +269,11 @@ public class TransactionsTabListener implements ActionListener {
         String anime_id = subtab.getComponentText("animeId");
 
         String checkExistingQuery = """
-            SELECT EXISTS(SELECT *
-            FROM ratings
-            WHERE user_id = ? AND anime_id = ?)
-            AS checkExistingQuery
-            """;
+                SELECT EXISTS(SELECT *
+                FROM ratings
+                WHERE user_id = ? AND anime_id = ?)
+                AS checkExistingQuery
+                """;
 
         boolean ratingExists = false;
 
@@ -257,11 +285,11 @@ public class TransactionsTabListener implements ActionListener {
         }
 
         if (ratingExists) {
-           try {
-            HashMap<String, String> data = animeSystem.safeSingleQuery("""
-                    SELECT * FROM ratings
-                    WHERE user_id = ? AND anime_id = ?
-                    """, user_id, anime_id);
+            try {
+                HashMap<String, String> data = animeSystem.safeSingleQuery("""
+                        SELECT * FROM ratings
+                        WHERE user_id = ? AND anime_id = ?
+                        """, user_id, anime_id);
                 for (Map.Entry<String, String> pair : data.entrySet()) {
                     System.out.println(pair.getKey() + " : " + pair.getValue());
                 }
@@ -277,11 +305,10 @@ public class TransactionsTabListener implements ActionListener {
             } catch (SQLException e) {
                 topView.dialogPopUp("SQL Exception", e.getStackTrace().toString());
             }
-        }
-        else {
+        } else {
             topView.dialogPopUp("Rate An Anime", "Rating entry does not exist.");
         }
-        
+
     }
 
     public void deleteRating() {
@@ -289,9 +316,9 @@ public class TransactionsTabListener implements ActionListener {
         String user_id = subtab.getComponentText("userId");
         String anime_id = subtab.getComponentText("animeId");
         String query = """
-            DELETE FROM rating
-            WHERE user_id = ?
-            AND anime_id = ?""";
+                DELETE FROM rating
+                WHERE user_id = ?
+                AND anime_id = ?""";
 
         try {
             animeSystem.safeUpdate(query, user_id, anime_id);
@@ -332,6 +359,8 @@ public class TransactionsTabListener implements ActionListener {
         subtab.setAssociatedComponent("users.user_name", "user2name");
         this.searchUser();
     }
+
+    // TODO: Add error message for if no user is selected (for follows
     public void follow() {
         Subtab subtab = topView.getCurrentSubtab();
         String user1_id = subtab.getComponentText("userId");
@@ -382,9 +411,9 @@ public class TransactionsTabListener implements ActionListener {
         String user1_id = subtab.getComponentText("userId");
         String user2_id = subtab.getComponentText("user2Id");
         String query = """
-            DELETE FROM follows
-            WHERE follower_id = ?
-            AND followed_id = ?""";
+                DELETE FROM follows
+                WHERE follower_id = ?
+                AND followed_id = ?""";
 
         try {
             animeSystem.safeUpdate(query, user1_id, user2_id);
