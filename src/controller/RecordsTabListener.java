@@ -110,7 +110,6 @@ public class RecordsTabListener implements ActionListener {
             columns = animeSystem.getRecordColNames(recordName);
             data = animeSystem.selectColumns(columns, recordName);
         }
-
         topView.setRecordTableData(record.name, data, columns);
     }
 
@@ -304,6 +303,7 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate(
                     "UPDATE `users` SET `user_name` = ?, `region` = ?, `join_date` = ? WHERE `user_id` = ?",
                     username, region, joinDate, userId);
+            this.refreshRecordTableData(Records.USER);
         } catch (SQLException exception) {
             System.out.println("Exception class = " + exception.getClass());
             topView.dialogPopUp("SQLException", exception.getMessage());
@@ -371,6 +371,7 @@ public class RecordsTabListener implements ActionListener {
                 animeSystem.safeUpdate(
                         "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?)",
                         firstName, lastName, occupation, birthday);
+                this.setTopViewWithNewest(Records.STAFF);
             } catch (MysqlDataTruncation exception) {
                 topView.dialogPopUp("Anime",
                         (firstName.length() > 16) ? "First Name is too long"
