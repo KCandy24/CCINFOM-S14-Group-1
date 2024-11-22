@@ -364,7 +364,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate(
                 "Update `staff` SET `first_name` = ?, `last_name` = ?, `occupation` = ?, `birthday` = ? WHERE `staff_id` = ?",
-                staffId, firstName, lastName, occupation, birthday);
+                firstName, lastName, occupation, birthday, staffId);
         } catch (MysqlDataTruncation exception) {
             topView.dialogPopUp("Anime", (firstName.length() > 16) ? "First Name is too long" :
                                                 (lastName.length() > 16) ? "Last Name is too long" :
