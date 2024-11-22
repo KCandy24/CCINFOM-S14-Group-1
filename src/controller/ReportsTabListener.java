@@ -8,6 +8,9 @@ import src.model.AnimeSystem;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
+/**
+ * ReportsTabListener handles events in the Reports tab.
+ */
 public class ReportsTabListener extends TabListener {
 
     public ReportsTabListener(AnimeSystem animeSystem, TopView topView) {

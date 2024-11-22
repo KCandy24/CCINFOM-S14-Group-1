@@ -287,12 +287,6 @@ public class WidgetFactory {
         return dialog;
     }
 
-    // Custom widgets
-
-    public static LabelledField creatLabelledField(String text) {
-        return new LabelledField(text);
-    }
-
     public static JComboBox<String> createJComboBox() {
         JComboBox<String> cb = new JComboBox<>();
         WidgetFactory.styleComponent(cb);
@@ -300,7 +294,8 @@ public class WidgetFactory {
     }
 
     /**
-     * Generate a component from JSON data.
+     * Generate a component from JSON data. This is mainly used to parse the various
+     * JSON files created to simplify creation of Subtabs.
      * 
      * @param cell
      * @return

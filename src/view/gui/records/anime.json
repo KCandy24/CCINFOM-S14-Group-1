@@ -4,12 +4,12 @@
             "value": "Anime"
         },
         {
-            "value": ""
-        },
-        {
             "name": "animeId",
             "value": "",
             "db_link": "animes.anime_id"
+        },
+        {
+            "value": ""
         },
         {
             "type": "Button",

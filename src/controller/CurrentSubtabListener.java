@@ -6,6 +6,9 @@ import javax.swing.event.ChangeListener;
 
 import src.view.gui.TopView;
 
+/**
+ * CurrentSubtabListener monitors the user's current Subtab.
+ */
 public class CurrentSubtabListener implements ChangeListener {
     private TopView topView;
 

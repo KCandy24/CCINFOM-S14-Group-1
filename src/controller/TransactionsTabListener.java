@@ -11,6 +11,9 @@ import src.model.AnimeSystem;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
+/**
+ * TransactionsTabListener handles events in the Transactions tab.
+ */
 public class TransactionsTabListener extends TabListener {
 
     public TransactionsTabListener(AnimeSystem animeSystem, TopView topView) {

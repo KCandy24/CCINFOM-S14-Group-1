@@ -17,7 +17,7 @@ import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
 /**
- * Handles events in the Records/Anime subtab.
+ * RecordsTabListener handles events in the Records/Anime subtab.
  */
 public class RecordsTabListener extends TabListener {
 

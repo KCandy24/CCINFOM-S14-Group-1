@@ -5,7 +5,7 @@ import src.model.AnimeSystem;
 import src.view.gui.TopView;
 
 /**
- * The Driver contains the entrypoint of the program.
+ * The Driver is the entrypoint of the program.
  */
 public class Driver {
     public static void main(String[] args) {

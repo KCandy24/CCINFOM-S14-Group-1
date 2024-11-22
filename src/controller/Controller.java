@@ -9,41 +9,18 @@ import src.view.gui.TopView;
  * The controller communicates between the model and the view.
  */
 public class Controller {
-    AnimeSystem animeSystem; // model
-    TopView topView; // view
-
-    // # Listeners
-
-    RecordTableListener animeRecordTableListener;
-    RecordTableListener userRecordTableListener;
-    RecordTableListener studioRecordTableListener;
-    RecordTableListener staffRecordTableListener;
-
-    CurrentTabListener currentTabListener;
-    CurrentSubtabListener currentSubtabListener;
-
-    // Per-Tab Listeners
-    RecordsTabListener recordsTabListener;
-    TransactionsTabListener transactionsTabListener;
-    ActionListener reportListener;
-
     /**
      * Initializes the listeners to listen to the view.
      */
     public Controller(AnimeSystem animeSystem, TopView topView) {
-        this.animeSystem = animeSystem;
-        this.topView = topView;
-
-        currentTabListener = new CurrentTabListener(topView);
-        currentSubtabListener = new CurrentSubtabListener(topView);
-        topView.setTabListeners(currentTabListener, currentSubtabListener);
+        topView.setTabListeners(new CurrentTabListener(topView), new CurrentSubtabListener(topView));
 
         for (Records record : Records.values()) {
             System.out.println("Setting record table for " + record.name);
             topView.setRecordTableListener(record.name, new RecordTableListener(animeSystem, topView, record));
         }
 
-        recordsTabListener = new RecordsTabListener(animeSystem, topView);
+        RecordsTabListener recordsTabListener = new RecordsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB,
                 recordsTabListener,
@@ -61,7 +38,7 @@ public class Controller {
                 recordsTabListener,
                 "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
 
-        transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
+        TransactionsTabListener transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
                 transactionsTabListener,
@@ -79,7 +56,7 @@ public class Controller {
                 transactionsTabListener,
                 "searchFollower", "searchFollowed", "follow", "unfollow");
 
-        reportListener = new ReportsTabListener(animeSystem, topView);
+        ReportsTabListener reportListener = new ReportsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.REPORTS_TAB, TopView.HIGHEST_RATED_ANIME_REPORT_SUBTAB,
                 reportListener,
