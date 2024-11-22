@@ -52,9 +52,6 @@ public class TopView {
             TOP_STUDIOS_REPORT_SUBTAB = "Top Studios",
             USER_PROFILE_REPORT_SUBTAB = "User Profile";
 
-    // Stores the last selected row on a RecordTable.
-    private HashMap<String, String> lastRowData;
-
     // Stores the current tab and subtab name.
     private int currentTabIndex = 0;
     private int[] currentSubtabIndex = {
@@ -200,6 +197,14 @@ public class TopView {
         recordTables.get(recordName).setData(data, column);
     }
 
+    public HashMap<String, String> getSelectedRowData(Records record) {
+        return recordTables.get(record.name).getSelectedRowData();
+    }
+
+    public HashMap<String, String> getLastRowData(Records record) {
+        return recordTables.get(record.name).getLastRowData();
+    }
+
     /**
      * Set the record table listener for a certain record table.
      * 
@@ -229,24 +234,6 @@ public class TopView {
         return recordTables.get(recordName).getSelected();
     }
 
-    /**
-     * Set the last row data selected.
-     * 
-     * @param rowData
-     */
-    public void setLastRowData(HashMap<String, String> rowData) {
-        this.lastRowData = new HashMap<String, String>();
-        lastRowData.putAll(rowData);
-    }
-
-    /**
-     * Return the last row data selected.
-     * 
-     * @return
-     */
-    public HashMap<String, String> getLastRowData() {
-        return lastRowData;
-    }
 
     /**
      * Set the visibility of a record table.

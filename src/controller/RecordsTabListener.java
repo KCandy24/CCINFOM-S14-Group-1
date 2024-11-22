@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import src.model.AnimeSystem;
+import src.model.Records;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
@@ -42,11 +43,9 @@ public class RecordsTabListener implements ActionListener {
                 break;
             case "saveAnime":
                 saveAnime();
-                updateFields("animes");
                 break;
             case "deleteAnime":
                 deleteAnime();
-                updateFields("animes");
                 break;
 
             // User subtab
@@ -58,11 +57,9 @@ public class RecordsTabListener implements ActionListener {
                 break;
             case "saveUser":
                 saveUser();
-                updateFields("users");
                 break;
             case "deleteUser":
                 deleteUser();
-                updateFields("users");
                 break;
 
             // Staff subtab
@@ -74,11 +71,9 @@ public class RecordsTabListener implements ActionListener {
                 break;
             case "saveStaff":
                 saveStaff();
-                updateFields("staff");
                 break;
             case "deleteStaff":
                 deleteStaff();
-                updateFields("staff");
                 break;
 
             // Studio subtab
@@ -91,12 +86,10 @@ public class RecordsTabListener implements ActionListener {
 
             case "saveStudio":
                 saveStudio();
-                updateFields("studio");
                 break;
 
             case "deleteStudio":
                 deleteStudio();
-                updateFields("studios");
                 break;
             default:
                 System.err.println("No action associated for " + name);
@@ -104,16 +97,33 @@ public class RecordsTabListener implements ActionListener {
         }
     }
 
-    public void updateFields(String recordName) {
-        String[] columns = animeSystem.getRecordColNames(recordName);
-        String[][] data = animeSystem.selectColumns(columns, recordName);
-        topView.setRecordTableData(recordName, data, columns);
+    // General
+
+    public void refreshRecordTableData(Records record) {
+        String recordName = record.name;
+        String[] columns;
+        String[][] data;
+        if (record.name == Records.ANIME.name) {
+            columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
+            data = animeSystem.selectColumns(columns, "animes JOIN studios ON animes.studio_id = studios.studio_id");
+        } else {
+            columns = animeSystem.getRecordColNames(recordName);
+            data = animeSystem.selectColumns(columns, recordName);
+        }
+
+        topView.setRecordTableData(record.name, data, columns);
+    }
+
+    public void setTopViewWithNewest(Records record) {
+        this.refreshRecordTableData(record);
+        HashMap<String, String> rowData = topView.getLastRowData(record);
+        topView.setFieldsFromData(rowData);
     }
 
     // Anime records management
 
     public void searchAnime() {
-        topView.selectFromTable("animes");
+        topView.selectFromTable(Records.ANIME.name);
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(true);
     }
@@ -139,6 +149,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             Integer.parseInt(animeId);
             updateAnime(animeId, studioId, animetitle, genre, airDate, episodes);
+
         } catch (NumberFormatException exception) {
             createAnime(studioId, animetitle, genre, episodes);
         }
@@ -156,6 +167,7 @@ public class RecordsTabListener implements ActionListener {
                         (?, ?, ?, NOW(), ?)
                         """;
                 animeSystem.safeUpdate(query, studioId, animeTitle, genre, episodes);
+                this.setTopViewWithNewest(Records.ANIME);
             } catch (MysqlDataTruncation exception) {
                 topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
             } catch (SQLException exception) {
@@ -197,6 +209,7 @@ public class RecordsTabListener implements ActionListener {
                 if (currentEpisodeCount > Integer.parseInt(episodes))
                     throw new SQLException();
                 animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
+                this.refreshRecordTableData(Records.ANIME);
             } catch (MysqlDataTruncation exception) {
                 topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
             } catch (SQLException exception) {
@@ -211,6 +224,8 @@ public class RecordsTabListener implements ActionListener {
 
         try {
             animeSystem.safeUpdate("DELETE FROM `animes` WHERE `anime_id` = ?", animeId);
+            this.refreshRecordTableData(Records.ANIME);
+
         } catch (SQLIntegrityConstraintViolationException Exception) {
             topView.dialogPopUp("Anime", "Could not delete due to existing transactions connected to " + subtab.getComponentText("animeTitle"));
         } catch (SQLException exception) {
@@ -270,6 +285,7 @@ public class RecordsTabListener implements ActionListener {
                 animeSystem.safeUpdate(
                         "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
                         username, region, joinDate);
+                this.setTopViewWithNewest(Records.USER);
             } catch (SQLIntegrityConstraintViolationException exception) {
                 topView.dialogPopUp("User", "Username must be unique");
             } catch (SQLException exception) {
@@ -296,6 +312,7 @@ public class RecordsTabListener implements ActionListener {
 
         try {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
+            this.refreshRecordTableData(Records.USER);
         } catch (SQLIntegrityConstraintViolationException Exception) {
             topView.dialogPopUp("User", "Could not delete due to existing transactions connected to " + subtab.getComponentText("username"));
         } catch (SQLException exception) {
@@ -317,10 +334,13 @@ public class RecordsTabListener implements ActionListener {
 
     public void saveStaff() {
         // TODO: IMPLEMENTATION
+        // * After creating a new staff, call this.setTopViewWithNewest(Records.STAFF)
+        this.refreshRecordTableData(Records.STAFF);
     }
 
     public void deleteStaff() {
         // TODO: IMPLEMENTATION
+        this.refreshRecordTableData(Records.STAFF); // do this on success
     }
 
     // Studio records management
@@ -352,7 +372,8 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
-                    studio_name);d
+                    studio_name);
+            this.setTopViewWithNewest(Records.STUDIO);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -364,6 +385,7 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate(
                     "UPDATE `studios` SET `studio_name` = ? WHERE `studio_id` = ?",
                     studio_name, studioID);
+            this.refreshRecordTableData(Records.STUDIO);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -371,6 +393,7 @@ public class RecordsTabListener implements ActionListener {
 
     public void deleteStudio() {
         // TODO: IMPLEMENTATION
+        this.refreshRecordTableData(Records.STUDIO);
     }
 
 }
