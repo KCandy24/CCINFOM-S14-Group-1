@@ -70,7 +70,7 @@ CREATE TABLE `credits` (
     `position` VARCHAR(32) NOT NULL,
     `department` ENUM('DP', 'AD', 'AN', 'EV', 'SS', 'TO') NOT NULL,
     -- DEPARTMENTS: Direction and Production, Art and Design, Animation, Sound and Music, Editing and Visual Effects, Script and Storyboarding, Technical and Other Staff
-    PRIMARY KEY(`staff_id`, `anime_id`),
+    PRIMARY KEY(`staff_id`, `anime_id`, `episode`),
     FOREIGN KEY(`staff_id`) REFERENCES `staff`(`staff_id`),
     FOREIGN KEY(`anime_id`) REFERENCES `animes`(`anime_id`)
 );
@@ -113,9 +113,6 @@ INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watche
 (1, 1, 1, '2022-01-06 03:22:54'),
 (1, 1, 2, '2022-01-06 04:50:21'),
 (1, 1, 3, '2022-01-09 08:00:11'),
-(1, 1, 1, '2022-02-11 16:08:31'),
-(1, 1, 2, '2022-02-12 17:05:23'),
-(1, 1, 3, '2022-02-15 12:07:10'),
 (1, 3, 1, '2022-07-01 09:01:53'),
 (1, 3, 2, '2022-07-10 12:19:20'),
 (1, 2, 1, '2023-01-14 16:20:08'),
@@ -131,7 +128,7 @@ INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watche
 (3, 6, 2, '2023-11-02 19:07:30'),
 (3, 6, 3, '2023-11-21 23:22:12'),
 -- USER 4 (MysticBlaze)
-(4, 2, 2, '2022-07-21 16:29:10'),
+(4, 2, 1, '2022-07-21 16:29:10'),
 (4, 4, 1, '2023-03-03 01:58:26'),
 (4, 4, 2, '2023-03-04 00:21:02'),
 (4, 4, 3, '2023-05-07 16:08:14'),
@@ -141,8 +138,7 @@ INSERT INTO `views` (`user_id`, `anime_id`, `watched_episode`, `timestamp_watche
 (5, 2, 1, '2023-09-11 09:42:02'),
 (5, 1, 1, '2023-10-12 23:38:53'),
 (5, 3, 1, '2023-10-13 20:57:08'),
-(5, 3, 2, '2023-10-14 16:58:21'),
-(5, 3, 1, '2023-10-15 15:30:00');
+(5, 3, 2, '2023-10-14 16:58:21');
 
 INSERT INTO `ratings` (`user_id`, `anime_id`, `rating`, `comment`, `last_episode_watched`, `last_edited_timestamp`) VALUES
 -- USER 1 (SunshineSoda)
@@ -463,20 +459,23 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `ViewUserProfile`;
 CREATE PROCEDURE `ViewUserProfile`(
-    IN param_user_id INT
+    IN param_user_id INT,
+    IN param_year INT
 )
 BEGIN
     SELECT 
         u.user_name,
+        u.region,
+        u.join_date,
         COUNT(DISTINCT v.anime_id) AS viewed_anime_count,
         COUNT(v.watched_episode) AS episodes_watched,
-		COUNT(r.rating) AS ratings_made
+		COUNT(DISTINCT(r.last_edited_timestamp)) AS ratings_made
     FROM 
         users u
     LEFT JOIN 
-        views v ON u.user_id = v.user_id
+        views v ON u.user_id = v.user_id AND (YEAR(v.timestamp_watched) = param_year OR param_year = 0)
 	LEFT JOIN 
-        ratings r ON u.user_id = r.user_id
+        ratings r ON u.user_id = r.user_id AND (YEAR(r.last_edited_timestamp) = param_year OR param_year = 0)
     WHERE
         u.user_id = param_user_id
     GROUP BY
@@ -491,7 +490,8 @@ DELIMITER ;
 DELIMITER //
 -- DROP PROCEDURE IF EXISTS `ViewUserGenreAnime`;
 CREATE PROCEDURE `ViewUserGenreAnime`(
-    IN param_user_id INT
+    IN param_user_id INT,
+    IN param_year INT
 )
 BEGIN
 	SELECT
@@ -507,6 +507,7 @@ BEGIN
 			WHERE
 				r.user_id = param_user_id
 				AND asub.genre = a.genre
+                AND (YEAR(r.last_edited_timestamp) = param_year OR param_year = 0)
 			GROUP BY
 				asub.anime_id
 			ORDER BY
@@ -516,7 +517,7 @@ BEGIN
 	FROM
 		users u
 	LEFT JOIN
-		views v ON u.user_id = v.user_id
+		views v ON u.user_id = v.user_id AND (YEAR(v.timestamp_watched) = param_year OR param_year = 0)
 	LEFT JOIN
 		animes a ON v.anime_id = a.anime_id
 	WHERE
@@ -592,7 +593,7 @@ BEGIN
 	JOIN
 		views v ON a.anime_id = v.anime_id AND v.user_id = param_user_id
 	WHERE	
-		(YEAR(aa.air_date) = param_year OR param_year = 0)
+		(YEAR(a.air_date) = param_year OR param_year = 0)
     GROUP BY
 		a.anime_id
 	HAVING

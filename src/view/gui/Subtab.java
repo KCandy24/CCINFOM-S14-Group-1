@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -125,7 +126,7 @@ public class Subtab extends NamedPanel {
     /**
      * 
      * @param name
-     * @return the component with a matching name
+     * @return the component with a matching name, or null if none exists.
      */
     public JComponent getComponent(String name) {
         return componentName.get(name);
@@ -197,8 +198,29 @@ public class Subtab extends NamedPanel {
      * column.
      */
     public void resetFields() {
-        for (JComponent component : componentDbLinks.values()) {
-            setComponentText(component, "");
+        for (Map.Entry<String, JComponent> map : componentName.entrySet()) {
+            String name = map.getKey();
+            JComponent component = map.getValue();
+            switch (name) {
+                case "userId":
+                case "user2Id":
+                case "staffId":
+                case "studioId":
+                case "animeId":
+                    setComponentText(component, "None selected");
+                    break;
+                case "studioName":
+                case "username":
+                case "user2name":
+                case "anime":
+                case "staffFirstName":
+                case "staffLastName":
+                    setComponentText(component, "");
+                default:
+                    if (component instanceof JTextField || component instanceof JScrollPane) {
+                        setComponentText(component, "");
+                    }
+            }
         }
     }
 
