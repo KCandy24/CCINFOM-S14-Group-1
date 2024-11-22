@@ -141,6 +141,7 @@ public class RecordsTabListener implements ActionListener {
             updateAnime(animeId, studioId, animetitle, genre, airDate, episodes);
         } catch (NumberFormatException exception) {
             createAnime(studioId, animetitle, genre, episodes);
+
         }
         
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(true);
@@ -352,7 +353,7 @@ public class RecordsTabListener implements ActionListener {
         try {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
-                    studio_name);d
+                    studio_name);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
