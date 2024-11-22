@@ -93,12 +93,9 @@ public class RecordsTabListener implements ActionListener {
                 saveStudio();
                 updateFields("studios");
                 break;
+
             case "deleteStudio":
                 deleteStudio();
-                updateFields("studios");
-                break;
-            case "viewAnimeStudio":
-                searchStudio();
                 updateFields("studios");
                 break;
             default:
@@ -373,56 +370,8 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void deleteStudio() {
-        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
-        String studioId = subtab.getComponentText("studioId");
-
-        String checkExist = "SELECT EXISTS(SELECT * FROM studios s JOIN animes a ON a.studio_id = s.studio_id) AS studioHasAnimes FROM studios WHERE studio_id = ?";
-        boolean animeExists = false;
-
-        try{
-            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExist, studioId);
-            animeExists = data.get("studioHasAnimes").equals("1");
-            if(animeExists){
-                try {
-                    System.out.println("asdasdsad");
-                    animeSystem.safeUpdate(
-                            "DELETE FROM `studios` WHERE `studio_id` = ?",
-                            studioId);
-                } catch (SQLException exception) {
-                    topView.dialogPopUp("SQLException", exception.getMessage());
-                }
-            } else {
-                topView.dialogPopUp("ERROR","Studio has animes.");
-            }
-        } catch (Exception e) {
-            System.out.println("error occured: "+ e);
-        }
+        String checkExist =  
+        returnValue.get("checkExistingQuery").equals("0")
     }
 
-    public void viewAnimeStudio() {
-        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
-        String studioId = subtab.getComponentText("studioId");
-
-        String checkExist = "SELECT EXISTS(SELECT * FROM studios s JOIN animes a ON a.studio_id = s.studio_id) AS studioHasAnimes FROM studios WHERE studio_id = ?";
-        boolean animeExists = false;
-
-        try{
-            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExist, studioId);
-            animeExists = data.get("studioHasAnimes").equals("1");
-            if(animeExists){
-                try {
-                    System.out.println("asdasdsad");
-                    animeSystem.safeUpdate(
-                            "DELETE FROM `studios` WHERE `studio_id` = ?",
-                            studioId);
-                } catch (SQLException exception) {
-                    topView.dialogPopUp("SQLException", exception.getMessage());
-                }
-            } else {
-                topView.dialogPopUp("ERROR","Studio has animes.");
-            }
-        } catch (Exception e) {
-            System.out.println("error occured: "+ e);
-        }
-    }
 }
