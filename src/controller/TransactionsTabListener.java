@@ -384,6 +384,11 @@ public class TransactionsTabListener implements ActionListener {
                 validateId(anime_id, "No anime selected", "Please select an anime to create a credits entry.")) == false)
                 return;
         
+        if (position.length() > 32) {
+            topView.errorPopUp("Edit Credits", "Position name is too long.");
+            return;
+        }
+        
         try {
             maxEpisodes = Integer.parseInt(animeSystem.safeSingleQuery(saveMaxEpisodes, anime_id).get("num_of_episodes"));
         } catch (Exception e) {
