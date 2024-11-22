@@ -444,6 +444,7 @@ public class RecordsTabListener implements ActionListener {
                 """;
 
         try {
+            Integer.parseInt(staffId);
             data = animeSystem.rawQuery(queryA + staffId + queryB);
             topView.displayTable(data,
                 new String[]{"Staff Name", "Anime Title", "Episode", "Position", "Department"},
@@ -501,8 +502,8 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void deleteStudio() {
-        String checkExist =  
-        returnValue.get("checkExistingQuery").equals("0")
+        // String checkExist =  
+        // returnValue.get("checkExistingQuery").equals("0")
     }
 
 }
