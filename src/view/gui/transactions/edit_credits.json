@@ -28,7 +28,7 @@
         },
         {
             "type": "TextField",
-            "name": "position",
+            "name": "episode",
             "db_link": "credits.episode"
         }
     ],
