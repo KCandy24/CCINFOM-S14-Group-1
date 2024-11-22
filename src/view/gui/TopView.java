@@ -165,7 +165,9 @@ public class TopView {
             ActionListener listener,
             String... buttonNames) {
         Subtab subtab = mainTabs.get(tabName).getSubtab(subtabName);
+        System.out.println("Setting ActionListeners...");
         for (String name : buttonNames) {
+            System.out.printf("\tComponent %s gets %s\n", name, listener.toString());
             subtab.setActionListener(name, listener);
         }
     }

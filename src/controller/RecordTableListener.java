@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 
 import src.model.AnimeSystem;
