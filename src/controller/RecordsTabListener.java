@@ -159,7 +159,7 @@ public class RecordsTabListener implements ActionListener {
 
     public void createAnime(String studioId, String animeTitle, String genre, String episodes) {
         if (animeTitle.equals(""))
-            topView.dialogPopUp("Anime", "Title must not be empty");
+            topView.errorPopUp("Anime", "Title must not be empty");
         else {
             try {
                 String query = """
@@ -169,9 +169,9 @@ public class RecordsTabListener implements ActionListener {
                 animeSystem.safeUpdate(query, studioId, animeTitle, genre, episodes);
                 this.setTopViewWithNewest(Records.ANIME);
             } catch (MysqlDataTruncation exception) {
-                topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
+                topView.errorPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
             } catch (SQLException exception) {
-                topView.dialogPopUp("Anime", "Invalid Number of Episodes");
+                topView.errorPopUp("Anime", "Invalid Number of Episodes");
             }
         }
     }
@@ -189,13 +189,13 @@ public class RecordsTabListener implements ActionListener {
             HashMap<String, String> data = animeSystem.safeSingleQuery(checkCurrentEpisodeCount, animeId);
             currentEpisodeCount = Integer.parseInt(data.get("num_of_episodes"));
         } catch (SQLIntegrityConstraintViolationException exception) {
-            topView.dialogPopUp("Anime", "Anime Title must be unique");
+            topView.errorPopUp("Anime", "Anime Title must be unique");
         } catch (Exception e) {
             System.out.println("error occurred: " + e);
         }
 
         if (animeTitle.equals(""))
-            topView.dialogPopUp("Anime", "Title must not be empty");
+            topView.errorPopUp("Anime", "Title must not be empty");
         else {
             try {
                 String query = """
@@ -212,9 +212,9 @@ public class RecordsTabListener implements ActionListener {
                 animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
                 this.refreshRecordTableData(Records.ANIME);
             } catch (MysqlDataTruncation exception) {
-                topView.dialogPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
+                topView.errorPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
             } catch (SQLException exception) {
-                topView.dialogPopUp("Anime", "Invalid Number of Episodes");
+                topView.errorPopUp("Anime", "Invalid Number of Episodes");
             }
         }
     }
@@ -228,10 +228,10 @@ public class RecordsTabListener implements ActionListener {
             this.refreshRecordTableData(Records.ANIME);
 
         } catch (SQLIntegrityConstraintViolationException Exception) {
-            topView.dialogPopUp("Anime", "Could not delete due to existing transactions connected to "
+            topView.errorPopUp("Anime", "Could not delete due to existing transactions connected to "
                     + subtab.getComponentText("animeTitle"));
         } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(false);
@@ -282,7 +282,7 @@ public class RecordsTabListener implements ActionListener {
 
     public void createUser(String username, String region, String joinDate) {
         if (username.equals(""))
-            topView.dialogPopUp("User", "Username cannot be empty");
+            topView.errorPopUp("User", "Username cannot be empty");
         else {
             try {
                 animeSystem.safeUpdate(
@@ -290,10 +290,10 @@ public class RecordsTabListener implements ActionListener {
                         username, region, joinDate);
                 this.setTopViewWithNewest(Records.USER);
             } catch (SQLIntegrityConstraintViolationException exception) {
-                topView.dialogPopUp("User", "Username must be unique");
+                topView.errorPopUp("User", "Username must be unique");
             } catch (SQLException exception) {
                 System.out.println("Exception class = " + exception.getClass());
-                topView.dialogPopUp("SQLException", exception.getMessage());
+                topView.errorPopUp("SQLException", exception.getMessage());
             }
         }
     }
@@ -306,7 +306,7 @@ public class RecordsTabListener implements ActionListener {
             this.refreshRecordTableData(Records.USER);
         } catch (SQLException exception) {
             System.out.println("Exception class = " + exception.getClass());
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
     }
 
@@ -318,10 +318,10 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate("DELETE FROM `users` WHERE `user_id` = ?", userId);
             this.refreshRecordTableData(Records.USER);
         } catch (SQLIntegrityConstraintViolationException Exception) {
-            topView.dialogPopUp("User", "Could not delete due to existing transactions connected to "
+            topView.errorPopUp("User", "Could not delete due to existing transactions connected to "
                     + subtab.getComponentText("username"));
         } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.USER_RECORD_SUBTAB, "deleteUser").setEnabled(false);
@@ -356,8 +356,10 @@ public class RecordsTabListener implements ActionListener {
         try {
             Integer.parseInt(staffId);
             updateStaff(staffId, firstName, lastName, occupation, birthday);
+            topView.dialogPopUp("Staff", "Successfully updated staff entry!");
         } catch (NumberFormatException exception) {
             createStaff(firstName, lastName, occupation, birthday);
+            topView.dialogPopUp("Staff", "Successfully created staff entry!");
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);
@@ -365,7 +367,7 @@ public class RecordsTabListener implements ActionListener {
 
     public void createStaff(String firstName, String lastName, String occupation, String birthday) {
         if (firstName.equals("") || lastName.equals(""))
-            topView.dialogPopUp("Staff", "First and last name cannot be empty");
+            topView.errorPopUp("Staff", "First and last name cannot be empty");
         else {
             try {
                 animeSystem.safeUpdate(
@@ -373,13 +375,13 @@ public class RecordsTabListener implements ActionListener {
                         firstName, lastName, occupation, birthday);
                 this.setTopViewWithNewest(Records.STAFF);
             } catch (MysqlDataTruncation exception) {
-                topView.dialogPopUp("Anime",
+                topView.errorPopUp("Staff",
                         (firstName.length() > 16) ? "First Name is too long"
                                 : (lastName.length() > 16) ? "Last Name is too long"
                                         : (occupation.length() > 32) ? "Occupation name is too long" : "Invalid Date");
             } catch (SQLException exception) {
                 System.out.println("Exception class = " + exception.getClass());
-                topView.dialogPopUp("SQLException", exception.getMessage());
+                topView.errorPopUp("SQLException", exception.getMessage());
             }
         }
     }
@@ -391,13 +393,13 @@ public class RecordsTabListener implements ActionListener {
                     firstName, lastName, occupation, birthday, staffId);
             this.refreshRecordTableData(Records.STAFF);
         } catch (MysqlDataTruncation exception) {
-            topView.dialogPopUp("Anime",
+            topView.errorPopUp("Staff",
                     (firstName.length() > 16) ? "First Name is too long"
                             : (lastName.length() > 16) ? "Last Name is too long"
                                     : (occupation.length() > 32) ? "Occupation name is too long" : "Invalid Date");
         } catch (SQLException exception) {
             System.out.println("Exception class = " + exception.getClass());
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
 
     }
@@ -410,10 +412,10 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate("DELETE FROM `staff` WHERE `staff_id` = ?", staffId);
             this.refreshRecordTableData(Records.STAFF);
         } catch (SQLIntegrityConstraintViolationException Exception) {
-            topView.dialogPopUp("Staff", "Could not delete due to existing transactions connected to "
+            topView.errorPopUp("Staff", "Could not delete due to existing transactions connected to "
                     + subtab.getComponentText("firstName") + " " + subtab.getComponentText("lastName"));
         } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(false);
@@ -430,17 +432,17 @@ public class RecordsTabListener implements ActionListener {
     }
 
     public void saveStudio() {
-
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
         String studioId = subtab.getComponentText("studioId");
         String studio_name = subtab.getComponentText("studioName");
 
         try {
             Integer.parseInt(studioId);
-            // User ID field was parsed successfully; this must be an existing record
             updateStudio(studioId, studio_name);
+            topView.dialogPopUp("Studio", "Successfully updated studio entry!");
         } catch (NumberFormatException exception) {
             createStudio(studio_name);
+            topView.dialogPopUp("Studio", "Successfully created studio entry!");
         }
     }
 
@@ -451,7 +453,7 @@ public class RecordsTabListener implements ActionListener {
                     studio_name);
             this.setTopViewWithNewest(Records.STUDIO);
         } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
     }
 
@@ -462,7 +464,7 @@ public class RecordsTabListener implements ActionListener {
                     studio_name, studioID);
             this.refreshRecordTableData(Records.STUDIO);
         } catch (SQLException exception) {
-            topView.dialogPopUp("SQLException", exception.getMessage());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
     }
 

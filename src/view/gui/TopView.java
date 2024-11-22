@@ -456,5 +456,23 @@ public class TopView {
         popup.setVisible(true);
     }
 
+    /**
+     * Alert the user of an error occurring.
+     * 
+     * @param title
+     * @param message
+     */
+    public void errorPopUp(String title, String message) {
+        JDialog popup = new JDialog(frame, title, true);
+        popup.setSize(400, 160);
+        popup.setLayout(new BorderLayout());
+        popup.setLocationRelativeTo(frame);
 
+        JLabel messageLabel = WidgetFactory.createJLabel(message);
+        messageLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        popup.add(messageLabel, BorderLayout.CENTER);
+
+        popup.setVisible(true);
+    }
 }
