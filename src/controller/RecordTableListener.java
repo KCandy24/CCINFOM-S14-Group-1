@@ -4,14 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 
 import src.model.AnimeSystem;
 import src.model.Records;
+import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
 /**
- * ? Could be an abstract class?
+ * Listener for the RecordTable widget.
  */
 public class RecordTableListener extends SearchBoxListener implements ActionListener {
     Records associatedRecord;
@@ -45,7 +47,35 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
     public void actionPerformed(ActionEvent e) {
         HashMap<String, String> rowData = topView.getSelectedRowData(associatedRecord);
         topView.setFieldsFromData(rowData);
+        this.attemptRefreshLastWatched();
         topView.setRecordTableVisible(associatedRecord.name, false);
+    }
+
+    /**
+     * Attempt to refresh any "last watched episode" labels, if any.
+     */
+    private void attemptRefreshLastWatched() {
+        Subtab subtab = topView.getCurrentSubtab();
+        try {
+            String userId = subtab.getComponentText("userId");
+            String animeId = subtab.getComponentText("animeId");
+            try {
+                Integer.parseInt(userId);
+                Integer.parseInt(animeId);
+            } catch (NumberFormatException e) {
+                // Subtab does not have either userId or animeId.
+                return;
+            }
+            subtab.setComponentText("episode",
+                    animeSystem.getProcedureSingleResult(
+                            String.format(
+                                    "GetLastWatchedQ(%s, %s)",
+                                    userId, animeId)));
+        } catch (Exception e) {
+            // Subtab does not have a last episode watched label.
+            return;
+        }
+
     }
 
     /**

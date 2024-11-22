@@ -45,8 +45,6 @@ public class TransactionsTabListener implements ActionListener {
             // Watch episode
             case "watchEpisode":
                 this.watchEpisode(user_id, anime_id);
-                break;
-            case "refreshLastWatched":
                 this.refreshLastWatched(user_id, anime_id);
                 break;
 
@@ -90,8 +88,6 @@ public class TransactionsTabListener implements ActionListener {
                 System.err.println("No associated action for " + name);
                 break;
         }
-
-        this.refreshLastWatched(user_id, anime_id);
     }
 
     // General
@@ -155,11 +151,17 @@ public class TransactionsTabListener implements ActionListener {
         }
     }
 
+    /**
+     * Refresh the last watched episode -- used after a user successfully watches a
+     * new episode.
+     * 
+     * @param user_id
+     * @param anime_id
+     */
     public void refreshLastWatched(int user_id, int anime_id) {
         if (user_id != 0 && anime_id != 0) {
             Subtab subtab = topView.getCurrentSubtab();
-            subtab.setComponentText(
-                    subtab.getComponent("episode"),
+            subtab.setComponentText("episode",
                     animeSystem.getProcedureSingleResult(
                             String.format(
                                     "GetLastWatchedQ(%d, %d)",
@@ -168,6 +170,17 @@ public class TransactionsTabListener implements ActionListener {
     }
 
     // Rate anime
+
+    public boolean validateId(String id, String errorTitle, String errorBody) {
+        try {
+            Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            topView.errorPopUp(errorTitle, errorBody);
+            return false;
+        }
+        return true;
+    }
+
     public void saveRating() {
         // Grab data from GUI
         Subtab subtab = topView.getCurrentSubtab();
@@ -190,17 +203,8 @@ public class TransactionsTabListener implements ActionListener {
         // TODO ? Minor inconvenience: must refresh episode if user previously didn't
         // watch, watched, then tried to save a rating
 
-        try {
-            Integer.parseInt(user_id);
-        } catch (NumberFormatException e) {
-            topView.errorPopUp("No user selected", "Please select a user before making a rating.");
-            return;
-        }
-
-        try {
-            Integer.parseInt(anime_id);
-        } catch (NumberFormatException e) {
-            topView.errorPopUp("No anime selected", "Please select an anime to rate.");
+        if ((validateId(user_id, "No user selected", "Please select a user before making a rating.") &&
+                validateId(anime_id, "No anime selected", "Please select an anime to rate.")) == false) {
             return;
         }
 
@@ -262,11 +266,19 @@ public class TransactionsTabListener implements ActionListener {
 
     }
 
+    /**
+     * Attempt to load a rating.
+     */
     public void loadRating() {
         // Get rating data
         Subtab subtab = topView.getCurrentSubtab();
         String user_id = subtab.getComponentText("userId");
         String anime_id = subtab.getComponentText("animeId");
+
+        if ((validateId(user_id, "No user selected", "Please select a user.") &&
+                validateId(anime_id, "No anime selected", "Please select an anime.")) == false) {
+            return;
+        }
 
         String checkExistingQuery = """
                 SELECT EXISTS(SELECT *
@@ -311,6 +323,9 @@ public class TransactionsTabListener implements ActionListener {
 
     }
 
+    /**
+     * Attempt to delete a rating.
+     */
     public void deleteRating() {
         Subtab subtab = topView.getCurrentSubtab();
         String user_id = subtab.getComponentText("userId");
@@ -319,6 +334,11 @@ public class TransactionsTabListener implements ActionListener {
                 DELETE FROM rating
                 WHERE user_id = ?
                 AND anime_id = ?""";
+
+        if ((validateId(user_id, "No user selected", "Please select a user.") &&
+                validateId(anime_id, "No anime selected", "Please select an anime.")) == false) {
+            return;
+        }
 
         try {
             animeSystem.safeUpdate(query, user_id, anime_id);
@@ -376,19 +396,10 @@ public class TransactionsTabListener implements ActionListener {
      *         true
      */
     public boolean validateFollowIds(String followerId, String followedId) {
-        try {
-            Integer.parseInt(followerId);
-        } catch (NumberFormatException e) {
-            topView.errorPopUp("Follower not selected", "Please select the follower user.");
+        if ((validateId(followerId, "Follower not selected", "Please select the follower user.") &&
+                validateId(followedId, "Followed user not selected", "Please select the followed user.")) == false) {
             return false;
         }
-        try {
-            Integer.parseInt(followedId);
-        } catch (NumberFormatException e) {
-            topView.errorPopUp("Followed user not selected", "Please select the followed user.");
-            return false;
-        }
-
         // Validate if the follower and the followed are the same person
         if (followerId.equals(followedId)) {
             topView.errorPopUp("Follow User", "Follower and followed must not be the same user.");
