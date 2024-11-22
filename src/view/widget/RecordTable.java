@@ -30,7 +30,8 @@ public class RecordTable extends JDialog {
     public RecordTable(JFrame frame, String recordName, String noun, String... shownColumnNames) {
         super(frame, "Please select " + noun, true);
         this.shownColumnNames = shownColumnNames;
-        this.setSize(new Dimension(800, 600));
+        this.setSize(WidgetFactory.RECORD_TABLE_SIZE);
+        this.setLocationRelativeTo(frame);
         this.setResizable(true);
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -43,8 +44,11 @@ public class RecordTable extends JDialog {
         c.gridy++;
     }
 
+    /**
+     * Hide certain columns from the user's view based of the shownColumnNames
+     * String array passed in on initialization.
+     */
     public void hideColumns() {
-        // Hide some columns
         TableColumnModel columnModel = table.getColumnModel();
         boolean show;
         for (int i = columnNames.length - 1; i >= 0; i--) {
@@ -64,6 +68,13 @@ public class RecordTable extends JDialog {
         }
     }
 
+    /**
+     * Initialize data to this RecordTable. This must only be called once, when
+     * setting data for the first time, as this also sets up the table.
+     * 
+     * @param data
+     * @param columnNames
+     */
     public void initializeData(String[][] data, String[] columnNames) {
         this.columnNames = columnNames;
         this.table = WidgetFactory.createJTable(data, columnNames);
@@ -84,6 +95,14 @@ public class RecordTable extends JDialog {
         this.add(panel);
     }
 
+    /**
+     * Set data to this RecordTable. Whereas {@link #initializeData()} can only be
+     * called once, this can be called multiple times in order to update the values
+     * in the table view.
+     * 
+     * @param data
+     * @param columnNames
+     */
     public void setData(String[][] data, String[] columnNames) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         if (model.getRowCount() < data.length) {
@@ -93,14 +112,31 @@ public class RecordTable extends JDialog {
         this.hideColumns();
     }
 
+    /**
+     * Add a RecordTableListener to this RecordTable.
+     * 
+     * @param listener
+     */
     public void setListener(RecordTableListener listener) {
         button.addActionListener(listener);
     }
 
+    /**
+     * Get the currently-selected row index.
+     * 
+     * @return
+     */
     public int getSelected() {
         return table.getSelectedRow();
     }
 
+    /**
+     * Get data corresponding to a certain row in the table.
+     * 
+     * @param row     row index
+     * @param columns amount of columns
+     * @return a hashmap mapping column names to corresponding values
+     */
     public HashMap<String, String> getRowData(int row, int columns) {
         HashMap<String, String> data = new HashMap<>();
         for (int column = 0; column < columns; column++) {

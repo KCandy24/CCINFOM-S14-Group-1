@@ -22,6 +22,7 @@ public class WidgetFactory {
     private static final String DEFAULT_FONT_FAMILY = "Inter";
     public static final Dimension WINDOW_SIZE = new Dimension(800, 600);
     public static final Dimension POPUP_SIZE = new Dimension(400, 150);
+    public static final Dimension RECORD_TABLE_SIZE = new Dimension(400, 500);
 
     /**
      * This class is not meant to be instantiated. Use the various static methods to

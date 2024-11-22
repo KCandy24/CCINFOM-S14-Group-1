@@ -310,6 +310,24 @@ public class TopView {
     }
 
     /**
+     * Set the components of the current Subtab with data. Inspect the JSON files'
+     * <code>db_link</code> field in order to identify and specify which components
+     * get which data.
+     * 
+     * An entry like
+     * 
+     * <pre>
+     *      {"name": "userId", "db_link": "users.user_id"}
+     * </pre>
+     * 
+     * in the current Subtab would mean that if data included an entry
+     * 
+     * <pre>
+     *      {"users.user_id": "12"}
+     * </pre>
+     * 
+     * then the component named "userId" would have its text set with 12.
+     * 
      * @param data A HashMap mapping column names of a record to their corresponding
      *             data values.
      */
@@ -318,6 +336,51 @@ public class TopView {
         Subtab subtab = mainTabs.get(getCurrentTabName()).getSubtab(getCurrentSubtabName());
         subtab.setFields(data);
     }
+
+    // General pop-ups
+
+    /**
+     * Display a raw dialog with a table and a custom title.
+     * 
+     * @param data
+     * @param columns
+     * @param title
+     */
+    public void displayTable(String[][] data, String[] columns, String title) {
+        JDialog tablePanes = WidgetFactory.createJDialog(frame, title);
+        tablePanes.add(WidgetFactory.createJTableInScrollPane(data, columns), BorderLayout.CENTER);
+        tablePanes.setVisible(true);
+    }
+
+    /**
+     * Alert the user with a dialog pop-up.
+     * 
+     * @param title
+     * @param message
+     */
+    public void dialogPopUp(String title, String message) {
+        JDialog popup = WidgetFactory.createJDialog(frame, title, WidgetFactory.POPUP_SIZE);
+        JLabel messageLabel = WidgetFactory.createJLabel(message, SwingConstants.CENTER);
+        messageLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
+        popup.add(messageLabel, BorderLayout.CENTER);
+        popup.setVisible(true);
+    }
+
+    /**
+     * Alert the user of an error occurring.
+     * 
+     * @param title
+     * @param message
+     */
+    public void errorPopUp(String title, String message) {
+        JDialog popup = WidgetFactory.createJDialog(frame, title, WidgetFactory.POPUP_SIZE);
+        JLabel messageLabel = WidgetFactory.createJLabel(message, SwingConstants.CENTER);
+        messageLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
+        popup.add(messageLabel, BorderLayout.CENTER);
+        popup.setVisible(true);
+    }
+
+    // Specialized pop-ups
 
     public void displayHighestRatedAnimes(HashMap<String[], String> data, String mode) {
         JDialog highestRatedPane = WidgetFactory.createJDialog(frame, "Highest Rated Anime " + mode);
@@ -423,44 +486,5 @@ public class TopView {
         profilePopup.add(profileTabs);
 
         profilePopup.setVisible(true);
-
-    }
-
-    public void displayTable(String[][] data, String[] columns, String title) {
-        JDialog tablePanes = WidgetFactory.createJDialog(frame, title);
-        tablePanes.add(WidgetFactory.createJTableInScrollPane(data, columns), BorderLayout.CENTER);
-        tablePanes.setVisible(true);
-    }
-
-    /**
-     * Alert the user with a dialog pop-up.
-     * 
-     * @param title
-     * @param message
-     */
-    public void dialogPopUp(String title, String message) {
-        JDialog popup = WidgetFactory.createJDialog(frame, title, WidgetFactory.POPUP_SIZE);
-
-        JLabel messageLabel = WidgetFactory.createJLabel(message, SwingConstants.CENTER);
-        messageLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
-        popup.add(messageLabel, BorderLayout.CENTER);
-
-        popup.setVisible(true);
-    }
-
-    /**
-     * Alert the user of an error occurring.
-     * 
-     * @param title
-     * @param message
-     */
-    public void errorPopUp(String title, String message) {
-        JDialog popup = WidgetFactory.createJDialog(frame, title, WidgetFactory.POPUP_SIZE);
-
-        JLabel messageLabel = WidgetFactory.createJLabel(message, SwingConstants.CENTER);
-        messageLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
-        popup.add(messageLabel, BorderLayout.CENTER);
-
-        popup.setVisible(true);
     }
 }
