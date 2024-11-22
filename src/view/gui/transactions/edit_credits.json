@@ -5,16 +5,16 @@
         },
         {
             "name": "anime",
-            "value": "No anime selected",
+            "value": "",
             "db_link": "animes.title"
+        },
+        {
+            "value": ""
         },
         {
             "name": "animeId",
             "value": "",
             "db_link": "animes.anime_id"
-        },
-        {
-            "value": ""
         },
         {
             "type": "Button",
@@ -38,7 +38,7 @@
         },
         {
             "name": "staffFirstName",
-            "value": "No staff selected",
+            "value": "",
             "db_link": "staff.first_name"
         },
         {

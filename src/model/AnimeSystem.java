@@ -157,7 +157,12 @@ public class AnimeSystem {
             columnsString += column + ", ";
         }
         columnsString = columnsString.substring(0, columnsString.length() - 2);
-        String query = "SELECT " + columnsString + " FROM " + record;
+        String query = String.format("""
+                SELECT %s FROM %s ORDER BY %s
+                """,
+                columnsString,
+                record,
+                Records.getSortByColumn(record));
         return this.rawQuery(query);
     }
 

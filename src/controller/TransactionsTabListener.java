@@ -31,7 +31,8 @@ public class TransactionsTabListener implements ActionListener {
                 this.searchAnimeWatchEpisode();
                 break;
             case "watchEpisode":
-                this.watchEpisode();
+                this.watchEpisode(user_id, anime_id);
+                this.refreshLastWatched(user_id, anime_id);
                 break;
 
             // Rate anime
@@ -52,6 +53,23 @@ public class TransactionsTabListener implements ActionListener {
                 System.err.println("No associated action for " + name);
                 break;
         }
+
+        refreshLastWatched(user_id, anime_id);
+
+    }
+
+    // General
+
+    public void searchAnime() {
+        topView.selectFromTable(Records.ANIME.name);
+    }
+
+    public void searchUser() {
+        topView.selectFromTable(Records.USER.name);
+    }
+
+    public void searchStaff() {
+        topView.selectFromTable(Records.STAFF.name);
     }
 
     // Watch episode transaction
@@ -64,31 +82,258 @@ public class TransactionsTabListener implements ActionListener {
         topView.selectFromTable("users");
     }
 
-    public void watchEpisode() {
-        int user_id = 2; // Get From topview
-        int anime_id = 2; // Get From topview
+    public void watchEpisode(int user_id, int anime_id) {
+        if (user_id == 0 || anime_id == 0) {
+            topView.dialogPopUp("Watch Episode", "User ID and Anime ID cannot be empty");
+            return;
+        }
 
-        int lastWatched = Integer.parseInt(animeSystem
-                .getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
-        topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + lastWatched);
+        int lastWatched = Integer.parseInt(
+                animeSystem.getProcedureSingleResult(String.format("GetLastWatchedQ(%d, %d)", user_id, anime_id)));
+        int maxEpisodes = Integer
+                .parseInt(animeSystem.singleQuery("SELECT num_of_episodes FROM animes WHERE anime_id = " + anime_id));
+        if (lastWatched == maxEpisodes) {
+            topView.dialogPopUp("Watch Episode", "User has watched all episodes of this anime.");
+            return;
+        }
+
+        try {
+            animeSystem.callProcedure("WatchAnime(?, ?)", Integer.toString(user_id), Integer.toString(anime_id));
+            topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + (lastWatched + 1));
+        } catch (Exception e) {
+            topView.dialogPopUp("Watch Episode", "An error occured, cannot watch episode.");
+        }
+    }
+
+    public void refreshLastWatched(int user_id, int anime_id) {
+        if (user_id != 0 && anime_id != 0) {
+            Subtab subtab = topView.getCurrentSubtab();
+            subtab.setComponentText(
+                    subtab.getComponent("episode"),
+                    animeSystem.getProcedureSingleResult(
+                            String.format(
+                                    "GetLastWatchedQ(%d, %d)",
+                                    user_id, anime_id)));
+        }
     }
 
     // Rate anime
+    public void saveRating() {
+        // Grab data from GUI
+        Subtab subtab = topView.getCurrentSubtab();
+        String user_id = subtab.getComponentText("userId");
+        String anime_id = subtab.getComponentText("animeId");
+        String rating = subtab.getComponentText("rating");
+        String comment = subtab.getComponentText("comment");
+        String last_episode_watched = subtab.getComponentText("episode");
+        String query = """
+                INSERT INTO ratings
+                (user_id, anime_id, rating, comment, last_episode_watched, last_edited_timestamp)
+                VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)""";
+        String checkExistingQuery = """
+            SELECT EXISTS(SELECT *
+            FROM ratings
+            WHERE user_id = ? AND anime_id = ?)
+            AS checkExistingQuery
+            """;
 
-    public void searchAnimeRateAnime() {
-        topView.selectFromTable("animes");
+        boolean ratingExists = false;
+
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, user_id, anime_id);
+            ratingExists = data.get("checkExistingQuery").equals("1");
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+        }
+        
+        // TO-DO: ADD VALIDATOR FOR THE FOLLOWING CONDITIONS
+        // Rating must be a value from 1 - 5
+        // Rating must not go through if a person has not watched at least 1 episode of that anime
+        // Pls also double check if the refresh episode thing works lol
+        // Add error message for if no user is selected (for follows and ratings pls hehe)
+
+        if (ratingExists) {
+            try {
+                query = """
+                        UPDATE ratings
+                        SET rating = ?,
+                        comment = ?,
+                        last_episode_watched = ?,
+                        last_edited_timestamp = CURRENT_TIMESTAMP
+                        WHERE user_id = ? AND anime_id = ?
+                        """;
+                animeSystem.safeUpdate(query,
+                        rating, comment, last_episode_watched, user_id, anime_id);
+                topView.dialogPopUp("Rate An Anime", "Successfully updated rating.");
+            } catch (SQLException e) {
+                topView.dialogPopUp("Rate An Anime", "Something went wrong.");
+                System.out.println(e.getStackTrace());
+            }
+        }
+        else {
+            try {
+                animeSystem.safeUpdate(query,
+                        user_id, anime_id, rating, comment, last_episode_watched);
+                topView.dialogPopUp("Rate An Anime", "Successfully saved rating.");
+            } catch (SQLException e) {
+                topView.dialogPopUp("Rate An Anime", "Something went wrong.");
+                System.out.println(e.getStackTrace());
+            }
+        }
+
     }
 
-    public void searchUserRateAnime() {
-        topView.selectFromTable("users");
+    public void loadRating() {
+        // Get rating data
+        Subtab subtab = topView.getCurrentSubtab();
+        String user_id = subtab.getComponentText("userId");
+        String anime_id = subtab.getComponentText("animeId");
+
+        String checkExistingQuery = """
+            SELECT EXISTS(SELECT *
+            FROM ratings
+            WHERE user_id = ? AND anime_id = ?)
+            AS checkExistingQuery
+            """;
+
+        boolean ratingExists = false;
+
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, user_id, anime_id);
+            ratingExists = data.get("checkExistingQuery").equals("1");
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+        }
+
+        if (ratingExists) {
+           try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery("""
+                    SELECT * FROM ratings
+                    WHERE user_id = ? AND anime_id = ?
+                    """, user_id, anime_id);
+                for (Map.Entry<String, String> pair : data.entrySet()) {
+                    System.out.println(pair.getKey() + " : " + pair.getValue());
+                }
+
+                // Set to GUI
+                subtab = topView.getCurrentSubtab();
+                subtab.setComponentText("rating", data.get("rating"));
+                subtab.setComponentText("comment", data.get("comment"));
+                subtab.setComponentText("episode", data.get("last_episode_watched"));
+
+                topView.dialogPopUp("Rate An Anime", "Successfully loaded the rating.");
+
+            } catch (SQLException e) {
+                topView.dialogPopUp("SQL Exception", e.getStackTrace().toString());
+            }
+        }
+        else {
+            topView.dialogPopUp("Rate An Anime", "Rating entry does not exist.");
+        }
+        
     }
 
-    public void rateAnime() {
+    public void deleteRating() {
+        Subtab subtab = topView.getCurrentSubtab();
+        String user_id = subtab.getComponentText("userId");
+        String anime_id = subtab.getComponentText("animeId");
+        String query = """
+            DELETE FROM rating
+            WHERE user_id = ?
+            AND anime_id = ?""";
+
+        try {
+            animeSystem.safeUpdate(query, user_id, anime_id);
+            topView.dialogPopUp("Rate An Anime", "Successfully deleted the rating.");
+        } catch (SQLException e) {
+            System.out.println(e);
+            topView.dialogPopUp("Rate An Anime", "Rating does not exist.");
+        }
+    }
+
+    // Edit credits
+    public void saveCredits() {
         // TODO: IMPLEMENTATION
     }
 
     // Edit credits
 
     // Follow user
+    private void searchFollower() {
+        Subtab subtab = this.topView.getSubtab(TopView.TRANSACTIONS_TAB,
+                TopView.FOLLOW_USER_TRANSACTION_SUBTAB);
+        subtab.setAssociatedComponent("users.user_id", "userId");
+        subtab.setAssociatedComponent("users.user_name", "username");
+        this.searchUser();
+    }
 
+    private void searchFollowed() {
+        Subtab subtab = this.topView.getSubtab(TopView.TRANSACTIONS_TAB,
+                TopView.FOLLOW_USER_TRANSACTION_SUBTAB);
+        subtab.setAssociatedComponent("users.user_id", "user2Id");
+        subtab.setAssociatedComponent("users.user_name", "user2name");
+        this.searchUser();
+    }
+    public void follow() {
+        Subtab subtab = topView.getCurrentSubtab();
+        String user1_id = subtab.getComponentText("userId");
+        String user2_id = subtab.getComponentText("user2Id");
+        String query = """
+                INSERT INTO follows
+                (follower_id, followed_id, following_since_date)
+                VALUES (?, ?, NOW())""";
+        String checkExistingQuery = """
+                SELECT EXISTS(SELECT *
+                FROM follows
+                WHERE follower_id = ? AND followed_id = ?)
+                AS checkExistingQuery
+                """;
+
+        boolean errorSameUsers = user1_id.equals(user2_id);
+        boolean errorEntryExists;
+
+        try {
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, user1_id, user2_id);
+            errorEntryExists = data.get("checkExistingQuery").equals("1");
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+            errorEntryExists = false;
+        }
+
+        System.out.println("errorSameUsers " + errorSameUsers);
+        System.out.println("errorEntryExists " + errorEntryExists);
+
+        if (errorSameUsers)
+            topView.dialogPopUp("Follow User", "Follower and followed must not be the same user.");
+        else if (errorEntryExists)
+            topView.dialogPopUp("Follow User", "Follow entry already exists.");
+        else {
+            // Save to model
+            try {
+                animeSystem.safeUpdate(query, user1_id, user2_id);
+                topView.dialogPopUp("Follow User", "Successfully added follow entry.");
+            } catch (SQLException e) {
+                topView.dialogPopUp("Follow User", "Something went wrong.");
+                System.out.println(e);
+            }
+        }
+    }
+
+    public void unfollow() {
+        Subtab subtab = topView.getCurrentSubtab();
+        String user1_id = subtab.getComponentText("userId");
+        String user2_id = subtab.getComponentText("user2Id");
+        String query = """
+            DELETE FROM follows
+            WHERE follower_id = ?
+            AND followed_id = ?""";
+
+        try {
+            animeSystem.safeUpdate(query, user1_id, user2_id);
+            topView.dialogPopUp("Follow User", "Successfully deleted follow entry.");
+        } catch (SQLException e) {
+            System.out.println(e);
+            topView.dialogPopUp("Follow User", "Follow entry doesn't exist.");
+        }
+    }
 }

@@ -20,4 +20,31 @@ public enum Records {
         this.noun = noun;
         this.shownColumnNames = shownColumnNames;
     }
+
+    public static String getSortByColumn(String recordName) {
+        String sortByCol;
+        switch (recordName) {
+            case "animes":
+            case "animes JOIN studios ON animes.studio_id = studios.studio_id":
+                /**
+                 * The GUI implicitly joins the animes record with the studios record so it can
+                 * grab the studio name.
+                 */
+                sortByCol = "animes.anime_id";
+                break;
+            case "users":
+                sortByCol = "users.user_id";
+                break;
+            case "staff":
+                sortByCol = "staff.staff_id";
+                break;
+            case "studios":
+                sortByCol = "studios.studio_id";
+                break;
+            default:
+                sortByCol = "id";
+                break;
+        }
+        return sortByCol;
+    }
 }
