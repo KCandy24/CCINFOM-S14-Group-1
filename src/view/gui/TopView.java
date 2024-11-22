@@ -18,7 +18,6 @@ import src.controller.CurrentTabListener;
 import src.controller.RecordTableListener;
 import src.model.Genre;
 import src.model.Records;
-import src.model.UserRegion;
 import src.view.widget.RecordTable;
 import src.view.widget.WidgetFactory;
 
@@ -51,6 +50,9 @@ public class TopView {
             RECOMMEND_ANIME_REPORT_SUBTAB = "Recommend Anime",
             TOP_STUDIOS_REPORT_SUBTAB = "Top Studios",
             USER_PROFILE_REPORT_SUBTAB = "User Profile";
+
+    // Stores the last selected row on a RecordTable.
+    private HashMap<String, String> lastRowData;
 
     // Stores the current tab and subtab name.
     private int currentTabIndex = 0;
@@ -197,14 +199,6 @@ public class TopView {
         recordTables.get(recordName).setData(data, column);
     }
 
-    public HashMap<String, String> getSelectedRowData(Records record) {
-        return recordTables.get(record.name).getSelectedRowData();
-    }
-
-    public HashMap<String, String> getLastRowData(Records record) {
-        return recordTables.get(record.name).getLastRowData();
-    }
-
     /**
      * Set the record table listener for a certain record table.
      * 
@@ -234,6 +228,24 @@ public class TopView {
         return recordTables.get(recordName).getSelected();
     }
 
+    /**
+     * Set the last row data selected.
+     * 
+     * @param rowData
+     */
+    public void setLastRowData(HashMap<String, String> rowData) {
+        this.lastRowData = new HashMap<String, String>();
+        lastRowData.putAll(rowData);
+    }
+
+    /**
+     * Return the last row data selected.
+     * 
+     * @return
+     */
+    public HashMap<String, String> getLastRowData() {
+        return lastRowData;
+    }
 
     /**
      * Set the visibility of a record table.
@@ -404,51 +416,6 @@ public class TopView {
         topStudiosPane.setVisible(true);
     }
 
-
-    public void displayUserProfile(String[] userDetails, String[][] userGenres){
-        JDialog profilePopup = new JDialog(frame);
-        JTabbedPane profileTabs = new JTabbedPane(JTabbedPane.TOP);
-
-        String[] formatSequence = {"userName", "region", "joinDate", "viewedAnimes", "totalEpisodes", "ratingsMade"};
-        Subtab defaultProfile = new Subtab(userDetails[0] + " Profile", "reports/user_profile_template.json");
-        for (int i = 0; i < userDetails.length; i++) {
-            if (i == 1) 
-                userDetails[i] = UserRegion.findName(userDetails[i]);
-            defaultProfile.setComponentText(formatSequence[i], userDetails[i]);
-        }
-
-
-        Subtab genreProfile = new Subtab("Top 3 Genres", "reports/user_profile_genre.json");
-        int i = 1;
-        for (String[] row : userGenres) {
-            genreProfile.setComponentText("rank"+i, Genre.findName(row[0]));
-            genreProfile.setComponentText("topAnime"+i, row[2]);
-            i++;
-        }
-
-        profileTabs.addTab(defaultProfile.getName(), defaultProfile);
-        profileTabs.addTab(genreProfile.getName(), genreProfile);
-        profilePopup.add(profileTabs);
-
-        profilePopup.setSize(400, 600);
-        profilePopup.setLocationRelativeTo(frame);
-        profilePopup.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        profilePopup.setVisible(true);
-        
-    }
-
-    public void displayTable(String[][] data, String[] columns, String title){
-        JDialog tablePanes = new JDialog(frame, title);
-        tablePanes.setLayout(new BorderLayout());
-        
-        tablePanes.add(new JScrollPane(new JTable(new DefaultTableModel(data, columns))), BorderLayout.CENTER);
-
-        tablePanes.setSize(500, 400);
-        tablePanes.setLocationRelativeTo(frame);
-        tablePanes.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        tablePanes.setVisible(true);
-    }
-
     /**
      * Alert the user with a dialog pop-up.
      * 
@@ -469,23 +436,5 @@ public class TopView {
         popup.setVisible(true);
     }
 
-    /**
-     * Alert the user of an error occurring.
-     * 
-     * @param title
-     * @param message
-     */
-    public void errorPopUp(String title, String message) {
-        JDialog popup = new JDialog(frame, title, true);
-        popup.setSize(400, 160);
-        popup.setLayout(new BorderLayout());
-        popup.setLocationRelativeTo(frame);
 
-        JLabel messageLabel = WidgetFactory.createJLabel(message);
-        messageLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
-        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        popup.add(messageLabel, BorderLayout.CENTER);
-
-        popup.setVisible(true);
-    }
 }

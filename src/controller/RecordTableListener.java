@@ -4,19 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 
 import src.model.AnimeSystem;
 import src.model.Records;
-import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
 /**
- * Listener for the RecordTable widget.
+ * ? Could be an abstract class?
  */
 public class RecordTableListener extends SearchBoxListener implements ActionListener {
     Records associatedRecord;
+    String[][] data;
+    String[] columns;
 
     public RecordTableListener(AnimeSystem animeSystem, TopView topView, Records associatedRecord) {
         super(animeSystem, topView);
@@ -25,18 +25,16 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
     }
 
     public void setData() {
-        String[] columns;
-        String[][] data;
         if (associatedRecord != Records.ANIME) {
-            columns = animeSystem.getRecordColNames(associatedRecord.name);
-            data = animeSystem.selectColumns(columns, associatedRecord.name);
+            this.columns = animeSystem.getRecordColNames(associatedRecord.name);
+            this.data = animeSystem.selectColumns(this.columns, associatedRecord.name);
         } else {
             // Anime record table is special since we also want the studio names.
-            columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
-            data = animeSystem.selectColumns(columns,
+            this.columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
+            this.data = animeSystem.selectColumns(this.columns,
                     "animes JOIN studios ON animes.studio_id = studios.studio_id");
         }
-        topView.initializeRecordTableData(associatedRecord.name, data, columns);
+        topView.initializeRecordTableData(associatedRecord.name, this.data, this.columns);
     }
 
     /**
@@ -45,37 +43,20 @@ public class RecordTableListener extends SearchBoxListener implements ActionList
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        HashMap<String, String> rowData = topView.getSelectedRowData(associatedRecord);
-        topView.setFieldsFromData(rowData);
-        this.attemptRefreshLastWatched();
-        topView.setRecordTableVisible(associatedRecord.name, false);
-    }
+        int index = topView.getSelected(associatedRecord.name);
+        HashMap<String, String> rowData = new HashMap<>();
 
-    /**
-     * Attempt to refresh any "last watched episode" labels, if any.
-     */
-    private void attemptRefreshLastWatched() {
-        Subtab subtab = topView.getCurrentSubtab();
-        try {
-            String userId = subtab.getComponentText("userId");
-            String animeId = subtab.getComponentText("animeId");
-            try {
-                Integer.parseInt(userId);
-                Integer.parseInt(animeId);
-            } catch (NumberFormatException e) {
-                // Subtab does not have either userId or animeId.
-                return;
-            }
-            subtab.setComponentText("episode",
-                    animeSystem.getProcedureSingleResult(
-                            String.format(
-                                    "GetLastWatchedQ(%s, %s)",
-                                    userId, animeId)));
-        } catch (Exception e) {
-            // Subtab does not have a last episode watched label.
-            return;
+        for (int i = 0; i < this.data[index].length; i++) {
+            rowData.put(this.columns[i], this.data[index][i]);
+            System.out.printf("%d\t%s : %s\n", i, this.columns[i], this.data[index][i]);
         }
+        topView.setFieldsFromData(rowData);
+        topView.setLastRowData(rowData);
+        topView.setRecordTableVisible(associatedRecord.name, false);
 
+        // ?
+        // TODO: topView.refresh();
+        // ?
     }
 
     /**

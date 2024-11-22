@@ -5,7 +5,7 @@
         },
         {
             "name": "username",
-            "value": "",
+            "value": "No user selected",
             "db_link": "users.user_name"
         },
         {
@@ -25,7 +25,7 @@
         },
         {
             "name": "anime",
-            "value": "",
+            "value": "No anime selected",
             "db_link": "animes.title"
         },
         {
@@ -64,6 +64,11 @@
         {
             "name": "episode",
             "value": "0"
+        },
+        {
+            "type": "Button",
+            "value": "Refresh",
+            "name": "refreshLastWatched"
         }
     ],
     [

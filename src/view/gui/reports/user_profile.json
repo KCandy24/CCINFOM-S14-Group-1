@@ -5,12 +5,12 @@
         },
         {
             "name": "username",
-            "value": "No user selected",
+            "value": "",
             "db_link": "users.user_name"
         },
         {
             "name": "userId",
-            "value": "",
+            "value": "No user selected",
             "db_link": "users.user_id"
         },
         {
