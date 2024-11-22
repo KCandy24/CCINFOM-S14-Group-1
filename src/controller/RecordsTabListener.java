@@ -485,6 +485,7 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate(
                     "INSERT INTO `studios` (`studio_name`) VALUES (?)",
                     studio_name);
+            this.refreshRecordTableData(Records.STUDIO);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
@@ -496,14 +497,25 @@ public class RecordsTabListener implements ActionListener {
             animeSystem.safeUpdate(
                     "UPDATE `studios` SET `studio_name` = ? WHERE `studio_id` = ?",
                     studio_name, studioID);
+            this.refreshRecordTableData(Records.STUDIO);
         } catch (SQLException exception) {
             topView.dialogPopUp("SQLException", exception.getMessage());
         }
     }
 
     public void deleteStudio() {
-        // String checkExist =  
-        // returnValue.get("checkExistingQuery").equals("0")
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
+        String studio_id = subtab.getComponentText("studioId");
+
+        try {
+            animeSystem.safeUpdate("DELETE FROM `studios` WHERE `studio_id` = ?", studio_id);
+            this.refreshRecordTableData(Records.STAFF);
+        } catch (SQLIntegrityConstraintViolationException Exception) {
+            topView.errorPopUp("Studio", "Could not delete due to existing animes.");
+        } catch (SQLException exception) {
+            topView.errorPopUp("SQLException", exception.getMessage());
+        }
+
     }
 
 }
