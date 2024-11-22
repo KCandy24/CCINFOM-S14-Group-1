@@ -371,7 +371,7 @@ public class RecordsTabListener implements ActionListener {
         else {
             try {
                 animeSystem.safeUpdate(
-                        "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?)",
+                        "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?, ?)",
                         firstName, lastName, occupation, birthday);
                 this.setTopViewWithNewest(Records.STAFF);
             } catch (MysqlDataTruncation exception) {
