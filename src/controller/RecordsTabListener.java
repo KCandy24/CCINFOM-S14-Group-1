@@ -75,6 +75,9 @@ public class RecordsTabListener implements ActionListener {
             case "deleteStaff":
                 deleteStaff();
                 break;
+            case "staffHistory":
+                checkStaffHistory();
+                break;
 
             // Studio subtab
             case "searchStudio":
@@ -419,6 +422,36 @@ public class RecordsTabListener implements ActionListener {
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(false);
+    }
+
+    public void checkStaffHistory() {
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB);
+        String[][] data;
+        String staffId = subtab.getComponentText("staffId");
+        String firstName = subtab.getComponentText("firstName");
+        String lastName = subtab.getComponentText("lastName");
+
+        String queryA = """
+                SELECT CONCAT(s.first_name, " ", s.last_name) AS staff_name,
+                a.title, c.episode, c.position, c.department
+                FROM credits c
+                JOIN staff s ON s.staff_id = c.staff_id
+                JOIN animes a ON c.anime_id = a.anime_id
+                WHERE s.staff_id = """;
+        String queryB = """
+                
+                ORDER BY a.anime_id;
+                """;
+
+        try {
+            data = animeSystem.rawQuery(queryA + staffId + queryB);
+            topView.displayTable(data,
+                new String[]{"Staff Name", "Anime Title", "Episode", "Position", "Department"},
+                new String(firstName + " " + lastName + "'s Work History"));
+        } catch (Exception exception) {
+            topView.errorPopUp("Staff", "Cannot fetch staff history");
+            System.out.println(exception.getMessage());
+        }
     }
 
     // Studio records management

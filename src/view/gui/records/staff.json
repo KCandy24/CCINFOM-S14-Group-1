@@ -70,5 +70,12 @@
             "name": "deleteStaff",
             "value": "Delete"
         }
+    ],
+    [
+        {
+            "type": "Button",
+            "name": "staffHistory",
+            "value": "Check Work History"
+        }
     ]
 ]

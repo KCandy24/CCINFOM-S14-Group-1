@@ -59,7 +59,7 @@ public class Controller {
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB,
                 recordsTabListener,
-                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
+                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff", "staffHistory");
 
         transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
         topView.setActionListeners(

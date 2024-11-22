@@ -436,6 +436,19 @@ public class TopView {
         profilePopup.setVisible(true);
         
     }
+
+    public void displayTable(String[][] data, String[] columns, String title){
+        JDialog tablePanes = new JDialog(frame, title);
+        tablePanes.setLayout(new BorderLayout());
+        
+        tablePanes.add(new JScrollPane(new JTable(new DefaultTableModel(data, columns))), BorderLayout.CENTER);
+
+        tablePanes.setSize(500, 400);
+        tablePanes.setLocationRelativeTo(frame);
+        tablePanes.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        tablePanes.setVisible(true);
+    }
+
     /**
      * Alert the user with a dialog pop-up.
      * 
