@@ -467,6 +467,27 @@ public class TransactionsTabListener implements ActionListener {
             return;
         }
 
+        // "Follow"-specific validation
+        boolean errorEntryDoesntExists;
+        try {
+            String checkExistingQuery = """
+                    SELECT EXISTS(
+                        SELECT * FROM follows
+                        WHERE follower_id = ? AND followed_id = ?
+                    ) AS checkExistingQuery
+                    """;
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, followerId, followedId);
+            errorEntryDoesntExists = data.get("checkExistingQuery").equals("0");
+        } catch (Exception e) {
+            System.out.println("error occurred: " + e);
+            errorEntryDoesntExists = false;
+        }
+
+        if (errorEntryDoesntExists) {
+            topView.errorPopUp("Follow User", "Follow entry doesn't exist.");
+            return;
+        }
+
         try {
             String query = """
                     DELETE FROM follows
