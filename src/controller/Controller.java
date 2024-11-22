@@ -55,7 +55,7 @@ public class Controller {
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB,
                 recordsTabListener,
-                "searchStudio", "saveStudio", "deleteStudio", "searchAllAnime");
+                "searchStudio", "saveStudio", "deleteStudio", "searchAllAnime", "addNewStudio");
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB,
                 recordsTabListener,
@@ -65,11 +65,11 @@ public class Controller {
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
                 transactionsTabListener,
-                "searchUser", "searchAnime", "watchEpisode", "refreshLastWatched");
+                "searchUser", "searchAnime", "watchEpisode");
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.RATE_ANIME_TRANSACTION_SUBTAB,
                 transactionsTabListener,
-                "searchUser", "searchAnime", "saveRating", "loadRating", "refreshLastWatched");
+                "searchUser", "searchAnime", "saveRating", "loadRating");
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.EDIT_CREDITS_TRANSACTION_SUBTAB,
                 transactionsTabListener,

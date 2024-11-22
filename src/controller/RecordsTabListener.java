@@ -476,8 +476,10 @@ public class RecordsTabListener implements ActionListener {
             Integer.parseInt(studioId);
             // User ID field was parsed successfully; this must be an existing record
             updateStudio(studioId, studio_name);
+            topView.dialogPopUp("Studio", "Studio name successfully changed to "+studio_name+".");
         } catch (NumberFormatException exception) {
             createStudio(studio_name);
+            topView.dialogPopUp("Studio", "Studio "+studio_name+" successfully created.");
         }
     }
 
@@ -507,10 +509,12 @@ public class RecordsTabListener implements ActionListener {
     public void deleteStudio() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
         String studio_id = subtab.getComponentText("studioId");
+        String studio_name = subtab.getComponentText("studioName");
 
         try {
             animeSystem.safeUpdate("DELETE FROM `studios` WHERE `studio_id` = ?", studio_id);
-            this.refreshRecordTableData(Records.STAFF);
+            this.refreshRecordTableData(Records.STUDIO);
+            topView.dialogPopUp("Studio", "Deletion of Studio "+studio_name+" successful.");
         } catch (SQLIntegrityConstraintViolationException Exception) {
             topView.errorPopUp("Studio", "Could not delete due to existing animes.");
         } catch (SQLException exception) {

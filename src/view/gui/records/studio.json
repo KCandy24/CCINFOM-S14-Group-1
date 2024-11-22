@@ -12,6 +12,11 @@
             "type": "Button",
             "value": "Search",
             "name": "searchStudio"
+        },
+        {
+            "type": "Button",
+            "value": "Add New",
+            "name": "addNewStudio"
         }
     ],
     [

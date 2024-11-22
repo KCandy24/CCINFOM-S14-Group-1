@@ -47,6 +47,9 @@ public class TransactionsTabListener implements ActionListener {
                 this.watchEpisode(user_id, anime_id);
                 this.refreshLastWatched(user_id, anime_id);
                 break;
+            case "refreshLastWatched":
+                this.refreshLastWatched(user_id, anime_id);
+                break;
 
             // Rate anime
             case "saveRating":
