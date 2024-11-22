@@ -18,6 +18,5 @@ public class CurrentSubtabListener implements ChangeListener {
         int index = ((SingleSelectionModel) e.getSource()).getSelectedIndex();
         topView.setCurrentSubtabName(index);
         System.out.println(topView.getCurrentTabName() + "/" + topView.getCurrentSubtabName());
-        topView.resetFields(topView.getCurrentTabName(), topView.getCurrentSubtabName());
     }
 }

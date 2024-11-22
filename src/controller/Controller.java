@@ -59,17 +59,17 @@ public class Controller {
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB,
                 recordsTabListener,
-                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff", "staffHistory");
+                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
 
         transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.WATCH_EPISODE_TRANSACTION_SUBTAB,
                 transactionsTabListener,
-                "searchUser", "searchAnime", "watchEpisode");
+                "searchUser", "searchAnime", "watchEpisode", "refreshLastWatched");
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.RATE_ANIME_TRANSACTION_SUBTAB,
                 transactionsTabListener,
-                "searchUser", "searchAnime", "saveRating", "loadRating");
+                "searchUser", "searchAnime", "saveRating", "loadRating", "refreshLastWatched");
         topView.setActionListeners(
                 TopView.TRANSACTIONS_TAB, TopView.EDIT_CREDITS_TRANSACTION_SUBTAB,
                 transactionsTabListener,

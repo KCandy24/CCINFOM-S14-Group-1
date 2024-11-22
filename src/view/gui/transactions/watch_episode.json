@@ -25,12 +25,12 @@
         },
         {
             "name": "anime",
-            "value": "",
+            "value": "No anime selected",
             "db_link": "animes.title"
         },
         {
             "name": "animeId",
-            "value": "No anime selected",
+            "value": "",
             "db_link": "animes.anime_id"
         },
         {
@@ -46,6 +46,14 @@
         {
             "value": "0",
             "name": "episode"
+        },
+        {
+            "value": ""
+        },
+        {
+            "type": "Button",
+            "value": "Refresh",
+            "name": "refreshLastWatched"
         }
     ],
     [
