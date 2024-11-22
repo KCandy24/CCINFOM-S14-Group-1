@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import src.model.AnimeSystem;
+import src.model.Genre;
 import src.model.Records;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
@@ -92,6 +93,9 @@ public class RecordsTabListener extends TabListener {
 
             case "deleteStudio":
                 deleteStudio();
+                break;
+            case "searchAllAnime":
+                searchAllAnime();
                 break;
             default:
                 System.err.println("No action associated for " + name);
@@ -543,12 +547,26 @@ public class RecordsTabListener extends TabListener {
             animeSystem.safeUpdate("DELETE FROM `studios` WHERE `studio_id` = ?", studio_id);
             this.refreshRecordTableData(Records.STUDIO);
             topView.dialogPopUp("Studio", "Deletion of Studio " + studio_name + " successful.");
+            topView.resetFields(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
         } catch (SQLIntegrityConstraintViolationException Exception) {
             topView.errorPopUp("Studio", "Could not delete due to existing animes.");
         } catch (SQLException exception) {
             topView.errorPopUp("SQLException", exception.getMessage());
         }
-
     }
 
+    public void searchAllAnime() {
+        Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
+        String studio_id = subtab.getComponentText("studioId");
+        String studio_name = subtab.getComponentText("studioName");
+
+        String[][] data = animeSystem.rawQuery(
+                "SELECT title, genre, air_date, num_of_episodes FROM animes WHERE studio_id = " + studio_id);
+        for (String[] strings : data) {
+            strings[1] = Genre.findName(strings[1]);
+        }
+        topView.displayTable(data, new String[] {
+                "Anime Title", "Genre", "Air Date", "Episode Count"
+        }, studio_name);
+    }
 }
