@@ -134,7 +134,7 @@ public class TransactionsTabListener implements ActionListener {
 
     public void watchEpisode(int user_id, int anime_id) {
         if (user_id == 0 || anime_id == 0) {
-            topView.dialogPopUp("Watch Episode", "User ID and Anime ID cannot be empty");
+            topView.errorPopUp("Watch Episode", "User ID and Anime ID cannot be empty");
             return;
         }
 
@@ -143,7 +143,7 @@ public class TransactionsTabListener implements ActionListener {
         int maxEpisodes = Integer
                 .parseInt(animeSystem.singleQuery("SELECT num_of_episodes FROM animes WHERE anime_id = " + anime_id));
         if (lastWatched == maxEpisodes) {
-            topView.dialogPopUp("Watch Episode", "User has watched all episodes of this anime.");
+            topView.errorPopUp("Watch Episode", "User has watched all episodes of this anime.");
             return;
         }
 
@@ -151,7 +151,7 @@ public class TransactionsTabListener implements ActionListener {
             animeSystem.callProcedure("WatchAnime(?, ?)", Integer.toString(user_id), Integer.toString(anime_id));
             topView.dialogPopUp("Watch Episode", "Successfully watched anime episode " + (lastWatched + 1));
         } catch (Exception e) {
-            topView.dialogPopUp("Watch Episode", "An error occured, cannot watch episode.");
+            topView.errorPopUp("Watch Episode", "An error occured, cannot watch episode.");
         }
     }
 
@@ -246,7 +246,7 @@ public class TransactionsTabListener implements ActionListener {
                         rating, comment, last_episode_watched, user_id, anime_id);
                 topView.dialogPopUp("Rate An Anime", "Successfully updated rating.");
             } catch (SQLException e) {
-                topView.dialogPopUp("Rate An Anime", "Something went wrong.");
+                topView.errorPopUp("Rate An Anime", "Something went wrong.");
                 System.out.println(e.getStackTrace());
             }
         } else {
@@ -255,7 +255,7 @@ public class TransactionsTabListener implements ActionListener {
                         user_id, anime_id, rating, comment, last_episode_watched);
                 topView.dialogPopUp("Rate An Anime", "Successfully saved rating.");
             } catch (SQLException e) {
-                topView.dialogPopUp("Rate An Anime", "Something went wrong.");
+                topView.errorPopUp("Rate An Anime", "Something went wrong.");
                 System.out.println(e.getStackTrace());
             }
         }
@@ -303,10 +303,10 @@ public class TransactionsTabListener implements ActionListener {
                 topView.dialogPopUp("Rate An Anime", "Successfully loaded the rating.");
 
             } catch (SQLException e) {
-                topView.dialogPopUp("SQL Exception", e.getStackTrace().toString());
+                topView.errorPopUp("SQL Exception", e.getStackTrace().toString());
             }
         } else {
-            topView.dialogPopUp("Rate An Anime", "Rating entry does not exist.");
+            topView.errorPopUp("Rate An Anime", "Rating entry does not exist.");
         }
 
     }
@@ -325,7 +325,7 @@ public class TransactionsTabListener implements ActionListener {
             topView.dialogPopUp("Rate An Anime", "Successfully deleted the rating.");
         } catch (SQLException e) {
             System.out.println(e);
-            topView.dialogPopUp("Rate An Anime", "Rating does not exist.");
+            topView.errorPopUp("Rate An Anime", "Rating does not exist.");
         }
     }
 
@@ -391,7 +391,7 @@ public class TransactionsTabListener implements ActionListener {
 
         // Validate if the follower and the followed are the same person
         if (followerId.equals(followedId)) {
-            topView.dialogPopUp("Follow User", "Follower and followed must not be the same user.");
+            topView.errorPopUp("Follow User", "Follower and followed must not be the same user.");
             return false;
         }
         return true;
@@ -426,7 +426,7 @@ public class TransactionsTabListener implements ActionListener {
         }
 
         if (errorEntryExists) {
-            topView.dialogPopUp("Follow User", "Follow entry already exists.");
+            topView.errorPopUp("Follow User", "Follow entry already exists.");
             return;
         }
 
@@ -439,7 +439,7 @@ public class TransactionsTabListener implements ActionListener {
             animeSystem.safeUpdate(query, followerId, followedId);
             topView.dialogPopUp("Follow User", "Successfully added follow entry.");
         } catch (SQLException e) {
-            topView.dialogPopUp("Follow User", "Something went wrong.");
+            topView.errorPopUp("Follow User", "Something went wrong.");
             System.out.println(e);
         }
     }
@@ -465,7 +465,7 @@ public class TransactionsTabListener implements ActionListener {
             topView.dialogPopUp("Follow User", "Successfully deleted follow entry.");
         } catch (SQLException e) {
             System.out.println(e);
-            topView.dialogPopUp("Follow User", "Follow entry doesn't exist.");
+            topView.errorPopUp("Follow User", "Follow entry doesn't exist.");
         }
     }
 }
