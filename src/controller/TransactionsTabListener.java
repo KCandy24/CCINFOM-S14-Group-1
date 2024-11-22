@@ -343,7 +343,11 @@ public class TransactionsTabListener implements ActionListener {
         // ? Need a procedure, maybe
     }
 
-    // Follow user
+    // Follow
+
+    /**
+     * Prompt the user to select the "follower" user.
+     */
     private void searchFollower() {
         Subtab subtab = this.topView.getSubtab(TopView.TRANSACTIONS_TAB,
                 TopView.FOLLOW_USER_TRANSACTION_SUBTAB);
@@ -352,6 +356,9 @@ public class TransactionsTabListener implements ActionListener {
         this.searchUser();
     }
 
+    /**
+     * Prompt the user to select the "followed" user.
+     */
     private void searchFollowed() {
         Subtab subtab = this.topView.getSubtab(TopView.TRANSACTIONS_TAB,
                 TopView.FOLLOW_USER_TRANSACTION_SUBTAB);
@@ -360,63 +367,101 @@ public class TransactionsTabListener implements ActionListener {
         this.searchUser();
     }
 
-    // TODO: Add error message for if no user is selected (for follows
+    /**
+     * Perform validation on the followerId and followedId fields.
+     * 
+     * @param followerId
+     * @param followedId
+     * @return false if either id is not valid or if both ids are the same, else
+     *         true
+     */
+    public boolean validateFollowIds(String followerId, String followedId) {
+        try {
+            Integer.parseInt(followerId);
+        } catch (NumberFormatException e) {
+            topView.errorPopUp("Follower not selected", "Please select the follower user.");
+            return false;
+        }
+        try {
+            Integer.parseInt(followedId);
+        } catch (NumberFormatException e) {
+            topView.errorPopUp("Followed user not selected", "Please select the followed user.");
+            return false;
+        }
+
+        // Validate if the follower and the followed are the same person
+        if (followerId.equals(followedId)) {
+            topView.dialogPopUp("Follow User", "Follower and followed must not be the same user.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Attempt to let a user follow another.
+     */
     public void follow() {
         Subtab subtab = topView.getCurrentSubtab();
-        String user1_id = subtab.getComponentText("userId");
-        String user2_id = subtab.getComponentText("user2Id");
-        String query = """
-                INSERT INTO follows
-                (follower_id, followed_id, following_since_date)
-                VALUES (?, ?, NOW())""";
-        String checkExistingQuery = """
-                SELECT EXISTS(SELECT *
-                FROM follows
-                WHERE follower_id = ? AND followed_id = ?)
-                AS checkExistingQuery
-                """;
+        String followerId = subtab.getComponentText("userId");
+        String followedId = subtab.getComponentText("user2Id");
 
-        boolean errorSameUsers = user1_id.equals(user2_id);
+        if (validateFollowIds(followerId, followedId) == false) {
+            return;
+        }
+
+        // "Follow"-specific validation
         boolean errorEntryExists;
-
         try {
-            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, user1_id, user2_id);
+            String checkExistingQuery = """
+                    SELECT EXISTS(
+                        SELECT * FROM follows
+                        WHERE follower_id = ? AND followed_id = ?
+                    ) AS checkExistingQuery
+                    """;
+            HashMap<String, String> data = animeSystem.safeSingleQuery(checkExistingQuery, followerId, followedId);
             errorEntryExists = data.get("checkExistingQuery").equals("1");
         } catch (Exception e) {
             System.out.println("error occurred: " + e);
             errorEntryExists = false;
         }
 
-        System.out.println("errorSameUsers " + errorSameUsers);
-        System.out.println("errorEntryExists " + errorEntryExists);
-
-        if (errorSameUsers)
-            topView.dialogPopUp("Follow User", "Follower and followed must not be the same user.");
-        else if (errorEntryExists)
+        if (errorEntryExists) {
             topView.dialogPopUp("Follow User", "Follow entry already exists.");
-        else {
-            // Save to model
-            try {
-                animeSystem.safeUpdate(query, user1_id, user2_id);
-                topView.dialogPopUp("Follow User", "Successfully added follow entry.");
-            } catch (SQLException e) {
-                topView.dialogPopUp("Follow User", "Something went wrong.");
-                System.out.println(e);
-            }
+            return;
+        }
+
+        // Passed validation; save to model
+        String query = """
+                INSERT INTO follows
+                (follower_id, followed_id, following_since_date)
+                VALUES (?, ?, NOW())""";
+        try {
+            animeSystem.safeUpdate(query, followerId, followedId);
+            topView.dialogPopUp("Follow User", "Successfully added follow entry.");
+        } catch (SQLException e) {
+            topView.dialogPopUp("Follow User", "Something went wrong.");
+            System.out.println(e);
         }
     }
 
+    /**
+     * Attempt to let a user unfollow another.
+     */
     public void unfollow() {
         Subtab subtab = topView.getCurrentSubtab();
-        String user1_id = subtab.getComponentText("userId");
-        String user2_id = subtab.getComponentText("user2Id");
-        String query = """
-                DELETE FROM follows
-                WHERE follower_id = ?
-                AND followed_id = ?""";
+        String followerId = subtab.getComponentText("userId");
+        String followedId = subtab.getComponentText("user2Id");
+
+        if (validateFollowIds(followerId, followedId) == false) {
+            return;
+        }
 
         try {
-            animeSystem.safeUpdate(query, user1_id, user2_id);
+            String query = """
+                    DELETE FROM follows
+                    WHERE follower_id = ?
+                    AND followed_id = ?""";
+            animeSystem.safeUpdate(query, followerId, followedId);
             topView.dialogPopUp("Follow User", "Successfully deleted follow entry.");
         } catch (SQLException e) {
             System.out.println(e);
