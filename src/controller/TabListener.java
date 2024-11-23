@@ -13,10 +13,27 @@ import src.view.gui.TopView;
 public abstract class TabListener implements ActionListener {
     AnimeSystem animeSystem;
     TopView topView;
+    public static final String INVALID_DATE_STRING = "Please input a valid date in the YYYY-MM-DD format.";
 
     public TabListener(AnimeSystem animeSystem, TopView topView) {
         this.animeSystem = animeSystem;
         this.topView = topView;
+    }
+
+    public void searchAnime() {
+        topView.selectFromTable(Records.ANIME);
+    }
+
+    public void searchUser() {
+        topView.selectFromTable(Records.USER);
+    }
+
+    public void searchStaff() {
+        topView.selectFromTable(Records.STAFF);
+    }
+
+    public void searchStudio() {
+        topView.selectFromTable(Records.STUDIO);
     }
 
     /**
@@ -37,19 +54,57 @@ public abstract class TabListener implements ActionListener {
         return true;
     }
 
-    public void searchAnime() {
-        topView.selectFromTable(Records.ANIME);
+    /**
+     * Validate that a text is not empty.
+     * 
+     * @param text   text to verify
+     * @param entity the "entity name" used to build the error pop-up
+     * @return true if text is not empty, false otherwise
+     */
+    public boolean validateNotEmpty(String text, String entity) {
+        if (text.isEmpty()) {
+            topView.errorPopUp(
+                    "Empty " + entity,
+                    "Error: " + entity + " must not be empty.");
+            return false;
+        }
+        return true;
     }
 
-    public void searchUser() {
-        topView.selectFromTable(Records.USER);
+    /**
+     * Validate that a text is not longer than a certain limit.
+     * 
+     * @param text   text to verify
+     * @param entity the "entity name" used to build the error pop-up
+     * @return true if text is not empty, false otherwise
+     */
+    public boolean validateLength(String text, String entity, int limit) {
+        if (text.length() > limit) {
+            topView.errorPopUp(
+                    "Too long: " + entity,
+                    "Error: " + entity + " too long. Please limit to " + limit + "characters.");
+            return false;
+        }
+        return true;
     }
 
-    public void searchStaff() {
-        topView.selectFromTable(Records.STAFF);
+    /**
+     * Check if a String is a valid date in the YYYY-MM-DD format.
+     * 
+     * @param date
+     * @return true if a valid date string is passed; false otherwise
+     */
+    public boolean validateDate(String date) {
+        String[] tokens = date.split("-");
+        for (String token : tokens) {
+            try {
+                Integer.parseInt(token);
+            } catch (NumberFormatException e) {
+                topView.errorPopUp("Date error", INVALID_DATE_STRING);
+                return false;
+            }
+        }
+        return true;
     }
 
-    public void searchStudio() {
-        topView.selectFromTable(Records.STUDIO);
-    }
 }

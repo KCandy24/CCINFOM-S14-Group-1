@@ -2,8 +2,8 @@ package src.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.HashMap;
-
 
 import src.model.AnimeSystem;
 import src.model.Records;
@@ -28,16 +28,21 @@ public class RecordTableListener implements ActionListener {
     public void setData() {
         String[] columns;
         String[][] data;
-        if (associatedRecord != Records.ANIME) {
-            columns = animeSystem.getRecordColNames(associatedRecord.name);
-            data = animeSystem.selectColumns(columns, associatedRecord.name);
-        } else {
-            // Anime record table is special since we also want the studio names.
-            columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
-            data = animeSystem.selectColumns(columns,
-                    "animes JOIN studios ON animes.studio_id = studios.studio_id");
+
+        try {
+            if (associatedRecord != Records.ANIME) {
+                columns = animeSystem.getRecordColNames(associatedRecord.name);
+                data = animeSystem.selectColumns(columns, associatedRecord.name);
+            } else {
+                // Anime record table is special since we also want the studio names.
+                columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
+                data = animeSystem.selectColumns(columns,
+                        "animes JOIN studios ON animes.studio_id = studios.studio_id");
+            }
+            topView.initializeRecordTableData(associatedRecord.name, data, columns);
+        } catch (SQLException e) {
+            topView.errorPopUp("RecordTable setData error", e.getMessage());
         }
-        topView.initializeRecordTableData(associatedRecord.name, data, columns);
     }
 
     /**

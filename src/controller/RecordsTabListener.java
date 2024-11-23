@@ -106,18 +106,31 @@ public class RecordsTabListener extends TabListener {
     // General
 
     public void refreshRecordTableData(Records record) {
+        String recordNameColSelect = record.name;
         String recordName = record.name;
         String[] columns;
         String[][] data;
+
         if (record.name == Records.ANIME.name) {
+            recordName = "animes JOIN studios ON animes.studio_id = studios.studio_id";
             columns = animeSystem.getRecordColNames(Records.ANIME.name, Records.STUDIO.name);
-            data = animeSystem.selectColumns(columns, "animes JOIN studios ON animes.studio_id = studios.studio_id");
             // ^ Anime record is special since in the GUI we also need studio names.
+            // ! Next time, use studio name as a primary key instead of a surrogate key, to
+            // ! avoid these workarounds
         } else {
-            columns = animeSystem.getRecordColNames(recordName);
-            data = animeSystem.selectColumns(columns, recordName);
+            columns = animeSystem.getRecordColNames(recordNameColSelect);
         }
-        topView.setRecordTableData(record.name, data, columns);
+
+        try {
+            data = animeSystem.selectColumns(columns, recordName);
+            topView.setRecordTableData(record.name, data, columns);
+        } catch (SQLException e) {
+            topView.errorPopUp(
+                    "Record column retrieval error",
+                    "Could not determine record columns for record <pre>"
+                            + recordName
+                            + "</pre>");
+        }
     }
 
     public void setTopViewWithNewest(Records record) {
@@ -144,43 +157,62 @@ public class RecordsTabListener extends TabListener {
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(false);
     }
 
+    /**
+     * Attempt to save an anime. Validation is performed to the best of its ability
+     * before actually sending it to the database. Afterwards, either inserts or
+     * updates based on the validity of animeId.
+     */
     public void saveAnime() {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB);
         String animeId = subtab.getComponentText("animeId");
         String studioId = subtab.getComponentText("studioId");
-        String animetitle = subtab.getComponentText("animeTitle");
+        String animeTitle = subtab.getComponentText("animeTitle");
         String genre = subtab.getComponentText("genre", "genre");
         String airDate = subtab.getComponentText("airDate");
         String episodes = subtab.getComponentText("episodes");
 
+        if (!validateId(studioId, "No studio selected", "Please select a studio")) {
+            return;
+        }
+
+        if (!validateDate(airDate)) {
+            return;
+        }
+
+        if (!validateNotEmpty(animeTitle, "anime title")) {
+            return;
+        }
+
+        if (!validateLength(animeTitle, "anime title", 64)) {
+            return;
+        }
+
         try {
             Integer.parseInt(animeId);
-            updateAnime(animeId, studioId, animetitle, genre, airDate, episodes);
-
+            // Valid animeId, so we're updating an existing anime
+            updateAnime(animeId, studioId, animeTitle, genre, airDate, episodes);
         } catch (NumberFormatException exception) {
-            createAnime(studioId, animetitle, genre, episodes);
-
+            // Invalid animeId, so we're creating a new one
+            createAnime(studioId, animeTitle, genre, episodes);
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.ANIME_RECORD_SUBTAB, "deleteAnime").setEnabled(true);
     }
 
     public void createAnime(String studioId, String animeTitle, String genre, String episodes) {
-        if (animeTitle.equals(""))
-            topView.errorPopUp("Anime", "Title must not be empty");
-        else {
-            try {
-                String query = """
-                        INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`) VALUES
-                        (?, ?, ?, NOW(), ?)
-                        """;
-                animeSystem.safeUpdate(query, studioId, animeTitle, genre, episodes);
-                this.setTopViewWithNewest(Records.ANIME);
-            } catch (MysqlDataTruncation exception) {
-                topView.errorPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
-            } catch (SQLException exception) {
-                topView.errorPopUp("Anime", "Invalid Number of Episodes");
-            }
+        try {
+            String query = """
+                    INSERT INTO `animes` (`studio_id`, `title`, `genre`, `air_date`, `num_of_episodes`)
+                    VALUES (?, ?, ?, NOW(), ?)
+                    """;
+            animeSystem.safeUpdate(query, studioId, animeTitle, genre, episodes);
+            this.topView.dialogPopUp("Successfully inserted new anime",
+                    String.format("Anime %s has been successfully inserted into the database.", animeTitle));
+            this.setTopViewWithNewest(Records.ANIME);
+        } catch (MysqlDataTruncation exception) {
+            topView.errorPopUp("Invalid date error", "Invalid date.");
+        } catch (SQLException exception) {
+            topView.errorPopUp("Invalid episode count", "Invalid number of episodes.");
         }
     }
 
@@ -197,33 +229,36 @@ public class RecordsTabListener extends TabListener {
             HashMap<String, String> data = animeSystem.safeSingleQuery(checkCurrentEpisodeCount, animeId);
             currentEpisodeCount = Integer.parseInt(data.get("num_of_episodes"));
         } catch (SQLIntegrityConstraintViolationException exception) {
-            topView.errorPopUp("Anime", "Anime Title must be unique");
+            topView.errorPopUp("Anime", "Anime title must be unique");
         } catch (Exception e) {
             System.out.println("error occurred: " + e);
         }
 
-        if (animeTitle.equals(""))
-            topView.errorPopUp("Anime", "Title must not be empty");
-        else {
-            try {
-                String query = """
-                        UPDATE  `animes`
-                        SET     `studio_id` = ?,
-                        `title` = ?,
-                        `genre` = ?,
-                        `air_date` = ?,
-                        `num_of_episodes` = ?
-                        WHERE `anime_id` = ?
-                        """;
-                if (currentEpisodeCount > Integer.parseInt(episodes))
-                    throw new SQLException();
-                animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
-                this.refreshRecordTableData(Records.ANIME);
-            } catch (MysqlDataTruncation exception) {
-                topView.errorPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
-            } catch (SQLException exception) {
-                topView.errorPopUp("Anime", "Invalid Number of Episodes");
-            }
+        try {
+            String query = """
+                    UPDATE  `animes`
+                    SET     `studio_id` = ?,
+                    `title` = ?,
+                    `genre` = ?,
+                    `air_date` = ?,
+                    `num_of_episodes` = ?
+                    WHERE `anime_id` = ?
+                    """;
+            if (currentEpisodeCount > Integer.parseInt(episodes))
+                throw new SQLException();
+            animeSystem.safeUpdate(query, studioId, animeTitle, genre, airDate, episodes, animeId);
+
+            this.topView.dialogPopUp("Successfully updated anime",
+                    String.format(
+                            "Anime %s (ID %s) has been successfully updated in the database.",
+                            animeTitle,
+                            animeId));
+
+            this.refreshRecordTableData(Records.ANIME);
+        } catch (MysqlDataTruncation exception) {
+            topView.errorPopUp("Anime", (animeTitle.length() > 64) ? "Title is too long" : "Invalid Date");
+        } catch (SQLException exception) {
+            topView.errorPopUp("Anime", "Invalid Number of Episodes");
         }
     }
 
@@ -288,20 +323,24 @@ public class RecordsTabListener extends TabListener {
     }
 
     public void createUser(String username, String region, String joinDate) {
-        if (username.equals(""))
+        if (username.equals("")) {
             topView.errorPopUp("User", "Username cannot be empty");
-        else {
-            try {
-                animeSystem.safeUpdate(
-                        "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
-                        username, region, joinDate);
-                this.setTopViewWithNewest(Records.USER);
-            } catch (SQLIntegrityConstraintViolationException exception) {
-                topView.errorPopUp("User", "Username must be unique");
-            } catch (SQLException exception) {
-                System.out.println("Exception class = " + exception.getClass());
-                topView.errorPopUp("SQLException", exception.getMessage());
-            }
+            return;
+        }
+        if (!validateDate(joinDate)) {
+            return;
+        }
+
+        try {
+            animeSystem.safeUpdate(
+                    "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
+                    username, region, joinDate);
+            this.setTopViewWithNewest(Records.USER);
+        } catch (SQLIntegrityConstraintViolationException exception) {
+            topView.errorPopUp("User", "Username must be unique");
+        } catch (SQLException exception) {
+            System.out.println("Exception class = " + exception.getClass());
+            topView.errorPopUp("SQLException", exception.getMessage());
         }
     }
 
@@ -356,16 +395,22 @@ public class RecordsTabListener extends TabListener {
                 AND views.user_id = %s
                 ORDER BY timestamp_watched DESC, animes.title, views.watched_episode
                 """, userId);
-        String[][] data = animeSystem.rawQuery(query);
-        for (String[] row : data) {
-            for (String s : row) {
-                System.out.print(s + '\t');
+        try {
+            String[][] data = animeSystem.rawQuery(query);
+            for (String[] row : data) {
+                for (String s : row) {
+                    System.out.print(s + '\t');
+                }
+                System.out.println();
             }
-            System.out.println();
+            topView.displayTable(data, new String[] {
+                    "Timestamp", "Anime", "Episode"
+            }, "Watch History of " + userName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            topView.errorPopUp("Unhandled SQLException", e.getMessage());
         }
-        topView.displayTable(data, new String[] {
-                "Timestamp", "Anime", "Episode"
-        }, "Watch History of " + userName);
+
     }
 
     // Staff records management
@@ -396,42 +441,25 @@ public class RecordsTabListener extends TabListener {
         try {
             Integer.parseInt(staffId);
             updateStaff(staffId, firstName, lastName, occupation, birthday);
-            topView.dialogPopUp("Staff", "Successfully updated staff entry!");
         } catch (NumberFormatException exception) {
             createStaff(firstName, lastName, occupation, birthday);
-            topView.dialogPopUp("Staff", "Successfully created staff entry!");
         }
 
         topView.getComponent(TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB, "deleteStaff").setEnabled(true);
     }
 
     public void createStaff(String firstName, String lastName, String occupation, String birthday) {
-        if (firstName.equals("") || lastName.equals(""))
+        if (firstName.equals("") || lastName.equals("")) {
             topView.errorPopUp("Staff", "First and last name cannot be empty");
-        else {
-            try {
-                animeSystem.safeUpdate(
-                        "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?, ?)",
-                        firstName, lastName, occupation, birthday);
-                this.setTopViewWithNewest(Records.STAFF);
-            } catch (MysqlDataTruncation exception) {
-                topView.errorPopUp("Staff",
-                        (firstName.length() > 16) ? "First Name is too long"
-                                : (lastName.length() > 16) ? "Last Name is too long"
-                                        : (occupation.length() > 32) ? "Occupation name is too long" : "Invalid Date");
-            } catch (SQLException exception) {
-                System.out.println("Exception class = " + exception.getClass());
-                topView.errorPopUp("SQLException", exception.getMessage());
-            }
+            return;
         }
-    }
 
-    public void updateStaff(String staffId, String firstName, String lastName, String occupation, String birthday) {
         try {
             animeSystem.safeUpdate(
-                    "Update `staff` SET `first_name` = ?, `last_name` = ?, `occupation` = ?, `birthday` = ? WHERE `staff_id` = ?",
-                    firstName, lastName, occupation, birthday, staffId);
-            this.refreshRecordTableData(Records.STAFF);
+                    "INSERT INTO `staff` (`first_name`, `last_name`, `occupation`, `birthday`) VALUES (?, ?, ?, ?)",
+                    firstName, lastName, occupation, birthday);
+            this.setTopViewWithNewest(Records.STAFF);
+            topView.dialogPopUp("Staff", "Successfully created staff entry!");
         } catch (MysqlDataTruncation exception) {
             topView.errorPopUp("Staff",
                     (firstName.length() > 16) ? "First Name is too long"
@@ -441,7 +469,24 @@ public class RecordsTabListener extends TabListener {
             System.out.println("Exception class = " + exception.getClass());
             topView.errorPopUp("SQLException", exception.getMessage());
         }
+    }
 
+    public void updateStaff(String staffId, String firstName, String lastName, String occupation, String birthday) {
+        try {
+            animeSystem.safeUpdate(
+                    "Update `staff` SET `first_name` = ?, `last_name` = ?, `occupation` = ?, `birthday` = ? WHERE `staff_id` = ?",
+                    firstName, lastName, occupation, birthday, staffId);
+            this.refreshRecordTableData(Records.STAFF);
+            topView.dialogPopUp("Staff", "Successfully updated staff entry!");
+        } catch (MysqlDataTruncation exception) {
+            topView.errorPopUp("Staff",
+                    (firstName.length() > 16) ? "First Name is too long"
+                            : (lastName.length() > 16) ? "Last Name is too long"
+                                    : (occupation.length() > 32) ? "Occupation name is too long" : "Invalid Date");
+        } catch (SQLException exception) {
+            System.out.println("Unhandled SQLException class " + exception.getClass());
+            topView.errorPopUp("Unhandled SQLException", exception.getMessage());
+        }
     }
 
     public void deleteStaff() {
@@ -468,21 +513,19 @@ public class RecordsTabListener extends TabListener {
         String firstName = subtab.getComponentText("firstName");
         String lastName = subtab.getComponentText("lastName");
 
-        String queryA = """
-                SELECT CONCAT(s.first_name, " ", s.last_name) AS staff_name,
+        String query = String.format("""
+                    SELECT CONCAT(s.first_name, " ", s.last_name) AS staff_name,
                 a.title, c.episode, c.position, c.department
                 FROM credits c
                 JOIN staff s ON s.staff_id = c.staff_id
                 JOIN animes a ON c.anime_id = a.anime_id
-                WHERE s.staff_id = """;
-        String queryB = """
-
-                ORDER BY a.anime_id;
-                """;
+                WHERE s.staff_id = %s
+                ORDER BY a.anime_id
+                    """, staffId);
 
         try {
             Integer.parseInt(staffId);
-            data = animeSystem.rawQuery(queryA + staffId + queryB);
+            data = animeSystem.rawQuery(query);
             topView.displayTable(data,
                     new String[] {
                             "Staff Name", "Anime Title", "Episode", "Position", "Department"
@@ -560,13 +603,28 @@ public class RecordsTabListener extends TabListener {
         String studio_id = subtab.getComponentText("studioId");
         String studio_name = subtab.getComponentText("studioName");
 
-        String[][] data = animeSystem.rawQuery(
-                "SELECT title, genre, air_date, num_of_episodes FROM animes WHERE studio_id = " + studio_id);
-        for (String[] strings : data) {
-            strings[1] = Genre.findName(strings[1]);
+        if (!validateId(
+                studio_id,
+                "No studio selected",
+                "Please select a studio.")) {
+            return;
         }
-        topView.displayTable(data, new String[] {
-                "Anime Title", "Genre", "Air Date", "Episode Count"
-        }, studio_name);
+
+        try
+
+        {
+            String[][] data = animeSystem.rawQuery(
+                    "SELECT title, genre, air_date, num_of_episodes FROM animes WHERE studio_id = " + studio_id);
+            for (String[] strings : data) {
+                strings[1] = Genre.findName(strings[1]);
+            }
+            topView.displayTable(data, new String[] {
+                    "Anime Title", "Genre", "Air Date", "Episode Count"
+            }, studio_name);
+        } catch (SQLException e) {
+            topView.errorPopUp("Unhandled SQLException", e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 }

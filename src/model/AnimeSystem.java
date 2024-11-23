@@ -124,34 +124,39 @@ public class AnimeSystem {
         }
     }
 
-    public String[][] rawQuery(String query) {
+    public String[][] rawQuery(String query) throws SQLException {
         System.out.println(query);
         ArrayList<String[]> data = new ArrayList<String[]>();
-        try {
-            dbResultSet = dbStatement.executeQuery(query);
-            dbMetaData = dbResultSet.getMetaData();
-            int columnCount = dbMetaData.getColumnCount();
-            while (dbResultSet.next()) {
-                String[] rowData = new String[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    rowData[i] = dbResultSet.getString(i + 1);
-                }
-                data.add(rowData);
+        dbResultSet = dbStatement.executeQuery(query);
+        dbMetaData = dbResultSet.getMetaData();
+        int columnCount = dbMetaData.getColumnCount();
+        while (dbResultSet.next()) {
+            String[] rowData = new String[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                rowData[i] = dbResultSet.getString(i + 1);
             }
-        } catch (Exception e) {
-            System.err.println("Query to 'dbanime' Failed.");
-            e.printStackTrace();
+            data.add(rowData);
         }
         return data.toArray(new String[0][0]);
     }
 
     /**
+     * Select columns from a record. This is a "shortcut" function, returning
+     * essentially
+     * 
+     * <pre>
+     * SELECT `columns` FROM `record` ORDER BY `column to sort by`
+     * </pre>
+     * 
+     * where <code>column to sort by</code> is defined in the
+     * {@link Records#getSortByColumn(String)} function, and is thus not a parameter
+     * here.
      * 
      * @param columns
      * @param record
      * @return
      */
-    public String[][] selectColumns(String[] columns, String record) {
+    public String[][] selectColumns(String[] columns, String record) throws SQLException {
         String columnsString = new String();
         for (String column : columns) {
             columnsString += column + ", ";

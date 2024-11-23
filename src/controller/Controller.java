@@ -1,6 +1,5 @@
 package src.controller;
 
-import java.awt.event.*;
 import src.model.AnimeSystem;
 import src.model.Records;
 import src.view.gui.TopView;
@@ -36,7 +35,7 @@ public class Controller {
         topView.setActionListeners(
                 TopView.RECORDS_TAB, TopView.STAFF_RECORD_SUBTAB,
                 recordsTabListener,
-                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff");
+                "searchStaff", "addNewStaff", "saveStaff", "deleteStaff", "staffHistory");
 
         TransactionsTabListener transactionsTabListener = new TransactionsTabListener(animeSystem, topView);
         topView.setActionListeners(

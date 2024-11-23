@@ -4,12 +4,14 @@
             "value": "Anime"
         },
         {
+            "type": "TextField",
+            "name": "animeTitle",
+            "db_link": "animes.title"
+        },
+        {
             "name": "animeId",
             "value": "",
             "db_link": "animes.anime_id"
-        },
-        {
-            "value": ""
         },
         {
             "type": "Button",
@@ -42,16 +44,6 @@
             "type": "Button",
             "name": "searchStudio",
             "value": "Search"
-        }
-    ],
-    [
-        {
-            "value": "Title"
-        },
-        {
-            "type": "TextField",
-            "name": "animeTitle",
-            "db_link": "animes.title"
         }
     ],
     [

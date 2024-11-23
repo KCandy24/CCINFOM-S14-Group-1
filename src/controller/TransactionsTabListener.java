@@ -179,11 +179,11 @@ public class TransactionsTabListener extends TabListener {
                 AS checkExistingQuery
                 """;
 
-        // TODO ? Minor inconvenience: must refresh episode if user previously didn't
-        // watch, watched, then tried to save a rating
+        if (!validateId(user_id, "No user selected", "Please select a user before making a rating.")) {
+            return;
+        }
 
-        if ((validateId(user_id, "No user selected", "Please select a user before making a rating.") &&
-                validateId(anime_id, "No anime selected", "Please select an anime to rate.")) == false) {
+        if (!validateId(user_id, "No anime selected", "Please select an anime to rate.")) {
             return;
         }
 
@@ -356,7 +356,8 @@ public class TransactionsTabListener extends TabListener {
 
         int maxEpisodes = 1;
 
-        if ((validateId(staff_id, "No staff selected", "Please select a staff member before creating a credits entry.")
+        if ((validateId(staff_id, "No staff selected",
+                "Please select a staff member before creating a credits entry.")
                 && validateId(anime_id, "No anime selected",
                         "Please select an anime to create a credits entry.")) == false)
             return;
@@ -428,7 +429,8 @@ public class TransactionsTabListener extends TabListener {
         String anime_id = subtab.getComponentText("animeId");
         String episode = subtab.getComponentText("episode");
 
-        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
+        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.")
+                &&
                 validateId(anime_id, "No anime selected",
                         "Please select an anime to create a credits entry.")) == false)
             return;
@@ -484,7 +486,8 @@ public class TransactionsTabListener extends TabListener {
                 AND episode = ?
                 """;
 
-        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.") &&
+        if ((validateId(staff_id, "No staff selected", "Please select a staff member before create a credits entry.")
+                &&
                 validateId(anime_id, "No anime selected",
                         "Please select an anime to create a credits entry.")) == false)
             return;

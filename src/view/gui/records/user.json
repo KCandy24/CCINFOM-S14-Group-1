@@ -4,6 +4,11 @@
             "value": "User"
         },
         {
+            "type": "TextField",
+            "name": "username",
+            "db_link": "users.user_name"
+        },
+        {
             "value": "No user selected",
             "name": "userId",
             "db_link": "users.user_id"
@@ -17,16 +22,6 @@
             "type": "Button",
             "value": "Add New",
             "name": "addNewUser"
-        }
-    ],
-    [
-        {
-            "value": "Username"
-        },
-        {
-            "type": "TextField",
-            "name": "username",
-            "db_link": "users.user_name"
         }
     ],
     [
@@ -60,7 +55,9 @@
             "type": "Button",
             "name": "deleteUser",
             "value": "Delete"
-        },
+        }
+    ],
+    [
         {
             "type": "Button",
             "name": "viewUserWatchHistory",
