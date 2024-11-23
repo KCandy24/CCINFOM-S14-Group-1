@@ -14,3 +14,5 @@
     ```
 
 3. Use [the `run.bat` script](run.bat).
+
+![Diagram](diagram.png)
