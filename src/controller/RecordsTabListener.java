@@ -13,6 +13,7 @@ import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import src.model.AnimeSystem;
 import src.model.Genre;
 import src.model.Records;
+import src.model.StaffDepartment;
 import src.view.gui.Subtab;
 import src.view.gui.TopView;
 
@@ -250,9 +251,8 @@ public class RecordsTabListener extends TabListener {
 
             this.topView.dialogPopUp("Successfully updated anime",
                     String.format(
-                            "Anime %s (ID %s) has been successfully updated in the database.",
-                            animeTitle,
-                            animeId));
+                            "Anime %s has been successfully updated in the database.",
+                            animeTitle));
 
             this.refreshRecordTableData(Records.ANIME);
         } catch (MysqlDataTruncation exception) {
@@ -336,6 +336,7 @@ public class RecordsTabListener extends TabListener {
                     "INSERT INTO `users` (`user_name`, `region`, `join_date`) VALUES (?, ?, ?)",
                     username, region, joinDate);
             this.setTopViewWithNewest(Records.USER);
+            topView.dialogPopUp("User add success", "Successfully added user " + username);
         } catch (SQLIntegrityConstraintViolationException exception) {
             topView.errorPopUp("User", "Username must be unique");
         } catch (SQLException exception) {
@@ -350,6 +351,7 @@ public class RecordsTabListener extends TabListener {
                     "UPDATE `users` SET `user_name` = ?, `region` = ?, `join_date` = ? WHERE `user_id` = ?",
                     username, region, joinDate, userId);
             this.refreshRecordTableData(Records.USER);
+            topView.dialogPopUp("User updated success", "Successfully updated user " + username);
         } catch (SQLException exception) {
             System.out.println("Exception class = " + exception.getClass());
             topView.errorPopUp("SQLException", exception.getMessage());
@@ -526,6 +528,10 @@ public class RecordsTabListener extends TabListener {
         try {
             Integer.parseInt(staffId);
             data = animeSystem.rawQuery(query);
+            // 4th column is department enum -- replace with full name
+            for (int i = 0; i < data.length; i++) {
+                data[i][4] = StaffDepartment.findName(data[i][4]);
+            }
             topView.displayTable(data,
                     new String[] {
                             "Staff Name", "Anime Title", "Episode", "Position", "Department"
@@ -547,6 +553,10 @@ public class RecordsTabListener extends TabListener {
         Subtab subtab = topView.getSubtab(TopView.RECORDS_TAB, TopView.STUDIO_RECORD_SUBTAB);
         String studioId = subtab.getComponentText("studioId");
         String studio_name = subtab.getComponentText("studioName");
+
+        if (validateNotEmpty(studio_name, "studio name") == false) {
+            return;
+        }
 
         try {
             Integer.parseInt(studioId);
@@ -586,6 +596,9 @@ public class RecordsTabListener extends TabListener {
         String studio_id = subtab.getComponentText("studioId");
         String studio_name = subtab.getComponentText("studioName");
 
+        if (!validateId(studio_id, "No studio selected", "Please select a studio to delete")) {
+            return;
+        }
         try {
             animeSystem.safeUpdate("DELETE FROM `studios` WHERE `studio_id` = ?", studio_id);
             this.refreshRecordTableData(Records.STUDIO);
