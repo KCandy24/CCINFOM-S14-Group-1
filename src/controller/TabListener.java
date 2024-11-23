@@ -15,23 +15,42 @@ public abstract class TabListener implements ActionListener {
     TopView topView;
     public static final String INVALID_DATE_STRING = "Please input a valid date in the YYYY-MM-DD format.";
 
+    /**
+     * By default, a TabListener takes in the {@link AnimeSystem} model and the
+     * {@link TopView} view.
+     * 
+     * @param animeSystem
+     * @param topView
+     */
     public TabListener(AnimeSystem animeSystem, TopView topView) {
         this.animeSystem = animeSystem;
         this.topView = topView;
     }
 
+    /**
+     * Convenience method for searching an anime.
+     */
     public void searchAnime() {
         topView.selectFromTable(Records.ANIME);
     }
 
+    /**
+     * Convenience method for searching a user.
+     */
     public void searchUser() {
         topView.selectFromTable(Records.USER);
     }
 
+    /**
+     * Convenience method for searching a staff member.
+     */
     public void searchStaff() {
         topView.selectFromTable(Records.STAFF);
     }
 
+    /**
+     * Convenience method for searching a studio.
+     */
     public void searchStudio() {
         topView.selectFromTable(Records.STUDIO);
     }
